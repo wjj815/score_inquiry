@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{:: title})">
+    <meta charset="utf-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>学生成绩管理系统</title>
+    <link rel="stylesheet" href="../../static/layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">管理系统后台</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <!--<ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="">控制台</a></li>
+            <li class="layui-nav-item"><a href="">商品管理</a></li>
+            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>-->
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    <span id="username" th:text="${user.name}">用户</span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">个人信息</a></dd>
+                    <dd><a href="#" id="logout">退出登录</a></dd>
+                </dl>
+            </li>
+            <!--<li class="layui-nav-item"><a href="">退了</a></li>-->
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul id="left_nav" class="layui-nav layui-nav-tree" lay-filter="test">
+                <th:block  th:each="m,stat : ${user.role.menuList}">
+                <li class="layui-nav-item">
+                    <a th:class="${m.childMenu.size() == 0 ? 'site-demo-active' : ''}"
+                       th:attr="data-menuId=${m.id},data-title=${m.menuName},data-src=${m.menuUrl},data-icon=${m.menuIcon}"  href="javascript:;">
+                        <i th:class="${m.menuIcon}" class="layui-icon layui-icon-table"></i>
+                        <span th:text="${m.menuName}">成绩统计分析 </span>
+                    </a>
+                    <dl class="layui-nav-child" th:each="cm : ${m.childMenu}">
+                        <dd>
+                            <a class="site-demo-active" th:class="${cm.childMenu.size() == 0 ? 'site-demo-active' : ''}"
+                               th:attr="data-menuId=${cm.id},data-title=${cm.menuName},data-src=${cm.menuUrl},data-icon=${cm.menuIcon}"
+                               href="javascript:;">
+                                <i th:class="${cm.menuIcon}" class="layui-icon layui-icon-table"></i>
+                                <span th:text="${cm.menuName}">考试列表</span>
+                            </a>
+                        </dd>
+                    </dl>
+                </li>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" style="overflow-y: hidden">
+        <div class="layui-tab layui-tab-brief" lay-filter="demo" style="margin-top: 0;" lay-allowclose="true">
+            <ul class="layui-tab-title">
+                <<!--li lay-id="22">用户管理</li>
+                <li lay-id="33">权限分配</li>
+                <li lay-id="44">商品管理</li>
+                <li lay-id="55">订单管理</li>-->
+            </ul>
+            <div class="layui-tab-content">
+            </div>
+        </div>
+        <!--<div class="site-demo-button" style="margin-bottom: 0;">
+            <button class="layui-btn site-demo-active" data-type="tabAdd">新增Tab项</button>
+            <button class="layui-btn site-demo-active" data-type="tabDelete">删除：商品管理</button>
+            <button class="layui-btn site-demo-active" data-type="tabChange">切换到：用户管理</button>
+        </div>-->
+        <!-- 内容主体区域 -->
+        <!-- <div style="padding: 15px;">内容主体区域</div>-->
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © 2020 wangjunjie
+    </div>
+</div>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+<script>
+
+    //JavaScript代码区域
+    layui.use(['element', 'jquery','layer'], function () {
+        var element = layui.element,
+            $ = layui.jquery
+            layer = layui.layer;
+
+
+        /*
+        * 重新计算iframe高度
+        */
+        function FrameWH() {
+            var h = $(window).height() - 164;
+            //console.controllerLog("高度问题=="+h);
+            $("iframe").css("height", h + "px");
+        }
+        $("#logout").click(function () {
+            logout();
+        });
+
+        function logout() {
+            ajaxGet($,"/user/logout",function (data) {
+                if(data.success){
+                    layer.msg(data.resultMsg);
+                }
+                window.location.href = "/login";
+
+            })
+        }
+
+        FrameWH();
+
+
+        /* $('.site-demo-active').on('click', function () {
+             var othis = $(this), type = othis.data('type');
+             active[type] ? active[type].call(this, othis) : '';
+         });*/
+
+
+        var layFilter = $("#left_nav").attr('lay-filter');
+        element.render('nav', layFilter);
+
+        var active = {
+            //在这里给active绑定几项事件，后面可通过active调用这些事件
+            tabAdd: function (url, id, name,icon) {
+                //新增一个Tab项 传入三个参数，分别对应其标题，tab页面的地址，还有一个规定的id，是标签中data-id的属性值
+                var body_url = url;
+                console.log("要切换的页面地址=" + body_url);
+                element.tabAdd('demo', {
+                    title: '<i class="'+icon+'"></i>'+name,
+                    content: '<iframe data-frameid="' + id + '" width="100%" scrolling="auto" frameborder="0" src="' + body_url + '"></iframe>',
+                    id: id //规定好的id
+                })
+                if(url === '/welcome') {
+                    $('li[lay-id='+id+']').find('i:last').css('display', 'none');
+                }
+                FrameWH();  //计算ifram层的大小
+            },
+            tabChange: function (id) {
+                //切换到指定Tab项
+                element.tabChange('demo', id); //根据传入的id传入到指定的tab项
+            },
+            tabDelete: function (id) {
+
+                element.tabDelete("demo", id);//删除
+
+            }
+        };
+
+
+
+        // //当点击有site-demo-active属性的标签时，即左侧菜单栏中内容 ，触发点击事件
+        $('.site-demo-active').on('click', function () {
+            var dataid = $(this);
+            if ($(".layui-tab-title li[lay-id]").length <= 0) {
+                //如果比零小，则直接打开新的tab项
+                console.log("没有tab页，新建tab页");
+                active.tabAdd(dataid.attr("data-src"), dataid.attr("data-menuId"), dataid.attr("data-title"),dataid.attr("data-icon"));
+            } else {
+                //否则判断该tab项是否以及存在
+                var isData = false; //初始化一个标志，为false说明未打开该tab项 为true则说明已有
+                $.each($(".layui-tab-title li[lay-id]"), function () {
+                    //如果点击左侧菜单栏所传入的id 在右侧tab项中的lay-id属性可以找到，则说明该tab项已经打开
+                    if ($(this).attr("lay-id") == dataid.attr("data-menuId")) {
+                        console.log("如果点击左侧菜单栏所传入的id 在右侧tab项中的lay-id属性可以找到，则说明该tab项已经打开");
+                        isData = true;
+                    }
+                })
+                if (isData == false) {
+                    //标志为false 新增一个tab项
+                    console.log("新增一个tab项")
+                    active.tabAdd(dataid.attr("data-src"), dataid.attr("data-menuId"), dataid.attr("data-title"),dataid.attr("data-icon"));
+                }
+            }
+            //最后不管是否新增tab，最后都转到要打开的选项页面上
+            active.tabChange(dataid.attr("data-menuId"));
+        });
+
+        //进入页面显示首页
+       $(".site-demo-active:first").click();
+    });
+</script>
+</body>
+</html>
