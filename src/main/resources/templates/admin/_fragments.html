@@ -1,0 +1,18 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title th:replace="${title}">学生成绩管理系统</title>
+    <link rel="stylesheet" href="../../static/layui/css/layui.css" th:href="@{/static/layui/css/layui.css}">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1603330_x7ze21kouqa.css">
+
+</head>
+<body>
+
+</body>
+<th:block th:fragment="script">
+    <script src="../src/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <script  th:src="@{/static/common/js/common.js}"></script>
+</th:block>
+</html>

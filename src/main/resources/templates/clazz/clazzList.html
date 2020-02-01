@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
+    <meta charset="UTF-8">
+    <title>年级/班级列表</title>
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header"><h3>年级列表</h3></div>
+                <div class="layui-card-body">
+                    <table class="layui-table"  id="test" lay-filter="test"></table>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <form class="layui-form ">
+                       <h3 style="float: left">班级列表</h3>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">年级:</label>
+                            <div class="layui-input-inline">
+                                <select name="grade" id="grade" lay-filter="grade">
+                                    <!--<option value="2013">2013级</option>-->
+                                    <!--<option value="2014">2014级</option>-->
+                                    <!--<option value="2015">2015级</option>-->
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-table"  id="test1" lay-filter="test1"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+</body>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+
+<script>
+    layui.use(['table','form','jquery'], function () {
+        var table = layui.table,
+        $ = layui.jquery,
+        form = layui.form;
+
+
+
+        table.render({
+            elem: '#test'
+            , url: apiPrefix+'/grade/page'
+            // , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            // , defaultToolbar: ['filter', 'exports']
+            ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , title: '年级列表'
+            , cols: [ [
+                {type: 'checkbox',align:'center', fixed: 'left',width:'10%'}
+                , {field:'id', title: '年级编号', width: '30%',align:'center'}
+                , {field: 'gradeName', title: '年级名称', width: '30%',align:'center'}
+                , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '30%' }
+            ]]
+            , page: true
+            ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": res.resultCode, //解析接口状态
+                    "msg": res.resultMsg, //解析提示文本
+                    "count": res.data.totalElements, //解析数据长度
+                    "data": res.data.content //解析数据列表
+                };
+            }
+        });
+
+
+        table.render({
+            elem: '#test1'
+            , url: apiPrefix+'/clazz/page'
+            // , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            // , defaultToolbar: ['filter', 'exports']
+            ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , title: '班级列表'
+            , cols: [ [
+                {type: 'checkbox',align:'center', fixed: 'left',width:'10%'}
+                , {field:'id', title: '班级编号', width: '20%',align:'center'}
+                , {field: 'clazzName', title: '班级名称', width: '30%',align:'center'}
+                , {
+                    field: 'gradeId', title: '年级编号', width: '20%',align:'center'/*,templet: function (res) {
+                        return '<em>' + res.grade.gradeName + '</em>'
+                    }*/
+                }
+                , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '20%' }
+            ]]
+            , page: true
+            ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": res.resultCode, //解析接口状态
+                    "msg": res.resultMsg, //解析提示文本
+                    "count": res.data.totalElements, //解析数据长度
+                    "data": res.data.content //解析数据列表
+                };
+            }
+        });
+
+
+        //头工具栏事件
+        table.on('toolbar(test1)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                    break;
+
+                //自定义头工具栏右侧图标 - 提示
+                case 'LAYTABLE_TIPS':
+                    layer.alert('这是工具栏右侧自定义的一个图标按钮');
+                    break;
+            }
+            ;
+        });
+
+        //监听行工具事件
+        table.on('tool(test1)', function (obj) {
+            var data = obj.data;
+            //console.controllerLog(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                layer.prompt({
+                    formType: 2
+                    , value: data.email
+                }, function (value, index) {
+                    obj.update({
+                        email: value
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+        //异步填充年级内容
+        layuiSelect($,"/grade/list",function (htmls,data) {
+            for(var x in data) {
+                htmls += '<option value="'+data[x].id+'">'+data[x].gradeName+'</option>'
+            }
+            $('#grade').html(htmls);
+            form.render('select');//需要渲染一下
+        });
+    });
+</script>
+</html>
