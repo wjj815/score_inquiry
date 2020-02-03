@@ -1,7 +1,10 @@
 package com.wangjj.scoreinquirywxback.util;
 
 import com.alibaba.fastjson.JSON;
+import jdk.net.SocketFlow;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -11,10 +14,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.boot.autoconfigure.http.HttpProperties;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @ClassName : HttpClientUtil
@@ -25,6 +30,12 @@ import java.util.Map;
 @Slf4j
 public class HttpClientUtil {
 
+
+
+
+	public static String doGet(String url) {
+		return doGet(url,null);
+	}
 	/**
 	 * 发送get请求
 	 * @param url
@@ -41,21 +52,18 @@ public class HttpClientUtil {
 		try {
 			// 创建uri
 			URIBuilder builder = new URIBuilder(url);
-			if (param != null) {
-				for (String key : param.keySet()) {
-					builder.addParameter(key, param.get(key));
-				}
+			if (Objects.nonNull(param)) {
+				param.forEach(builder::addParameter);
 			}
 			URI uri = builder.build();
-
 			// 创建http GET请求
 			HttpGet httpGet = new HttpGet(uri);
-
 			// 执行请求
 			response = httpclient.execute(httpGet);
+
 			// 判断返回状态是否为200
-			if (response.getStatusLine().getStatusCode() == 200) {
-				resultString = EntityUtils.toString(response.getEntity(), "UTF-8");
+			if (Objects.equals(response.getStatusLine().getStatusCode(),HttpStatus.SC_OK)) {
+				resultString = EntityUtils.toString(response.getEntity(), HttpProperties.Encoding.DEFAULT_CHARSET);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -95,7 +103,7 @@ public class HttpClientUtil {
 			httpPost.setEntity(entity);
 			// 执行http请求
 			response = httpClient.execute(httpPost);
-			resultString = EntityUtils.toString(response.getEntity(), "utf-8");
+			resultString = EntityUtils.toString(response.getEntity(), HttpProperties.Encoding.DEFAULT_CHARSET);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("网络出现异常:{}",e.getMessage());

@@ -37,16 +37,11 @@ public class UserController {
 	@ApiImplicitParam(name = "loginParameter", value = "用户登录参数", dataType = "LoginParameter")
 	public APIResultBean login(@RequestBody LoginParameter loginParameter) {
 		User user = userService.findByLoginParameter(loginParameter);
-
-		if(user != null) {
-			user.toBuilder().password(null);
-			SessionUtils.setUser(user);
-			log.info("set session that is : {}" ,SessionUtils.getUser());
-			return APIResultBean.ok("登录成功",user).build();
-		} else {
-			return APIResultBean.error(ResultCode.FAILED,"用户名或密码错误！").build();
-		}
-	}
+		user.toBuilder().password(null);
+		SessionUtils.setUser(user);
+		log.info("set session that is : {}", SessionUtils.getUser());
+		return APIResultBean.ok("登录成功", user).build();
+}
 
 	@GetMapping("/logout")
 	@ApiOperation(value = "用户退出登录", notes = "用户退出登录")
@@ -54,7 +49,4 @@ public class UserController {
 		SessionUtils.removeUser();
 		return APIResultBean.ok("已成功退出登录！").build();
 	}
-
-
-
 }

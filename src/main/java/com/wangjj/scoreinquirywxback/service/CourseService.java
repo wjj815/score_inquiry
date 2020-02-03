@@ -2,6 +2,8 @@ package com.wangjj.scoreinquirywxback.service;
 
 import com.wangjj.scoreinquirywxback.entity.Course;
 import com.wangjj.scoreinquirywxback.entity.Grade;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -14,18 +16,23 @@ import java.util.List;
 public interface CourseService {
 
 	/**
-	 * 获取年级的所有课程
-	 * @param grade
+	 * 获取所有课程
 	 * @return
 	 */
-	List<Course> getCourseListByGrade(Grade grade);
+	List<Course> getCourseList();
 
+
+	/**
+	 * 分页获取所有课程
+	 * @return
+	 */
+	Page<Course> getCoursePage(Pageable pageable);
 
 	/**
 	 * 添加课程
 	 * @param course
 	 */
-	 void addCourse(Course course);
+	 void saveCourse(Course course);
 
 	/**
 	 * 删除课程

@@ -38,3 +38,7 @@ spring:
       max-request-size: 31457280
 swagger2:
   enable: true
+#微信身份认证
+wechat:
+  appid: wxf677c993702b8418
+  appsecret: 0eb08d1e3c74e6274de375eddcbcfb29

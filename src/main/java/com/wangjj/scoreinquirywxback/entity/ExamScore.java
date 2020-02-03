@@ -36,7 +36,4 @@ public class ExamScore {
 	private Long studentId;
 	/**对应哪次考试*/
 	private Long examId;
-
-
-
 }

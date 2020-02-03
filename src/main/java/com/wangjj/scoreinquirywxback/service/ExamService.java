@@ -1,8 +1,10 @@
 package com.wangjj.scoreinquirywxback.service;
 
 import com.wangjj.scoreinquirywxback.entity.Exam;
+import com.wangjj.scoreinquirywxback.entity.ExamScore;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 /**
@@ -18,14 +20,20 @@ public interface ExamService {
 	 * @param pageable
 	 * @return
 	 */
-	List<Exam> getExamList(Pageable pageable);
+	Page<Exam> getExamPage(Exam exam,Pageable pageable);
+
+	/**
+	 * 获取考试信息列表
+	 * @return
+	 */
+	List<Exam> getExamList(Exam exam);
 
 
 	/**
-	 * 添加考试
+	 * 保存考试
 	 * @param exam
 	 */
-	void addExam(Exam exam);
+	void saveExam(Exam exam);
 
 
 	/**
@@ -33,8 +41,32 @@ public interface ExamService {
 	 */
 	void deleteExam(Long id);
 
+
 	/**
-	 * 学生考试列表
+	 * 分页获取考试成绩
+	 * @param examScore
+	 * @param pageable
+	 * @return
 	 */
-	void studentExamList();
+	Page<ExamScore> getExamScorePage(ExamScore examScore, Pageable pageable);
+
+	/**
+	 * 获取考试成绩列表
+	 * @param examScore
+	 * @return
+	 */
+	List<ExamScore> getExamScoreList(ExamScore examScore);
+
+	/**
+	 * 保存成绩
+	 * @param examScore
+	 */
+	void saveExamScore(ExamScore examScore);
+
+	/**
+	 * 删除考试成绩
+	 * @param id
+	 */
+	void deleteExamScore(Long id);
+
 }
