@@ -35,25 +35,6 @@ public class WeChatLoginController {
 
 	public String USERINFO = "" +
 			"https://api.weixin.qq.com/sns/userinfo?access_token=TOKEN&openid=OPENID";
-
-	/**
-	 * 使用a标签进行登录
-	 * @return
-	 */
-	@RequestMapping("/login")
-	public ModelAndView login(){
-		return new ModelAndView("login");
-	}
-
-	/**
-	 * 使用微信通过的js创建二维码登录
-	 * @return
-	 */
-	@RequestMapping("/login2")
-	public ModelAndView login2(){
-		return new ModelAndView("login2");
-	}
-
 	/**
 	 * 用户扫描确认登录后的回调执行，此处应对应redirect_uri
 	 * 注意：要保证回调域名和当前网络环境通畅，如果想要本地测试，

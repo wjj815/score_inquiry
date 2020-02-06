@@ -35,8 +35,8 @@ public interface CourseService {
 	 void saveCourse(Course course);
 
 	/**
-	 * 删除课程
-	 * @param courseId
+	 * 批量删除课程
+	 * @param courseIds
 	 */
-	void deleteCourse(Long courseId);
+	void deleteCourse(String courseIds);
 }

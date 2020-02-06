@@ -24,7 +24,7 @@ public class Teacher {
 	@ApiModelProperty(name = "id",value = "教师编号",required = true,example = "2019001")
 	@Id
 	@GeneratedValue
-	private String id; //Id
+	private Long id; //Id
 	/** 姓名 */
 	@ApiModelProperty(name="teacherName",value = "教师姓名",required = true,example = "王老师")
 	private String teacherName ;

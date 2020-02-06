@@ -1,12 +1,11 @@
 server:
-  port: 8080
-  url : http://localhost:8080
+  port: 8081
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/micro_campus?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    url: jdbc:mysql://47.98.44.184:3306/micro_campus?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: root
-    password: wangjj123456
+    password: root
     type: com.alibaba.druid.pool.DruidDataSource #druid监控配置
     dbcp2:
       min-idle: 5 #数据库链接池最小维持连接数
@@ -42,3 +41,7 @@ swagger2:
 wechat:
   appid: wxf677c993702b8418
   appsecret: 0eb08d1e3c74e6274de375eddcbcfb29
+logging:
+  file: log/score-inquiry.log
+
+

@@ -29,6 +29,11 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">性别</label>
                     <div class="layui-input-inline">
+                        <select name="sex"  lay-filter="sex" >
+                            <option value="男" th:selected="${'男' == student.sex}">男</option>
+                            <option value="女" th:selected="${'女' == student.sex}">女</option>
+
+                        </select>
                         <input type="text" name="sex" th:value="${student.sex}"  autocomplete="off" class="layui-input">
                     </div>
                 </div>

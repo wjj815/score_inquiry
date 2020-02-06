@@ -32,7 +32,6 @@ class MenuRepositoryTest {
 						.menuOrder(0)
 						.menuName("首页")
 						.menuUrl("/welcome")
-						.roleList(Arrays.asList(Role.builder().id(1L).build()))
 						.build()
 		);
 		/*添加菜单*/
@@ -42,7 +41,6 @@ class MenuRepositoryTest {
 				.id(2L)
 				.menuOrder(1)
 				.menuUrl("")
-				.roleList(Arrays.asList(Role.builder().id(1L).build()))
 				.build();
 		list.add(m1);
 
@@ -52,8 +50,6 @@ class MenuRepositoryTest {
 				.id(3L)
 				.menuOrder(2)
 				.menuUrl("")
-				.childMenu(Arrays.asList())
-				.roleList(Arrays.asList(Role.builder().id(1L).build()))
 				.build();
 		list.add(m2);
 		list.add(
@@ -73,7 +69,6 @@ class MenuRepositoryTest {
 				.menuOrder(3)
 				.menuUrl("")
 				.id(5L)
-				.roleList(Arrays.asList(Role.builder().id(1L).build()))
 				.build();
 		list.add(m3);
 		list.add(Menu.builder().menuCode("clazzList")
@@ -98,8 +93,6 @@ class MenuRepositoryTest {
 				.id(8L)
 				.menuOrder(2)
 				.menuUrl("")
-				.childMenu(Arrays.asList())
-				.roleList(Arrays.asList(Role.builder().id(1L).build()))
 				.build();
 		list.add(m4);
 		list.add(
@@ -129,11 +122,10 @@ class MenuRepositoryTest {
 						.id(11L)
 						.menuName("系统设置")
 						.menuUrl("/system")
-						.roleList(Arrays.asList(Role.builder().id(1L).build()))
 						.build()
 		);
 
-
+	list.forEach(menu -> menu.getRoleList().add(Role.builder().id(1L).build()));
 	menuRepository.saveAll(list);
 	}
 }

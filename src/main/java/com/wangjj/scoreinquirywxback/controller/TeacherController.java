@@ -1,6 +1,5 @@
 package com.wangjj.scoreinquirywxback.controller;
 
-import com.wangjj.scoreinquirywxback.entity.Course;
 import com.wangjj.scoreinquirywxback.entity.Teacher;
 import com.wangjj.scoreinquirywxback.service.TeacherService;
 import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
@@ -10,8 +9,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @ClassName : TeacherController

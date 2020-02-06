@@ -36,15 +36,16 @@ import java.util.List;
 @Controller
 public class PageController {
 
-	@Autowired
-	private StudentService studentService;
-	@Autowired
-	private GradeService gradeService;
-	@Autowired
-	private ClazzService clazzService;
+	private final StudentService studentService;
+	private final GradeService gradeService;
+	private final ClazzService clazzService;
 
-	@Value("${server.url}")
-	private String serverUrl;
+	@Autowired
+	public PageController(StudentService studentService, GradeService gradeService, ClazzService clazzService) {
+		this.studentService = studentService;
+		this.gradeService = gradeService;
+		this.clazzService = clazzService;
+	}
 
 	@ApiOperation(value = "主页面")
 	@GetMapping("/index")
@@ -81,6 +82,12 @@ public class PageController {
 		return "student/studentList";
 	}
 
+	@ApiOperation(value = "课程信息页面")
+	@GetMapping("/course")
+	public String courseList() {
+		return "course/courseList";
+	}
+
 	@ApiOperation(value = "家长信息详情页面")
 	@GetMapping("/parent")
 	public String studentParent() {
@@ -96,6 +103,6 @@ public class PageController {
 		List<Clazz> clazzList = clazzService.getClazzList(Clazz.builder().gradeId(student.getGradeId()).build());
 		model.addAttribute("clazzList",clazzList);
 		model.addAttribute("student",student);
-		return "/student/studentDetail";
+		return "student/studentDetail";
 	}
 }

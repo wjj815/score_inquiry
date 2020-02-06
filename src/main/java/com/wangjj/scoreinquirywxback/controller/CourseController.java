@@ -2,6 +2,7 @@ package com.wangjj.scoreinquirywxback.controller;
 
 import com.wangjj.scoreinquirywxback.entity.Course;
 import com.wangjj.scoreinquirywxback.service.CourseService;
+import com.wangjj.scoreinquirywxback.vo.request.IdsParameter;
 import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -25,7 +26,7 @@ import java.util.List;
 @RequestMapping("/course")
 public class CourseController {
 
-
+	@Autowired
 	private CourseService courseService;
 
 
@@ -38,7 +39,7 @@ public class CourseController {
 	}
 
 	@ApiOperation(value = "分页得到课程信息")
-	@GetMapping
+	@GetMapping("/page")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "page", value = "分页参数:页码(从1开始)", dataType = "Integer",defaultValue = "1"),
 			@ApiImplicitParam(name = "limit", value = "分页参数:页大小", dataType = "Integer",defaultValue = "10"),
@@ -50,7 +51,7 @@ public class CourseController {
 	}
 
 	@ApiOperation(value = "得到课程信息列表")
-	@GetMapping
+	@GetMapping("/list")
 	@ApiImplicitParams({})
 	public APIResultBean courseList() {
 		List<Course> courseList = courseService.getCourseList();
@@ -59,9 +60,9 @@ public class CourseController {
 
 	@ApiOperation(value = "删除课程信息")
 	@DeleteMapping
-	@ApiImplicitParam(name = "id",value = "课程id")
-	public APIResultBean courseList(@RequestBody Long id) {
-		courseService.deleteCourse(id);
+	@ApiImplicitParam(name = "idsParameter",value = "课程id集合",example = "IdsParameter")
+	public APIResultBean courseList(@RequestBody IdsParameter idsParameter) {
+		courseService.deleteCourse(idsParameter.getIds());
 		return APIResultBean.ok("删除成功！").build();
 	}
 }

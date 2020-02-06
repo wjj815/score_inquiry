@@ -40,7 +40,7 @@ public class Menu {
 	private Integer menuOrder;
 	/*一个子菜单只能对应一个父菜单*/
 	@OneToMany(mappedBy = "parentMenu",cascade = CascadeType.MERGE)
-	private List<Menu> childMenu = new ArrayList<>();
+	private final List<Menu> childMenu = new ArrayList<>();
 	/*父菜单*/
 	@JsonIgnore
 	@ManyToOne
@@ -50,5 +50,5 @@ public class Menu {
 	@JoinTable(name = "t_role_menu",
 			joinColumns = @JoinColumn(name = "menu_id",referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))
-	private List<Role> roleList = new ArrayList<>();
+	private final List<Role> roleList = new ArrayList<>();
 }

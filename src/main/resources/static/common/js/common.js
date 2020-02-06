@@ -39,6 +39,18 @@ function ajaxPost($,url,data,fun)
         success: fun
     });
 }
+/*ajax封装*/
+function ajaxDelete($,url,data,fun)
+{
+    $.ajax({
+        url: apiPrefix+url,
+        data:data,
+        type: 'delete',
+        contentType:"application/json",
+        dataType: 'json',
+        success: fun
+    });
+}
 
 function ajaxGet($,url,fun)
 {

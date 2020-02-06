@@ -41,9 +41,9 @@ public class Role {
 	private Date updatedTime ;
 	@JsonIgnore
 	@OneToMany(mappedBy = "role")
-	private List<User> user = new ArrayList<>();
+	private final List<User> user = new ArrayList<>();
 
 	@ManyToMany(mappedBy = "roleList")
-	private List<Menu> menuList = new ArrayList<>();
+	private final List<Menu> menuList = new ArrayList<>();
 
 }
