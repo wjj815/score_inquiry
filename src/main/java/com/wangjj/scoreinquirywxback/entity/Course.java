@@ -1,6 +1,7 @@
 package com.wangjj.scoreinquirywxback.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -14,6 +15,7 @@ import java.util.List;
  * 课程类
  *
  */
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 @ApiModel(description = "课程实体")
 @ToString
 @Getter

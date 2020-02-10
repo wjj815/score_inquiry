@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
+    <meta charset="UTF-8">
+    <title>教师班级课程详情</title>
+</head>
+<body>
+<div class="layui-card">
+    <div class="layui-card-header">添加教授的班级课程</div>
+    <div class="layui-card-body" style="padding-top: 10px">
+        <form class="layui-form" lay-filter='myForm' action="">
+            <input type="hidden" name="id">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">教师编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="teacherId" name="teacherId" disabled autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="teacherName" disabled name="teacherName"  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">年级:</label>
+                    <div class="layui-input-inline">
+                        <select name="gradeId" id="grade" lay-filter="grade">
+                            <!--<option value="2013">2013级</option>-->
+                            <!--<option value="2014">2014级</option>-->
+                            <!--<option value="2015">2015级</option>-->
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">班级:</label>
+                    <div class="layui-input-inline">
+                        <select name="clazzId" id="clazz" lay-filter="clazz" lay-search="">
+                            <!-- <option value="2013">201901</option>
+                             <option value="2014">201902</option>
+                             <option value="2015">201903</option>-->
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程:</label>
+                    <div class="layui-input-inline">
+                        <select name="courseId" id="course"  lay-search="">
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item" align="center">
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">提交</button>
+                </div>
+                <div class="layui-inline">
+                    <button type="reset" class="layui-btn layui-btn-warm"  lay-filter="demo1">重置</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+</body>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+<script>
+    layui.use(['table','layer','jquery','laydate','form'], function() {
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        function init(data) {
+            fillForm(data);
+        }
+
+        function fillForm(data) {
+            console.log(JSON.stringify(data));
+            form.val('myForm',{
+                teacherId:data.id,
+                teacherName:data.teacherName
+            });
+        }
+
+
+
+        layui.fillData = function(data) {
+            init(data);
+            layer.close(loadIndex);
+        }
+
+        form.on('submit(demo1)', function(data){
+            var url = '/teacher/clazzCourse';
+            console.log(JSON.stringify(data.field));
+            ajaxPost($,url,JSON.stringify(data.field),function(data){
+                if(data.success){
+                    parent.layer.msg(data.resultMsg);
+                    parent.layer.close(index);
+                }
+                layer.msg(data.resultMsg);
+            });
+            return false;
+        });
+        //异步填充年级内容
+        layuiSelect($,"/grade/list",function (htmls,data) {
+            for(var x in data) {
+                htmls += '<option value="'+data[x].id+'">'+data[x].gradeName+'</option>'
+            }
+            $('#grade').html(htmls);
+            form.render('select');//需要渲染一下
+        });
+
+        //监听复选框
+        form.on('select(grade)', function (data) {
+            var value = data.value;
+            if(value == ''){
+                // var htmls = '<option value="">请选择</option>'; //全局变量
+                $('#clazz').html('');
+                form.render('select');//需要渲染一下
+                return;
+            }
+            layuiSelect($,"/clazz/list?gradeId="+data.value,function (htmls,data) {
+                for(var x in data) {
+                    htmls += '<option value="'+data[x].id+'">'+data[x].clazzName+'</option>'
+                }
+                $('#clazz').html(htmls);
+                form.render('select');//需要渲染一下
+            });
+        });
+
+        layuiSelect($,"/course/list",function (htmls,data) {
+            for(var x in data) {
+                htmls += '<option value="'+data[x].id+'">'+data[x].courseName+'</option>'
+            }
+            $('#course').html(htmls);
+            form.render('select');//需要渲染一下
+        });
+
+    });
+</script>
+</html>

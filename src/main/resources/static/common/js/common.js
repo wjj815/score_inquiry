@@ -7,6 +7,7 @@ function openModel(url,layer,title,fun,endFun)
         type: 2,
         offset: 'auto',
         area: ['800px', '500px'],
+        skin:'layui-layer-molv',
         fixed: false,
         shadeClose: false, //点击遮罩关闭
         content: url,

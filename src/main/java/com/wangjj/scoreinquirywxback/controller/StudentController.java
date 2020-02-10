@@ -5,6 +5,7 @@ import com.wangjj.scoreinquirywxback.entity.Parent;
 import com.wangjj.scoreinquirywxback.entity.Student;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.StudentService;
+import com.wangjj.scoreinquirywxback.util.ExcelUtils;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
 import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
 import io.swagger.annotations.Api;
@@ -64,22 +65,18 @@ public class StudentController {
 	@ApiImplicitParam(name = "file" ,value = "excel文件(最大允许上传文件大小为100M)", dataTypeClass = MultipartFile.class)
 	public APIResultBean importStudentList(@RequestParam("file") MultipartFile multipartFile) {
 		log.info("导入文件名:{}",multipartFile.getOriginalFilename());
-		if(StringUtils.isEmpty(multipartFile.getOriginalFilename())) {
-			throw new GlobalException("上传文件异常");
-		}
-
-		if(!(multipartFile.getOriginalFilename().endsWith(".xls")||
-		multipartFile.getOriginalFilename().endsWith(".xlsx"))){
-			throw new GlobalException("导入文件格式错误！");
-		}
+		//检查文件是否合法
+		ExcelUtils.check(multipartFile);
 		try {
 			String s = studentService.importStudentList(multipartFile.getInputStream());
-			return APIResultBean.ok("导入成功!").build();
+			return APIResultBean.ok("导入成功!"+s).build();
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new GlobalException("导入失败,请检查您的导入数据");
 		}
 	}
+
+
 
 	@GetMapping("/excel")
 	@ApiOperation(value = "导出学生信息")
@@ -137,7 +134,7 @@ public class StudentController {
 		return APIResultBean.ok(studentPage).build();
 	}
 
-	@GetMapping("{studentId}")
+	@GetMapping("/{studentId}")
 	@ApiOperation(value = "根据id获取学生详情")
 	@ApiImplicitParam(name = "studentId",value = "学生学号",dataType = "Long")
 	public APIResultBean getStudent(@PathVariable Long studentId) {

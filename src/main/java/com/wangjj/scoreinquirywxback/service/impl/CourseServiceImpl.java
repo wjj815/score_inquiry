@@ -4,30 +4,22 @@ import com.wangjj.scoreinquirywxback.dao.CourseRepository;
 import com.wangjj.scoreinquirywxback.entity.Course;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.CourseService;
+import com.wangjj.scoreinquirywxback.util.ParameterUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @ClassName : CourseServiceImpl
  * @Author : wangJJ
  * @Date : 2020/2/4 19:29
- * @Description : TODO
+ * @Description : 课程业务的实现类
  */
 @Slf4j
 @Service
@@ -58,20 +50,7 @@ public class CourseServiceImpl implements CourseService {
 	@Transactional
 	@Override
 	public void deleteCourse(String courseIds) {
-		log.info("original Args:{}",courseIds);
-		String[] split = courseIds.split(",");
-		System.out.println(Arrays.toString(split));
-		boolean b = Arrays.stream(split)
-				.filter(s->!StringUtils.isEmpty(s))
-				.anyMatch(Pattern.compile("^[^\\d]+$").asPredicate());
-		if(b) {
-			throw new GlobalException("参数不合法！");
-		}
-		List<Long> collect = Arrays.stream(split)
-				.filter(s->!StringUtils.isEmpty(s))
-				.map(Long::parseLong)
-				.collect(Collectors.toList());
-
+		List<Long> collect = ParameterUtils.analyse(courseIds);
 		courseRepository.deleteByIdIn(collect);
 	}
 }

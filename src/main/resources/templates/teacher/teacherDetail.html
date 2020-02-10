@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
+    <meta charset="UTF-8">
+    <title>教师信息详情</title>
+</head>
+<body>
+<div class="layui-card">
+    <div class="layui-card-header">基本信息</div>
+    <div class="layui-card-body" style="padding-top: 10px">
+        <form class="layui-form" lay-filter='myForm' action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">教师编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="id" name="id" disabled autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="teacherName"  name="teacherName"  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-inline">
+                        <select name="sex"  id="sex" lay-filter="sex" >
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">年龄</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="age" name="age" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">生日</label>
+                    <div class="layui-input-inline">
+                        <input type="test" id="test1" placeholder="yyyy-MM-dd"  name="birthday"  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">手机号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="phone" name="phone"  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">身份证号</label>
+                    <div class="layui-input-block" style="width: 67%">
+                        <input type="text" id="idCardNo" name="idCardNo"  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">介绍</label>
+                <div class="layui-input-block" style="width: 67%">
+                    <textarea placeholder="简介" class="layui-textarea"  name="introduction" id="introduction"></textarea>
+                </div>
+            </div>
+
+            <legend>教授的班级和课程</legend>
+            <hr>
+            <table class="layui-hide"  id="test"  lay-filter="test"></table>
+            <div class="layui-form-item" align="center">
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">提交</button>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn layui-btn" id="addClazzCourse">添加教授的班级课程</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">
+        <i class="iconfont layui-extenddelete"></i>删除
+    </a>
+</script>
+</body>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+<script>
+    layui.use(['table','layer','jquery','laydate','form'], function() {
+        var table = layui.table;
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        var loadIndex = layer.load(1, {
+            shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
+        function init(data) {
+            fillForm(data);
+        }
+
+        var t = table.render({
+            elem: '#test'
+            , url: apiPrefix+'/teacher/clazzCourse/page'
+            /*   , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板*/
+            , defaultToolbar: [/*'filter', 'exports'*/]
+            ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , title: '学生信息'
+            , cols: [ [
+                {type: 'checkbox',align:'center',width:'5%'}
+                 , {type:'numbers', title: '序号', width: '5%',align:'center'}
+              /*  , {field: 'id', title: '教师编号', width: '20%',align:'center'}*/
+                , {field: 'clazz', title: '班级名称', width: '30%',align:'center',templet: function (d) {
+                    console.log(JSON.stringify(d));
+                        return d.clazz.clazzName;
+                    }}
+                , {field: 'course', title: '课程名称', width: '30%',align:'center',templet: function (d) {
+                        return d.course.courseName;
+                    }}
+                , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '30%' }
+            ]]
+            ,id: 'idTest'
+            , page: true
+            ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": res.resultCode, //解析接口状态
+                    "msg": res.resultMsg, //解析提示文本
+                    "count": res.data.totalElements, //解析数据长度
+                    "data": res.data.content //解析数据列表
+                };
+            }
+        });
+
+        function fillForm(data) {
+            console.log(JSON.stringify(data));
+            form.val('myForm',{
+                id:data.id,
+                teacherName:data.teacherName,
+                sex:data.sex,
+                age:data.age,
+                birthday:data.birthday,
+                idCardNo:data.idCardNo,
+                phone:data.phone,
+                introduction:data.introduction
+            });
+        }
+        layui.fillData=function(data) {
+            init(data);
+            layer.close(loadIndex);
+        }
+
+        var index = parent.layer.getFrameIndex(window.name);
+
+        form.on('submit(demo1)', function(data){
+            var url = '/teacher';
+            console.log(JSON.stringify(data.field));
+            ajaxPost($,url,JSON.stringify(data.field),function(data){
+                if(data.success){
+                    parent.layer.msg(data.resultMsg);
+                    parent.layer.close(index);
+                }
+                layer.msg(data.resultMsg);
+            });
+            return false;
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            //console.controllerLog(obj)
+            if (obj.event === 'delete') {
+                layer.confirm('真的删除这条数据吗', function (layero,index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+            }
+        });
+
+        $('#addClazzCourse').click(function(){
+            openModel("/clazzCourseTeacher",parent.layer,"教师关联班级课程页面",function(layero,index) {
+                var content = layero.find("iframe")[0].contentWindow.document;
+                $("#teacherId",content).val($('#id').val());
+                $("#teacherName",content).val($('#teacherName').val());
+            },function() {
+               t.reload();
+            });
+        });
+    });
+</script>
+</html>

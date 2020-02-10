@@ -1,6 +1,7 @@
 package com.wangjj.scoreinquirywxback.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -16,7 +17,7 @@ import java.util.List;
  * @Date : 2019/12/24 21:01
  * @Description : 家长
  */
-
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 @ApiModel(description = "家长实体类")
 @Data
 @Builder(toBuilder = true)

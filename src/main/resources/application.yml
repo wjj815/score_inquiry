@@ -15,11 +15,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+#    show-sql: true
     open-in-view: false
 #解决org.hibernate.LazyInitializationException: could not initialize proxy - no Session报错-懒加载问题
     properties:
       hibernate:
+        #show-sql : true #打印sql
+        format_sql: true #格式化sql
+#        use_sql_comments: true #指出是什么操作生成了该语句
         enable_lazy_load_no_trans: true
   mvc:
     static-path-pattern: /static/**
@@ -43,5 +46,7 @@ wechat:
   appsecret: 0eb08d1e3c74e6274de375eddcbcfb29
 logging:
   file: log/score-inquiry.log
+
+
 
 

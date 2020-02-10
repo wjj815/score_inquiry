@@ -7,7 +7,7 @@
 <body>
 <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
     <legend>家长信息</legend>
-<form class="layui-form" id="parentForm" action="">
+<form class="layui-form"  lay-filter="parentForm" action="">
     <input type="hidden" id="studentId" name="studentId">
     <input type="hidden" id="id" name = "id">
     <div class="layui-form-item">
@@ -20,7 +20,10 @@
         <div class="layui-inline">
             <label class="layui-form-label">性别</label>
             <div class="layui-input-inline">
-                <input type="text" id="sex"  name="sex"  autocomplete="off" class="layui-input">
+                <select name="sex"  id="sex" lay-filter="sex" >
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
             </div>
         </div>
     </div>
@@ -74,6 +77,31 @@
         form = layui.form,
         layer = layui.layer;
         var index = parent.layer.getFrameIndex(window.name);
+
+        var loadIndex = layer.load(1, {
+            shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
+
+        function fillFormData(data) {
+            console.log(data);
+            form.val("parentForm",{
+                studentId:data.studentId,
+                id:data.id,
+                name:data.name,
+                studentName:data.studentName,
+                sex:data.sex,
+                age:data.age,
+                idCardNo:data.idCardNo,
+                phone:data.phone,
+                studentRelation:data.studentRelation
+            });
+
+        }
+
+        layui.fillData = function(data) {
+            fillFormData(data);
+            layer.close(loadIndex);
+        }
         //监听提交
         form.on('submit(demo1)', function(data){
             var studentId = $('#studentId').val();

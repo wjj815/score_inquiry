@@ -16,7 +16,10 @@ class ClazzServiceTest {
 	private ClazzRepository clazzRepository;
 	@Test
 	public void test() {
-		List<Clazz> all = clazzRepository.findAll();
-		System.out.println(all);
+//		List<Clazz> all = clazzRepository.findAll();
+//		System.out.println(all);
+		Clazz one = clazzRepository.getOne(201901L);
+		Clazz one1 = clazzRepository.getOne(201901L);
+		System.out.println(one+""+one1);
 	}
 }

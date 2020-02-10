@@ -5,9 +5,9 @@
     <title>学生列表</title>
 </head>
 
-<body style="overflow-x: hidden">
+<body>
 
-<div class="layui-row layui-col-space15">
+<div class="layui-row">
         <div class="layui-card">
             <div class="layui-card-header" style="height: auto">
                 <form class="layui-form " action="">
@@ -32,7 +32,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">班级:</label>
                         <div class="layui-input-inline">
-                            <select name="clazz" id="clazz" lay-filter="clazz" layui-search>
+                            <select name="clazz" id="clazz" lay-filter="clazz" lay-search="">
                                <!-- <option value="2013">201901</option>
                                 <option value="2014">201902</option>
                                 <option value="2015">201903</option>-->
@@ -154,11 +154,18 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
-                openModel("/student/"+data.id,layer,"编辑学生信息",undefined,function () {
+                openModel("/student/"+data.id,layer,"编辑学生信息",function(layero,index){
+                    ajaxGet($,"/student/"+data.id,function (data) {
+                        var iframe = window['layui-layer-iframe'+index];
+                        var json = data.data;
+                        iframe.layui.fillData(json);
+                    });
+                },function () {
                    t.reload();
                 });
             }
         });
+
         function uploadFun() {
             upload.render({
                 elem: '#uploadBtn'

@@ -129,9 +129,11 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public String importStudentList(InputStream inputStream) {
 		log.info("导入学生信息excel");
-		 EasyExcel.read(inputStream, Student.class, new StudentDataListener(studentRepository))
+		StudentDataListener studentDataListener;
+		 EasyExcel.read(inputStream, Student.class,
+				 studentDataListener = new StudentDataListener(studentRepository))
 				.sheet().doRead();
-		return "导入成功";
+		return studentDataListener.getResult();
 	}
 
 

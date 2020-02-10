@@ -1,6 +1,5 @@
 package com.wangjj.scoreinquirywxback.page;
 
-import com.alibaba.fastjson.JSON;
 import com.wangjj.scoreinquirywxback.entity.Clazz;
 import com.wangjj.scoreinquirywxback.entity.Grade;
 import com.wangjj.scoreinquirywxback.entity.Student;
@@ -8,20 +7,15 @@ import com.wangjj.scoreinquirywxback.entity.User;
 import com.wangjj.scoreinquirywxback.service.ClazzService;
 import com.wangjj.scoreinquirywxback.service.GradeService;
 import com.wangjj.scoreinquirywxback.service.StudentService;
-import com.wangjj.scoreinquirywxback.util.HttpClientUtil;
 import com.wangjj.scoreinquirywxback.util.SessionUtils;
-import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -88,6 +82,25 @@ public class PageController {
 		return "course/courseList";
 	}
 
+	@ApiOperation(value = "教师信息页面")
+	@GetMapping("/teacher")
+	public String teacherList() {
+		return "teacher/teacherList";
+	}
+
+
+	@ApiOperation(value = "教师详情页面")
+	@GetMapping("/teacherDetail")
+	public String teacherDetail() {
+		return "teacher/teacherDetail";
+	}
+
+	@ApiOperation(value = "教师关联班级课程页面")
+	@GetMapping("/clazzCourseTeacher")
+	public String clazzCourseTeacher() {
+		return "teacher/clazzCourseTeacher";
+	}
+
 	@ApiOperation(value = "家长信息详情页面")
 	@GetMapping("/parent")
 	public String studentParent() {
@@ -96,7 +109,7 @@ public class PageController {
 
 	@GetMapping("/student/{id}")
 	public String studentDetail(@PathVariable Long id,Model model) {
-		Student student = studentService.findStudentById(id);
+		Student student = new Student();
 		List<Grade> gradeList = gradeService.findGradeList();
 //		log.info("student:{}", JSON.toJSON(student));
 		model.addAttribute("gradeList",gradeList);
