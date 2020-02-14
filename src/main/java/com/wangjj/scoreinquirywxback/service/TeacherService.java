@@ -6,6 +6,7 @@ import com.wangjj.scoreinquirywxback.vo.response.PageResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import javax.transaction.Transactional;
 import java.io.InputStream;
 import java.util.List;
 
@@ -29,7 +30,4 @@ public interface TeacherService {
 
 	Teacher getTeacherById(Long teacherId);
 
-	void saveClazzCourse(ClazzCourseTeacher clazzCourseTeacher);
-
-	PageResult<ClazzCourseTeacher> findClazzCoursePageByTeacherId(Long teacherId, Pageable pageable);
 }

@@ -1,7 +1,12 @@
 package com.wangjj.scoreinquirywxback.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,12 +15,13 @@ import java.util.List;
 
 /**
  * 考试类
- * 
+ * <p>
  * 考试分为年级统考和平时考试两种
  * 年级统考由管理员添加一次考试
  * 平时考试由科任老师添加考试
- *
  */
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+@ApiModel(description = "考试类")
 @ToString
 @Getter
 @Builder(toBuilder = true)
@@ -24,59 +30,81 @@ import java.util.List;
 @Entity
 @Table(name = "t_exam")
 public class Exam {
+
+	@ApiModelProperty(hidden = true)
 	@Id
 	@GeneratedValue
 	private Long id; //ID
-	/** 考试名称 */
-	private String examName ;
-	/** 考试时间 */
-	private String examTime ;
-	/** 考试备注 */
-	private String remark ;
-	/** 考试类型 */
-	@Enumerated(EnumType.STRING)
-	private ExamType examType ;
-	/** 创建人 */
-	private String createdBy ;
-	/** 创建时间 */
-	private Date createdTime ;
-	/** 更新人 */
-	private String updatedBy ;
-	/** 更新时间 */
-	private Date updatedTime ;
-
+	/**
+	 * 考试名称
+	 */
+	@ApiModelProperty(name = "examName", value = "考试名称", example = "2019级第一次期中考试")
+	private String examName;
+	/**
+	 * 考试时间
+	 */
+	@Temporal(TemporalType.DATE)
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@ApiModelProperty(name = "examTime", value = "考试时间", example = "2019-12-1", dataType = "Date")
+	private Date examTime;
+	/**
+	 * 考试备注
+	 */
+	@ApiModelProperty(name = "remark", value = "考试备注")
+	private String remark;
 	/**
 	 * 考试类型
 	 */
-	public enum ExamType{
-		/**
-		 * 考试类型：月考
-		 */
-		MONTH_TYPE,
-		/**
-		 * 考试类型：期中考试
-		 */
-		MIDTERM_TYPE,
-		/**
-		 * 考试类型：期末考试
-		 */
-		FINALTERM_TYPE
-	}
+	@ApiModelProperty(name = "examType", value = "考试类型:班级平时考试（0）,年级考试(1):月考、期中考、期末考", example = "0")
+	private Integer examType;
+	/**
+	 * 创建人
+	 */
+	@ApiModelProperty(hidden = true)
+	private String createdBy;
+	/**
+	 * 创建时间
+	 */
+	@ApiModelProperty(hidden = true)
+	private Date createdTime;
+	/**
+	 * 更新人
+	 */
+	@ApiModelProperty(hidden = true)
+	private String updatedBy;
+	/**
+	 * 更新时间
+	 */
+	@ApiModelProperty(hidden = true)
+	private Date updatedTime;
 
-	/*public static final int EXAM_MONTH_TYPE = 1;
 
+	/**
+	 * 年级考试类型
+	 */
+	public static final int GRADE_EXAM_TYPE = 1;
 
-	public static final int EXAM_MID_TERM_TYPE = 2;
+	/**
+	 * 班级考试类型
+	 */
+	public static final int CLAZZ_EXAM_TYPE = 0;
 
-
-	public static final int EXAM_FINAL_TERM_TYPE = 3;*/
 
 	/**
 	 * 年级id
 	 */
+	@ApiModelProperty(name = "gradeId", value = "年级Id", example = "2019")
 	private Long gradeId;
 	/**
 	 * 班级id
 	 */
-	private Long clazzId ; //考试的班级: 平时考试涉及到某个班级，统考则为所有班级
+	@ApiModelProperty(name = "clazzId", value = "班级Id", example = "201901")
+	private Long clazzId; //考试的班级: 平时考试涉及到某个班级，统考则为所有班级
+
+	/*@ApiModelProperty(hidden = true)
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<Course> courses = new ArrayList<> ();
+	@ApiModelProperty(hidden = true)
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<Student> students = new ArrayList<> ();*/
 }

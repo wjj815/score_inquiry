@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
+    <meta charset="UTF-8">
+    <title>年级详情页</title>
+</head>
+<body>
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <legend>年级课程信息</legend>
+    <form class="layui-form"  lay-filter="parentForm" action="">
+        <input type="hidden" id="studentId" name="studentId">
+        <input type="hidden" id="id" name = "id">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-inline">
+                    <select name="sex"  id="sex" lay-filter="sex" >
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">年龄</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="age" name="age" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">身份证号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="idCardNo" name="idCardNo"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">与学生关系</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="studentRelation" name="studentRelation"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="phone" name="phone"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item" align="center">
+            <div class="layui-inline">
+                <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">提交</button>
+            </div>
+
+            <div class="layui-inline">
+                <button type="reset" class="layui-btn layui-btn">重置</button>
+            </div>
+        </div>
+    </form>
+</fieldset>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+<script>
+    layui.use(['jquery','form','layer'],function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            layer = layui.layer;
+        var index = parent.layer.getFrameIndex(window.name);
+
+        function fillFormData(data) {
+            console.log(JSON.stringify(data));
+            form.val("parentForm",{
+                studentId:data.studentId,
+                id:data.id,
+                name:data.name,
+                studentName:data.studentName,
+                sex:data.sex,
+                age:data.age,
+                idCardNo:data.idCardNo,
+                phone:data.phone,
+                studentRelation:data.studentRelation
+            });
+
+        }
+
+        layui.fillData = function(data) {
+            var loadIndex = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+            fillFormData(data);
+            layer.close(loadIndex);
+        }
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            var studentId = $('#studentId').val();
+            var url = '/student/' + studentId + '/parent';
+            // alert(JSON.stringify(data.field));
+            ajaxPost($,url,JSON.stringify(data.field),function(data){
+                if(data.success) {
+                    parent.layer.msg(data.resultMsg);
+                    parent.layer.close(index);
+                }
+                layer.msg(data.resultMsg);
+            });
+
+            return false;
+        });
+    });
+
+
+</script>
+</body>
+</html>

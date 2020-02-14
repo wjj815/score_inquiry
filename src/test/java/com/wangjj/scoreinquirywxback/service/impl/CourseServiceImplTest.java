@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -32,5 +34,11 @@ class CourseServiceImplTest {
 
 		String ids = "125,";
 		courseService.deleteCourse(ids);
+	}
+
+	@Test
+	void getExamCourseList() {
+		List<Course> examCourseList = courseService.getGradeCourseList(2019L);
+		System.out.println(examCourseList);
 	}
 }

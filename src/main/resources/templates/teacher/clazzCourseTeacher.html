@@ -64,7 +64,7 @@
                     <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">提交</button>
                 </div>
                 <div class="layui-inline">
-                    <button type="reset" class="layui-btn layui-btn-warm"  lay-filter="demo1">重置</button>
+                    <button type="button" class="layui-btn layui-btn-warm" id="cancelBtn">取消</button>
                 </div>
             </div>
 
@@ -99,6 +99,12 @@
             init(data);
             layer.close(loadIndex);
         }
+
+        var index = parent.layer.getFrameIndex(window.name);
+
+        $("#cancelBtn").click(function(){
+           parent.layer.close(index);
+        });
 
         form.on('submit(demo1)', function(data){
             var url = '/teacher/clazzCourse';

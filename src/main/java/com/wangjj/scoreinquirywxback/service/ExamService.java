@@ -39,34 +39,5 @@ public interface ExamService {
 	/**
 	 * 删除考试
 	 */
-	void deleteExam(Long id);
-
-
-	/**
-	 * 分页获取考试成绩
-	 * @param examScore
-	 * @param pageable
-	 * @return
-	 */
-	Page<ExamScore> getExamScorePage(ExamScore examScore, Pageable pageable);
-
-	/**
-	 * 获取考试成绩列表
-	 * @param examScore
-	 * @return
-	 */
-	List<ExamScore> getExamScoreList(ExamScore examScore);
-
-	/**
-	 * 保存成绩
-	 * @param examScore
-	 */
-	void saveExamScore(ExamScore examScore);
-
-	/**
-	 * 删除考试成绩
-	 * @param id
-	 */
-	void deleteExamScore(Long id);
-
+	void deleteExam(String ids);
 }

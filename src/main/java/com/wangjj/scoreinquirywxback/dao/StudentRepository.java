@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @ClassName : StudentRepository
  * @Author : wangJJ
@@ -13,4 +15,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface StudentRepository extends JpaRepository<Student,Long>, JpaSpecificationExecutor<Student> {
+
+	List<Student> findByClazzId(Long clazzId);
+
+	List<Student> findByGradeId(Long gradeId);
+
+	void deleteByIdIn(List<Long> ids);
 }

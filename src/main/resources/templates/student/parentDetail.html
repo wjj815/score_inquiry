@@ -78,12 +78,8 @@
         layer = layui.layer;
         var index = parent.layer.getFrameIndex(window.name);
 
-        var loadIndex = layer.load(1, {
-            shade: [0.1,'#fff'] //0.1透明度的白色背景
-        });
-
         function fillFormData(data) {
-            console.log(data);
+            console.log(JSON.stringify(data));
             form.val("parentForm",{
                 studentId:data.studentId,
                 id:data.id,
@@ -99,6 +95,9 @@
         }
 
         layui.fillData = function(data) {
+            var loadIndex = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
             fillFormData(data);
             layer.close(loadIndex);
         }

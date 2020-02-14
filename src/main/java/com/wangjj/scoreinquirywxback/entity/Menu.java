@@ -14,7 +14,7 @@ import java.util.List;
  * @Description : 菜单实体类对象
  */
 @ToString(exclude = {"roleList","parentMenu"})
-@Getter
+@Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,14 +39,14 @@ public class Menu {
 	/*菜单顺序*/
 	private Integer menuOrder;
 	/*一个子菜单只能对应一个父菜单*/
-	@OneToMany(mappedBy = "parentMenu",cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "parentMenu",cascade = CascadeType.ALL)
 	private final List<Menu> childMenu = new ArrayList<>();
 	/*父菜单*/
 	@JsonIgnore
 	@ManyToOne
 	private Menu parentMenu;
 	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "t_role_menu",
 			joinColumns = @JoinColumn(name = "menu_id",referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))

@@ -29,17 +29,12 @@ public interface StudentService {
 	 */
 	void saveStudent(Student student);
 
-	/**
-	 * 更改学生信息
-	 * @param student
-	 */
-	void updateStudent(Student student);
 
 	/**
 	 * 删除学生信息
-	 * @param student
+	 * @param ids
 	 */
-	void deleteStudent(Student student);
+	void deleteStudent(String ids);
 
 
 	List<Student> findStudent(Student student);

@@ -1,7 +1,10 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
+import com.wangjj.scoreinquirywxback.dao.ClazzCourseTeacherRepository;
 import com.wangjj.scoreinquirywxback.dao.CourseRepository;
+import com.wangjj.scoreinquirywxback.dao.GradeCourseRepository;
 import com.wangjj.scoreinquirywxback.entity.Course;
+import com.wangjj.scoreinquirywxback.entity.GradeCourse;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.CourseService;
 import com.wangjj.scoreinquirywxback.util.ParameterUtils;
@@ -13,7 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName : CourseServiceImpl
@@ -27,6 +32,12 @@ public class CourseServiceImpl implements CourseService {
 
 	@Autowired
 	private CourseRepository courseRepository;
+
+	@Autowired
+	private ClazzCourseTeacherRepository clazzCourseTeacherRepository;
+
+	@Autowired
+	private GradeCourseRepository gradeCourseRepository;
 
 	@Override
 	public List<Course> getCourseList() {
@@ -51,6 +62,28 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public void deleteCourse(String courseIds) {
 		List<Long> collect = ParameterUtils.analyse(courseIds);
+		clazzCourseTeacherRepository.deleteByCourseIdIn(collect);
 		courseRepository.deleteByIdIn(collect);
 	}
+
+	@Override
+	public List<Course> getGradeCourseList(Long gradeId) {
+		List<GradeCourse> byGradeId = gradeCourseRepository.findByGradeId(gradeId);
+		List<Long> collect = byGradeId.stream()
+				.map(GradeCourse::getCourseId)
+				.sorted(Long::compare)
+				.collect(Collectors.toList());
+		return courseRepository.findAllById(collect);
+	}
+
+	@Override
+	public void saveGradeCourse(GradeCourse gradeCourse) {
+		gradeCourseRepository.save(gradeCourse);
+	}
+
+	public void deleteGradeCourse(String ids) {
+		List<Long> collect = ParameterUtils.analyse(ids);
+		gradeCourseRepository.deleteByIdIn(collect);
+	}
+
 }

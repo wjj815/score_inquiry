@@ -183,9 +183,9 @@
             } else if (obj.event === 'edit') {
 
                 var url = '/parent';
-                openModel(url,layer,"编辑家长详情",function (layero,index) {
+                openModel(url,parent.layer,"编辑家长详情",function (layero,index) {
                     ajaxGet($,"/student/"+studentId+'/parent/'+data.id,function (data) {
-                        var iframe = window['layui-layer-iframe'+index];
+                        var iframe = parent.window['layui-layer-iframe'+index];
                         var json = data.data;
                         json['studentId'] = studentId;
                         iframe.layui.fillData(json);

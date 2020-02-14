@@ -2,6 +2,7 @@ package com.wangjj.scoreinquirywxback.service;
 
 import com.wangjj.scoreinquirywxback.entity.Course;
 import com.wangjj.scoreinquirywxback.entity.Grade;
+import com.wangjj.scoreinquirywxback.entity.GradeCourse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -39,4 +40,9 @@ public interface CourseService {
 	 * @param courseIds
 	 */
 	void deleteCourse(String courseIds);
+
+	List<Course> getGradeCourseList(Long gradeId);
+
+	void saveGradeCourse(GradeCourse gradeCourse);
+
 }

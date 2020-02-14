@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -84,6 +86,7 @@ public class Student {
 	private String createdBy ;
 	/** 创建时间 */
 	@ExcelIgnore
+	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdTime ;
 
@@ -95,6 +98,7 @@ public class Student {
 	@ExcelIgnore
 	@ApiParam(hidden = true)
 	@Temporal(TemporalType.TIMESTAMP)
+	@LastModifiedDate
 	private Date updateTime ;
 	/** 所在班级 */
 	/*@Transient//jpa忽略字段*/
@@ -113,5 +117,6 @@ public class Student {
 		inverseJoinColumns = @JoinColumn(name = "parent_id",referencedColumnName = "id")
 	)
 	private List<Parent> parents = new ArrayList<>(); //家长信息*/
-
+	/*@ManyToMany(mappedBy = "students")
+	List<Exam> exams = new ArrayList<> ();*/
 }

@@ -15,4 +15,8 @@ import java.util.List;
 public interface ClazzCourseTeacherRepository extends JpaRepository<ClazzCourseTeacher,Long>, JpaSpecificationExecutor<ClazzCourseTeacher> {
 
 	List<ClazzCourseTeacher> findByTeacherId(Long id);
+
+	int deleteByIdIn(List<Long> ids);
+
+	int deleteByCourseIdIn(List<Long> ids);
 }

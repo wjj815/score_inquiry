@@ -6,7 +6,9 @@ import com.wangjj.scoreinquirywxback.entity.Student;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.StudentService;
 import com.wangjj.scoreinquirywxback.util.ExcelUtils;
+import com.wangjj.scoreinquirywxback.util.HttpUtils;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
+import com.wangjj.scoreinquirywxback.vo.request.IdsParameter;
 import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -60,6 +62,14 @@ public class StudentController {
 		return APIResultBean.ok("操作成功！").build();
 	}
 
+	@DeleteMapping
+	@ApiOperation(value = "删除学生信息")
+	@ApiImplicitParam(name = "idsParameter",value = "学生学号的集合", dataType = "IdsParameter")
+	public APIResultBean saveStudent(@RequestBody IdsParameter idsParameter) {
+		studentService.deleteStudent(idsParameter.getIds());
+		return APIResultBean.ok("删除成功！").build();
+	}
+
 	@PostMapping("/excel")
 	@ApiOperation(value = "导入学生信息excel")
 	@ApiImplicitParam(name = "file" ,value = "excel文件(最大允许上传文件大小为100M)", dataTypeClass = MultipartFile.class)
@@ -86,18 +96,9 @@ public class StudentController {
 	})
 	public APIResultBean exportStudentList(@RequestParam(required = false) Long clazzId,
 										   @RequestParam(required = false) Long gradeId) {
-		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-		HttpServletResponse response = Objects.requireNonNull(requestAttributes).getResponse();
-		Objects.requireNonNull(response).setContentType("application/force-download");
-		response.setCharacterEncoding("utf-8");
-		try {
-			// 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
-			String fileName = URLEncoder.encode("学生信息", "UTF-8");
-			response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new GlobalException("导出Excel异常");
-		}
+
+		HttpServletResponse response = HttpUtils.getExcelResponse("学生信息");
+
 		List<Student> studentList = studentService.findStudent(new Student().toBuilder()
 				.clazzId(clazzId)
 				.gradeId(gradeId)

@@ -1,7 +1,10 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
+import com.wangjj.scoreinquirywxback.dao.GradeCourseRepository;
 import com.wangjj.scoreinquirywxback.dao.GradeRepository;
+import com.wangjj.scoreinquirywxback.entity.Course;
 import com.wangjj.scoreinquirywxback.entity.Grade;
+import com.wangjj.scoreinquirywxback.entity.GradeCourse;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.GradeService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,9 @@ public class GradeServiceImpl implements GradeService {
 
 	@Autowired
 	private GradeRepository gradeRepository;
+
+	@Autowired
+	private GradeCourseRepository gradeCourseRepository;
 
 	@Override
 	public void addGrade(Grade grade) {
@@ -78,5 +84,7 @@ public class GradeServiceImpl implements GradeService {
 			return null;
 		},pageable);
 	}
+
+
 
 }

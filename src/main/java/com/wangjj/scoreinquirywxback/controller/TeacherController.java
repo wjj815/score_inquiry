@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.wangjj.scoreinquirywxback.entity.ClazzCourseTeacher;
 import com.wangjj.scoreinquirywxback.entity.Teacher;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
+import com.wangjj.scoreinquirywxback.service.ClazzCourseTeacherService;
 import com.wangjj.scoreinquirywxback.service.TeacherService;
 import com.wangjj.scoreinquirywxback.util.ExcelUtils;
 import com.wangjj.scoreinquirywxback.util.HttpUtils;
@@ -37,6 +38,9 @@ public class TeacherController {
 
 	@Autowired
 	private TeacherService teacherService;
+
+	@Autowired
+	private ClazzCourseTeacherService clazzCourseTeacherService;
 
 	@ApiOperation(value = "新增/修改教师")
 	@PostMapping
@@ -113,7 +117,15 @@ public class TeacherController {
 	@PostMapping("/clazzCourse")
 	@ApiImplicitParam(name = "clazzCourseTeacher",value = "关联数据",dataType = "ClazzCourseTeacher")
 	public APIResultBean saveClazzCourseTeacher(@RequestBody ClazzCourseTeacher clazzCourseTeacher){
-		teacherService.saveClazzCourse(clazzCourseTeacher);
+		clazzCourseTeacherService.saveClazzCourse(clazzCourseTeacher);
+		return APIResultBean.ok("操作成功！").build();
+	}
+
+	@ApiOperation(value = "删除关联老师对应的班级课程")
+	@DeleteMapping("/clazzCourse")
+	@ApiImplicitParam(name = "clazzCourseTeacher",value = "关联数据",dataType = "ClazzCourseTeacher")
+	public APIResultBean deleteClazzCourseTeacher(@RequestBody IdsParameter idsParameter){
+		clazzCourseTeacherService.deleteClazzCourseTeacher(idsParameter.getIds());
 		return APIResultBean.ok("操作成功！").build();
 	}
 
@@ -127,7 +139,7 @@ public class TeacherController {
 	public APIResultBean findClazzCourseTeacher(@RequestParam Integer page,
 												@RequestParam Integer limit,
 												@RequestParam(required = false) Long teacherId){
-		PageResult<ClazzCourseTeacher> pageResult = teacherService.findClazzCoursePageByTeacherId(teacherId, PageRequest.of(page - 1, limit));
+		PageResult<ClazzCourseTeacher> pageResult = clazzCourseTeacherService.findClazzCoursePageByTeacherId(teacherId, PageRequest.of(page - 1, limit));
 		return APIResultBean.ok(pageResult).build();
 	}
 }

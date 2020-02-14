@@ -1,5 +1,6 @@
 package com.wangjj.scoreinquirywxback.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,8 +10,9 @@ import java.util.Date;
  * 考试成绩类
  *
  */
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 @ToString
-@Getter
+@Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,6 +34,8 @@ public class ExamScore {
 	private Date updatedTime ;
 	/**考试科目*/
 	private Long courseId;
+	@Transient
+	private Course course;
 	/**考试学生*/
 	private Long studentId;
 	/**对应哪次考试*/

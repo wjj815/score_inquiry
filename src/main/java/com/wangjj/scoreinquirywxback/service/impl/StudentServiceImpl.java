@@ -13,6 +13,7 @@ import com.wangjj.scoreinquirywxback.entity.StudentParent;
 import com.wangjj.scoreinquirywxback.excel.StudentDataListener;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.StudentService;
+import com.wangjj.scoreinquirywxback.util.ParameterUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -73,14 +74,12 @@ public class StudentServiceImpl implements StudentService {
 		studentRepository.save(student);
 	}
 
-	@Override
-	public void updateStudent(Student student) {
-		studentRepository.save(student);
-	}
 
+	@Transactional
 	@Override
-	public void deleteStudent(Student student) {
-		studentRepository.delete(student);
+	public void deleteStudent(String ids) {
+		List<Long> collect = ParameterUtils.analyse(ids);
+		studentRepository.deleteByIdIn(collect);
 	}
 
 

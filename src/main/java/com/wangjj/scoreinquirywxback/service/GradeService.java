@@ -1,6 +1,7 @@
 package com.wangjj.scoreinquirywxback.service;
 
 import com.wangjj.scoreinquirywxback.entity.Grade;
+import com.wangjj.scoreinquirywxback.entity.GradeCourse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,4 +26,5 @@ public interface GradeService {
 	List<Grade> findGradeList();
 
 	Page<Grade> findGradePage(Grade grade, Pageable pageable);
+
 }

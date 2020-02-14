@@ -40,13 +40,6 @@ public class TeacherServiceImpl implements TeacherService {
 	@Autowired
 	private TeacherRepository teacherRepository;
 
-	@Autowired
-	private ClazzCourseTeacherRepository clazzCourseTeacherRepository;
-	@Autowired
-	private ClazzRepository clazzRepository;
-
-	@Autowired
-	private CourseRepository courseRepository;
 
 	@Transactional
 	@Override
@@ -88,37 +81,4 @@ public class TeacherServiceImpl implements TeacherService {
 		return teacherRepository.getOne(teacherId);
 	}
 
-
-	@Override
-	public void saveClazzCourse(ClazzCourseTeacher clazzCourseTeacher) {
-		if(clazzCourseTeacherRepository.exists(Example.of(clazzCourseTeacher))) {
-			throw new GlobalException("该班级课程老师已存在！");
-		}
-		clazzCourseTeacherRepository.save(clazzCourseTeacher);
-	}
-
-	public void delete(Long id) {
-		clazzCourseTeacherRepository.deleteById(id);
-	}
-
-	@Transactional
-	@Override
-	public PageResult<ClazzCourseTeacher> findClazzCoursePageByTeacherId(Long teacherId, Pageable pageable) {
-		ClazzCourseTeacher clazzCourseTeacher = ClazzCourseTeacher.builder().teacherId(teacherId).build();
-		Page<ClazzCourseTeacher> list = clazzCourseTeacherRepository.findAll(Example.of(clazzCourseTeacher),pageable);
-		PageResult<ClazzCourseTeacher> page = new PageResult<>();
-		BeanUtils.copyProperties(list,page);
-		List<ClazzCourseTeacher> l = new ArrayList<> ();
-		list.getContent().forEach(e->{
-			Clazz clazz = clazzRepository.getOne(e.getClazzId());
-			Course course= courseRepository.getOne(e.getCourseId());
-			ClazzCourseTeacher courseTeacher = ClazzCourseTeacher.builder().build();
-			BeanUtils.copyProperties(e,courseTeacher);
-			courseTeacher.setClazz(clazz);
-			courseTeacher.setCourse(course);
-			l.add(courseTeacher);
-		});
-		page.setContent(l);
-		return page;
-	}
 }

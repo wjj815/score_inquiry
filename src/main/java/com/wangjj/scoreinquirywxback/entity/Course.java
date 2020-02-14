@@ -35,16 +35,18 @@ public class Course {
 	/** 课程说明 */
 	@ApiModelProperty(name = "introduction",value = "课程介绍",example = "关于汉语的学习")
 	private String introduction ;
-	/** 创建人 */
+	/** 创建人 *//*
 	@ApiModelProperty(hidden = true)
 	private String createdBy ;
-	/** 创建时间 */
+	*//** 创建时间 *//*
 	@ApiModelProperty(hidden = true)
 	private Date createdTime ;
-	/** 更新人 */
+	*//** 更新人 *//*
 	@ApiModelProperty(hidden = true)
 	private String updatedBy ;
-	/** 更新时间 */
+	*//** 更新时间 *//*
 	@ApiModelProperty(hidden = true)
-	private Date updatedTime ;
+	private Date updatedTime ;*/
+	/*@ManyToMany(mappedBy = "courses")
+	private List<Exam> exams = new ArrayList<> ();*/
 }

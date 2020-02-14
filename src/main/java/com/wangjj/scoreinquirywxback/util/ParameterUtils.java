@@ -2,6 +2,7 @@ package com.wangjj.scoreinquirywxback.util;
 
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
@@ -35,6 +36,10 @@ public class ParameterUtils {
 				.filter(s->!StringUtils.isEmpty(s))
 				.map(Long::parseLong)
 				.collect(Collectors.toList());
+		/*空校验*/
+		if(CollectionUtils.isEmpty(collect)) {
+			throw new GlobalException("参数不能为空！");
+		}
 		return collect;
 	}
 }

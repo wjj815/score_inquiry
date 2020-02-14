@@ -15,7 +15,7 @@
                         <button class="layui-btn layui-btn-normal layui-btn-sm" style="width: 40px" lay-event="getCheckData">
                             <i class="iconfont layui-extendjia-"></i>
                         </button>
-                        <button class="layui-btn layui-btn-danger layui-btn-sm" style="width: 40px" lay-event="getCheckLength">
+                        <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" style="width: 40px" id="deleteBtn">
                             <i class="iconfont layui-extenddelete"></i>
                         </button>
                     </div>
@@ -118,32 +118,6 @@
             }
         });
 
-        //头工具栏事件
-        table.on('toolbar(test)', function (obj) {
-            var checkStatus = table.checkStatus(obj.config.id);
-            switch (obj.event) {
-                case 'getCheckData':
-                    var data = checkStatus.data;
-                    layer.alert(JSON.stringify(data));
-                    break;
-                case 'getCheckLength':
-                    var data = checkStatus.data;
-                    layer.msg('选中了：' + data.length + ' 个');
-                    break;
-                case 'isAll':
-                    layer.msg(checkStatus.isAll ? '全选' : '未全选');
-                    break;
-
-                //自定义头工具栏右侧图标 - 提示
-                case 'LAYTABLE_TIPS':
-                    layer.alert('这是工具栏右侧自定义的一个图标按钮');
-                    break;
-            }
-            ;
-        });
-
-
-
         //监听行工具事件
         table.on('tool(test)', function (obj) {
             var data = obj.data;
@@ -199,6 +173,31 @@
                            clazzId: clazzId
                     }
                 });
+            },
+            delete: function(){ //获取选中数目
+                var checkStatus = table.checkStatus('testReload')
+                    ,data = checkStatus.data;
+                if(data.length <= 0) {
+                    layer.msg("未选中数据");
+                    return;
+                }
+                var ids = '';
+                for(var x in data) {
+                    ids+=data[x].id+",";
+                }
+                var json = {};
+                json['ids'] = ids;
+                layer.confirm('<font color="red">您确定要删除吗？</font>', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    ajaxDelete($,'/student',JSON.stringify(json),function (data) {
+                        if(data.success) {
+                            t.reload();
+                        }
+                        layer.msg(data.resultMsg);
+                    });
+                }, function(){});
+
             }
         };
 
@@ -238,7 +237,9 @@
             active['reload'].call(this);
         });
 
-
+        $("#deleteBtn").click(function () {
+            active['delete'].call();
+        });
     });
 </script>
 </html>

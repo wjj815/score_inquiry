@@ -1,6 +1,8 @@
 package com.wangjj.scoreinquirywxback.controller;
 
+import com.wangjj.scoreinquirywxback.entity.Course;
 import com.wangjj.scoreinquirywxback.entity.Grade;
+import com.wangjj.scoreinquirywxback.service.CourseService;
 import com.wangjj.scoreinquirywxback.service.GradeService;
 import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
 import io.swagger.annotations.Api;
@@ -27,6 +29,10 @@ public class GradeController {
 
 	@Autowired
 	private GradeService gradeService;
+
+	@Autowired
+	private CourseService courseService;
+
 
 	@PostMapping
 	@ApiOperation(value = "增加年级信息")
@@ -73,5 +79,13 @@ public class GradeController {
 	public APIResultBean findGradeList() {
 		List<Grade> gradeList = gradeService.findGradeList();
 		return APIResultBean.ok(gradeList).build();
+	}
+
+	@GetMapping("/{gradeId}/course")
+	@ApiOperation(value = "获取年级下的课程")
+	@ApiImplicitParam(name = "gradeId", value = "年级id")
+	public APIResultBean findGradeCourseList(@PathVariable Long gradeId) {
+		List<Course> gradeCourseList = courseService.getGradeCourseList(gradeId);
+		return APIResultBean.ok(gradeCourseList).build();
 	}
 }

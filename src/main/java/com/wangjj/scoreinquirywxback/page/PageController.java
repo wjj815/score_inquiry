@@ -1,13 +1,13 @@
 package com.wangjj.scoreinquirywxback.page;
+import	java.util.HashMap;
+import	java.util.ArrayList;
 
-import com.wangjj.scoreinquirywxback.entity.Clazz;
-import com.wangjj.scoreinquirywxback.entity.Grade;
-import com.wangjj.scoreinquirywxback.entity.Student;
-import com.wangjj.scoreinquirywxback.entity.User;
-import com.wangjj.scoreinquirywxback.service.ClazzService;
-import com.wangjj.scoreinquirywxback.service.GradeService;
-import com.wangjj.scoreinquirywxback.service.StudentService;
+import com.alibaba.fastjson.JSON;
+import com.wangjj.scoreinquirywxback.entity.*;
+import com.wangjj.scoreinquirywxback.service.*;
 import com.wangjj.scoreinquirywxback.util.SessionUtils;
+import com.wangjj.scoreinquirywxback.vo.response.PageResult;
+import com.wangjj.scoreinquirywxback.vo.response.StudentScore;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName : PageController
@@ -33,12 +35,16 @@ public class PageController {
 	private final StudentService studentService;
 	private final GradeService gradeService;
 	private final ClazzService clazzService;
+	private final CourseService courseService;
+	private final ExamScoreService examScoreService;
 
 	@Autowired
-	public PageController(StudentService studentService, GradeService gradeService, ClazzService clazzService) {
+	public PageController(StudentService studentService, GradeService gradeService, ClazzService clazzService, CourseService courseService, ExamScoreService examScoreService) {
 		this.studentService = studentService;
 		this.gradeService = gradeService;
 		this.clazzService = clazzService;
+		this.courseService = courseService;
+		this.examScoreService = examScoreService;
 	}
 
 	@ApiOperation(value = "主页面")
@@ -117,5 +123,22 @@ public class PageController {
 		model.addAttribute("clazzList",clazzList);
 		model.addAttribute("student",student);
 		return "student/studentDetail";
+	}
+
+	@GetMapping("/examScore")
+	public String examScore(@RequestParam Long gradeId, Model model) {
+		List<Course> gradeCourseList = courseService.getGradeCourseList(gradeId);
+		model.addAttribute("courseList",gradeCourseList);
+		return "exam//examScore";
+	}
+
+	@GetMapping("/exam")
+	public String examList() {
+		return "exam/examList";
+	}
+
+	@GetMapping("/examDetail")
+	public String examDetail() {
+		return "exam/examDetail";
 	}
 }
