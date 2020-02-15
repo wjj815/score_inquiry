@@ -1,12 +1,10 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
-import com.wangjj.scoreinquirywxback.entity.Course;
+import com.wangjj.scoreinquirywxback.pojo.entity.Course;
 import com.wangjj.scoreinquirywxback.service.CourseService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class CourseServiceImplTest {

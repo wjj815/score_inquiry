@@ -1,16 +1,10 @@
 package com.wangjj.scoreinquirywxback.interceptor;
 
 
-import com.alibaba.fastjson.JSON;
-import com.wangjj.scoreinquirywxback.constant.ResultCode;
-import com.wangjj.scoreinquirywxback.util.SessionUtils;
-import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
-import org.apache.http.entity.ContentType;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Objects;
 
 /**
  * @ClassName : LoginInterceptor

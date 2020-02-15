@@ -1,7 +1,8 @@
 package com.wangjj.scoreinquirywxback.dao;
 
-import com.wangjj.scoreinquirywxback.entity.Exam;
+import com.wangjj.scoreinquirywxback.pojo.entity.Exam;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  * @ClassName : ExamRepository
@@ -9,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Date : 2020/1/21 20:01
  * @Description : 班级表操作
  */
-public interface ExamRepository extends JpaRepository<Exam,Long> {
+public interface ExamRepository extends JpaRepository<Exam,Long>, JpaSpecificationExecutor<Exam> {
 }

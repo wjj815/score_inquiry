@@ -1,6 +1,6 @@
 package com.wangjj.scoreinquirywxback.dao;
 
-import com.wangjj.scoreinquirywxback.entity.Clazz;
+import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

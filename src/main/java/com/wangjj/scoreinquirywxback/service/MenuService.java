@@ -1,6 +1,6 @@
 package com.wangjj.scoreinquirywxback.service;
 
-import com.wangjj.scoreinquirywxback.entity.Menu;
+import com.wangjj.scoreinquirywxback.pojo.entity.Menu;
 
 import java.util.List;
 

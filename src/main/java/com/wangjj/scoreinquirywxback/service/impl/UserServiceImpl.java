@@ -1,14 +1,13 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
 import com.wangjj.scoreinquirywxback.dao.UserRepository;
-import com.wangjj.scoreinquirywxback.entity.User;
+import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.UserService;
-import com.wangjj.scoreinquirywxback.vo.request.LoginParameter;
+import com.wangjj.scoreinquirywxback.pojo.dto.request.LoginParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Objects;
 
 /**

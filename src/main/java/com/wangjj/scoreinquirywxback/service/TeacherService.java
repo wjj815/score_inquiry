@@ -1,8 +1,8 @@
 package com.wangjj.scoreinquirywxback.service;
 
-import com.wangjj.scoreinquirywxback.entity.ClazzCourseTeacher;
-import com.wangjj.scoreinquirywxback.entity.Teacher;
-import com.wangjj.scoreinquirywxback.vo.response.PageResult;
+import com.wangjj.scoreinquirywxback.pojo.entity.ClazzCourseTeacher;
+import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

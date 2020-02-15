@@ -1,7 +1,8 @@
 package com.wangjj.scoreinquirywxback.service;
 
-import com.wangjj.scoreinquirywxback.entity.Clazz;
-import com.wangjj.scoreinquirywxback.entity.Grade;
+import com.wangjj.scoreinquirywxback.pojo.dto.ClazzDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
+import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,12 +18,12 @@ public interface ClazzService {
 
 	/**
 	 * 通过年级id获取年级下的班级信息
-	 * @param clazz
+	 * @param clazzDTO
 	 * @return
 	 */
-	List<Clazz> getClazzList(Clazz clazz);
+	List<ClazzDTO> getClazzList(ClazzDTO clazzDTO);
 
-	Page<Clazz> getClazzListByPage(Clazz clazz, Pageable pageable);
+	PageResult<ClazzDTO> getClazzListByPage(ClazzDTO clazzDTO, Pageable pageable);
 
 	/**
 	 * 添加班级
@@ -38,7 +39,7 @@ public interface ClazzService {
 	 */
 	void deleteClazz(Long id);
 
-	void updateClazz(Clazz clazz);
-
 	Clazz findById(Long id);
+
+	void saveClazz(ClazzDTO clazzDTO);
 }

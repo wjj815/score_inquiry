@@ -1,20 +1,16 @@
 package com.wangjj.scoreinquirywxback.controller;
 
-import com.wangjj.scoreinquirywxback.constant.ResultCode;
-import com.wangjj.scoreinquirywxback.entity.User;
+import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import com.wangjj.scoreinquirywxback.service.UserService;
 import com.wangjj.scoreinquirywxback.util.SessionUtils;
-import com.wangjj.scoreinquirywxback.vo.request.LoginParameter;
-import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
+import com.wangjj.scoreinquirywxback.pojo.dto.request.LoginParameter;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
 
 /**
  * @ClassName : UserController

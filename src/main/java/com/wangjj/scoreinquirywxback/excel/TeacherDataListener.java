@@ -1,6 +1,6 @@
 package com.wangjj.scoreinquirywxback.excel;
 
-import com.wangjj.scoreinquirywxback.entity.Teacher;
+import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

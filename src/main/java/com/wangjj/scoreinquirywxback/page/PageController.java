@@ -1,9 +1,9 @@
 package com.wangjj.scoreinquirywxback.page;
 
-import com.wangjj.scoreinquirywxback.entity.Clazz;
-import com.wangjj.scoreinquirywxback.entity.Grade;
-import com.wangjj.scoreinquirywxback.entity.Student;
-import com.wangjj.scoreinquirywxback.entity.User;
+import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
+import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
+import com.wangjj.scoreinquirywxback.pojo.entity.Student;
+import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import com.wangjj.scoreinquirywxback.service.ClazzService;
 import com.wangjj.scoreinquirywxback.service.GradeService;
 import com.wangjj.scoreinquirywxback.service.StudentService;
@@ -113,8 +113,8 @@ public class PageController {
 		List<Grade> gradeList = gradeService.findGradeList();
 //		log.info("student:{}", JSON.toJSON(student));
 		model.addAttribute("gradeList",gradeList);
-		List<Clazz> clazzList = clazzService.getClazzList(Clazz.builder().gradeId(student.getGradeId()).build());
-		model.addAttribute("clazzList",clazzList);
+		/*List<Clazz> clazzList = clazzService.getClazzList(Clazz.builder().gradeId(student.getGradeId()).build());
+		model.addAttribute("clazzList",clazzList);*/
 		model.addAttribute("student",student);
 		return "student/studentDetail";
 	}

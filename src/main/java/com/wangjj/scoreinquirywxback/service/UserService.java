@@ -1,7 +1,7 @@
 package com.wangjj.scoreinquirywxback.service;
 
-import com.wangjj.scoreinquirywxback.entity.User;
-import com.wangjj.scoreinquirywxback.vo.request.LoginParameter;
+import com.wangjj.scoreinquirywxback.pojo.entity.User;
+import com.wangjj.scoreinquirywxback.pojo.dto.request.LoginParameter;
 
 /**
  * @ClassName : UserService

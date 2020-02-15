@@ -1,21 +1,11 @@
 package com.wangjj.scoreinquirywxback.excel;
 
-import com.alibaba.excel.context.AnalysisContext;
-import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.excel.exception.ExcelDataConvertException;
-import com.alibaba.excel.util.DateUtils;
-import com.alibaba.fastjson.JSON;
-import com.wangjj.scoreinquirywxback.dao.StudentRepository;
-import com.wangjj.scoreinquirywxback.entity.Student;
+import com.wangjj.scoreinquirywxback.pojo.entity.Student;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * @ClassName : StudentDataListener

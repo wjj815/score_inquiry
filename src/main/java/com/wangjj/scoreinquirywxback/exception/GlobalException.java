@@ -1,7 +1,7 @@
 package com.wangjj.scoreinquirywxback.exception;
 
 import com.wangjj.scoreinquirywxback.constant.ResultCode;
-import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
 
 /**
  * @ClassName : GlobalException

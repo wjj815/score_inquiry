@@ -1,7 +1,7 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
 import com.wangjj.scoreinquirywxback.dao.MenuRepository;
-import com.wangjj.scoreinquirywxback.entity.Menu;
+import com.wangjj.scoreinquirywxback.pojo.entity.Menu;
 import com.wangjj.scoreinquirywxback.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -1,13 +1,12 @@
 package com.wangjj.scoreinquirywxback.dao;
 
-import com.wangjj.scoreinquirywxback.entity.Menu;
-import com.wangjj.scoreinquirywxback.entity.Role;
+import com.wangjj.scoreinquirywxback.pojo.entity.Menu;
+import com.wangjj.scoreinquirywxback.pojo.entity.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest

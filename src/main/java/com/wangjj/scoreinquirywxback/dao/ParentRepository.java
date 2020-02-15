@@ -1,9 +1,7 @@
 package com.wangjj.scoreinquirywxback.dao;
 
-import com.wangjj.scoreinquirywxback.entity.Parent;
+import com.wangjj.scoreinquirywxback.pojo.entity.Parent;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 /**
  * @ClassName : ParentRepository

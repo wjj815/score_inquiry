@@ -1,9 +1,9 @@
 package com.wangjj.scoreinquirywxback.controller;
 
-import com.wangjj.scoreinquirywxback.entity.Course;
+import com.wangjj.scoreinquirywxback.pojo.entity.Course;
 import com.wangjj.scoreinquirywxback.service.CourseService;
-import com.wangjj.scoreinquirywxback.vo.request.IdsParameter;
-import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
+import com.wangjj.scoreinquirywxback.pojo.dto.request.IdsParameter;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

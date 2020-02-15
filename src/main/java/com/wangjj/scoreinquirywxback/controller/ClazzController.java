@@ -1,11 +1,8 @@
 package com.wangjj.scoreinquirywxback.controller;
 
-import com.wangjj.scoreinquirywxback.entity.Clazz;
-import com.wangjj.scoreinquirywxback.entity.Grade;
+import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import com.wangjj.scoreinquirywxback.service.ClazzService;
-import com.wangjj.scoreinquirywxback.vo.request.PageParameter;
-import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
-import com.wangjj.scoreinquirywxback.vo.response.Layui;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -43,11 +40,11 @@ public class ClazzController {
 								   @RequestParam(required = false) Long gradeId) {
 		System.out.println(page + " " + limit);
 		PageRequest pageRequest = PageRequest.of(page - 1,limit);
-		Page<Clazz> clazzPage = clazzService.getClazzListByPage(Clazz.builder()
-				.gradeId(gradeId)
+		/*Page<Clazz> clazzPage = clazzService.getClazzListByPage(Clazz.builder()
+				*//*.gradeId(gradeId)*//*
 				.build(),
-				pageRequest);
-		return APIResultBean.ok(clazzPage).build();
+				pageRequest);*/
+		return APIResultBean.ok(/*clazzPage*/).build();
 	}
 
 	@GetMapping("/list")
@@ -57,10 +54,10 @@ public class ClazzController {
 	})
 	public APIResultBean clazzList(@RequestParam Long gradeId) {
 
-		List<Clazz> clazzList = clazzService.getClazzList(Clazz.builder()
-						.gradeId(gradeId)
-						.build());
-		return APIResultBean.ok(clazzList).build();
+		/*List<Clazz> clazzList = clazzService.getClazzList(Clazz.builder()
+						*//*.gradeId(gradeId)*//*
+						.build());*/
+		return APIResultBean.ok(/*clazzList*/).build();
 	}
 
 	@PostMapping

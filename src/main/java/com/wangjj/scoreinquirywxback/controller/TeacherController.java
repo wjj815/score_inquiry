@@ -1,15 +1,15 @@
 package com.wangjj.scoreinquirywxback.controller;
 
 import com.alibaba.excel.EasyExcel;
-import com.wangjj.scoreinquirywxback.entity.ClazzCourseTeacher;
-import com.wangjj.scoreinquirywxback.entity.Teacher;
+import com.wangjj.scoreinquirywxback.pojo.entity.ClazzCourseTeacher;
+import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.TeacherService;
 import com.wangjj.scoreinquirywxback.util.ExcelUtils;
 import com.wangjj.scoreinquirywxback.util.HttpUtils;
-import com.wangjj.scoreinquirywxback.vo.request.IdsParameter;
-import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
-import com.wangjj.scoreinquirywxback.vo.response.PageResult;
+import com.wangjj.scoreinquirywxback.pojo.dto.request.IdsParameter;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

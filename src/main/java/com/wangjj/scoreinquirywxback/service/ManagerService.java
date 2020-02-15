@@ -1,6 +1,6 @@
 package com.wangjj.scoreinquirywxback.service;
 
-import com.wangjj.scoreinquirywxback.entity.Manager;
+import com.wangjj.scoreinquirywxback.pojo.entity.Manager;
 
 /**
  * @ClassName : Manager

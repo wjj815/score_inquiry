@@ -1,25 +1,13 @@
 package com.wangjj.scoreinquirywxback.util;
 
-import com.alibaba.excel.EasyExcel;
-import com.wangjj.scoreinquirywxback.entity.Student;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
-import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.Objects;
 
 /**

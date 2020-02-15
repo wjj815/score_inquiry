@@ -1,7 +1,7 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
 import com.wangjj.scoreinquirywxback.dao.CourseRepository;
-import com.wangjj.scoreinquirywxback.entity.Course;
+import com.wangjj.scoreinquirywxback.pojo.entity.Course;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.CourseService;
 import com.wangjj.scoreinquirywxback.util.ParameterUtils;
@@ -30,7 +30,7 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public List<Course> getCourseList() {
-		return courseRepository.findAll((root, query, criteriaBuilder) -> null);
+		return courseRepository.findAll();
 	}
 
 	@Override

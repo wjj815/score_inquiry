@@ -1,13 +1,13 @@
 package com.wangjj.scoreinquirywxback.controller;
 
 import com.alibaba.excel.EasyExcel;
-import com.wangjj.scoreinquirywxback.entity.Parent;
-import com.wangjj.scoreinquirywxback.entity.Student;
+import com.wangjj.scoreinquirywxback.pojo.entity.Parent;
+import com.wangjj.scoreinquirywxback.pojo.entity.Student;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.StudentService;
 import com.wangjj.scoreinquirywxback.util.ExcelUtils;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
-import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -17,7 +17,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -56,7 +55,7 @@ public class StudentController {
 		Student originalStudent = Objects.isNull(student.getId()) ?
 				new Student() : studentService.findStudentById(student.getId());
 		BeanUtils.copyProperties(student,originalStudent, PropertyUtils.getNullPropertyNames(student));
-		studentService.saveStudent(originalStudent);
+//		studentService.saveStudent(originalStudent);
 		return APIResultBean.ok("操作成功！").build();
 	}
 
@@ -98,16 +97,16 @@ public class StudentController {
 			e.printStackTrace();
 			throw new GlobalException("导出Excel异常");
 		}
-		List<Student> studentList = studentService.findStudent(new Student().toBuilder()
-				.clazzId(clazzId)
-				.gradeId(gradeId)
-				.build());
-		try {
-			EasyExcel.write(response.getOutputStream(),Student.class).sheet().doWrite(studentList);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return APIResultBean.error("导出失败").build();
-		}
+//		List<Student> studentList = studentService.findStudent(new Student().toBuilder()
+//				.clazzId(clazzId)
+//				/*.gradeId(gradeId)*/
+//				.build());
+//		try {
+////			EasyExcel.write(response.getOutputStream(),Student.class).sheet().doWrite(studentList);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			return APIResultBean.error("导出失败").build();
+//		}
 		return APIResultBean.ok("导出成功").build();
 	}
 
@@ -126,12 +125,12 @@ public class StudentController {
 							 @RequestParam(required = false) Long gradeId) {
 		PageRequest pageRequest = PageRequest.of(page - 1,limit);
 
-		Page<Student> studentPage = studentService.findStudent(
-				new Student().toBuilder()
-						.clazzId(clazzId)
-						.gradeId(gradeId)
-						.build(),pageRequest);
-		return APIResultBean.ok(studentPage).build();
+//		Page<Student> studentPage = studentService.findStudent(
+//				new Student().toBuilder()
+//						.clazzId(clazzId)
+//						/*.gradeId(gradeId)*/
+//						.build(),pageRequest);
+		return APIResultBean.ok(/*studentPage*/).build();
 	}
 
 	@GetMapping("/{studentId}")
@@ -163,7 +162,7 @@ public class StudentController {
 				studentService.findParentByStudentIdAndParentId(studentId,parent.getId()) : new Parent();
 
 		BeanUtils.copyProperties(parent,originalParent, PropertyUtils.getNullPropertyNames(parent));
-		studentService.saveStudentParent(studentId,originalParent);
+//		studentService.saveStudentParent(studentId,originalParent);
 		return APIResultBean.ok("操作成功！").build();
 	}
 
@@ -172,8 +171,8 @@ public class StudentController {
 	@GetMapping("/{studentId}/parent")
 	@ApiImplicitParam(name = "studentId",value = "学生id",dataType = "Long")
 	public APIResultBean findStudentParent(@PathVariable("studentId") Long studentId) {
-		List<Parent> parents = studentService.findStudentParent(studentId);
-		return APIResultBean.ok(parents).build();
+		/*List<Parent> parents = studentService.findParentOfStudent(studentId);*/
+		return APIResultBean.ok(/*parents*/).build();
 	}
 
 	@ApiOperation(value = "根据学生id和家长id查询学生家长")

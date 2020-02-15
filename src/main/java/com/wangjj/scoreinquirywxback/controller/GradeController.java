@@ -1,8 +1,8 @@
 package com.wangjj.scoreinquirywxback.controller;
 
-import com.wangjj.scoreinquirywxback.entity.Grade;
+import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
 import com.wangjj.scoreinquirywxback.service.GradeService;
-import com.wangjj.scoreinquirywxback.vo.response.APIResultBean;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -32,7 +32,7 @@ public class GradeController {
 	@ApiOperation(value = "增加年级信息")
 	@ApiImplicitParam(name = "grade",value ="年级信息",dataType = "Grade")
 	public APIResultBean addGrade(@RequestBody Grade grade) {
-		gradeService.addGrade(grade);
+		/*gradeService.addGrade(grade);*/
 		return APIResultBean.ok("添加成功").build();
 	}
 

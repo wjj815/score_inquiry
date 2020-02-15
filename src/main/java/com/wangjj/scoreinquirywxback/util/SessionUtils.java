@@ -1,6 +1,6 @@
 package com.wangjj.scoreinquirywxback.util;
 
-import com.wangjj.scoreinquirywxback.entity.User;
+import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

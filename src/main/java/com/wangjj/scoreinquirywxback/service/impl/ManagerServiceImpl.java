@@ -1,7 +1,7 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
 import com.wangjj.scoreinquirywxback.dao.ManagerRepository;
-import com.wangjj.scoreinquirywxback.entity.Manager;
+import com.wangjj.scoreinquirywxback.pojo.entity.Manager;
 import com.wangjj.scoreinquirywxback.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

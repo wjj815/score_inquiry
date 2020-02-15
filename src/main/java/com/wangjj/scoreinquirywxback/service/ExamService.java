@@ -1,7 +1,9 @@
 package com.wangjj.scoreinquirywxback.service;
 
-import com.wangjj.scoreinquirywxback.entity.Exam;
-import com.wangjj.scoreinquirywxback.entity.ExamScore;
+import com.wangjj.scoreinquirywxback.pojo.dto.ExamDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
+import com.wangjj.scoreinquirywxback.pojo.entity.CourseScore;
+import com.wangjj.scoreinquirywxback.pojo.entity.Exam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,14 +28,14 @@ public interface ExamService {
 	 * 获取考试信息列表
 	 * @return
 	 */
-	List<Exam> getExamList(Exam exam);
+	List<ExamDTO> getExamList(ExamDTO examDTO);
 
 
 	/**
 	 * 保存考试
-	 * @param exam
+	 * @param examDTO
 	 */
-	void saveExam(Exam exam);
+	void saveExam(ExamDTO examDTO);
 
 
 	/**
@@ -44,24 +46,24 @@ public interface ExamService {
 
 	/**
 	 * 分页获取考试成绩
-	 * @param examScore
+	 * @param examDTO
 	 * @param pageable
 	 * @return
 	 */
-	Page<ExamScore> getExamScorePage(ExamScore examScore, Pageable pageable);
+	PageResult<ExamDTO> getExamScorePage(ExamDTO examDTO, Pageable pageable);
 
 	/**
 	 * 获取考试成绩列表
-	 * @param examScore
+	 * @param courseScore
 	 * @return
 	 */
-	List<ExamScore> getExamScoreList(ExamScore examScore);
+	List<CourseScore> getExamScoreList(CourseScore courseScore);
 
 	/**
 	 * 保存成绩
-	 * @param examScore
+	 * @param courseScore
 	 */
-	void saveExamScore(ExamScore examScore);
+	void saveExamScore(CourseScore courseScore);
 
 	/**
 	 * 删除考试成绩

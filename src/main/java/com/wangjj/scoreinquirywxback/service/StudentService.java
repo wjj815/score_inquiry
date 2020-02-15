@@ -1,11 +1,13 @@
 package com.wangjj.scoreinquirywxback.service;
 
-import com.wangjj.scoreinquirywxback.entity.Parent;
-import com.wangjj.scoreinquirywxback.entity.Student;
+import com.wangjj.scoreinquirywxback.pojo.dto.ParentDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.StudentDTO;
+import com.wangjj.scoreinquirywxback.pojo.entity.Parent;
+import com.wangjj.scoreinquirywxback.pojo.entity.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.io.File;
+import javax.transaction.Transactional;
 import java.io.InputStream;
 import java.util.List;
 
@@ -18,16 +20,19 @@ import java.util.List;
 public interface StudentService {
 
 	/**
-	 * 增加学生的家长信息
-	 * @param parent
+	 * 绑定学生和家长信息
+	 * @param parentId
 	 */
-	void saveStudentParent(Long studentId, Parent parent);
+	void saveStudentParent(Long studentId, Long parentId);
+
+	@Transactional
+	void saveParent(ParentDTO parentDTO);
 
 	/**
 	 * 增加学生信息
-	 * @param student
+	 * @param studentDTO
 	 */
-	void saveStudent(Student student);
+	void saveStudent(StudentDTO studentDTO);
 
 	/**
 	 * 更改学生信息
@@ -42,15 +47,17 @@ public interface StudentService {
 	void deleteStudent(Student student);
 
 
-	List<Student> findStudent(Student student);
+	List<StudentDTO> findStudent(StudentDTO studentDTO);
 
-	Page<Student> findStudent(Student student, Pageable pageable);
+	Page<Student> findStudent(StudentDTO student, Pageable pageable);
 
 	Student findStudentById(Long id);
 
 	String importStudentList(InputStream inputStream);
 
-	List<Parent> findStudentParent(Long studentId);
+	List<ParentDTO> findParentOfStudent(Long studentId);
 
-	Parent findParentByStudentIdAndParentId(Long studentId,Long parentId);
+	List<StudentDTO> findStudentOfParent(Long parentId);
+
+	Parent findParentByStudentIdAndParentId(Long studentId, Long parentId);
 }
