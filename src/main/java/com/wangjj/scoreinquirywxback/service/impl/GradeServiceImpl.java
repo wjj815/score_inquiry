@@ -25,6 +25,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @ClassName : GradeService
@@ -43,6 +44,7 @@ public class GradeServiceImpl implements GradeService {
 	private CourseRepository courseRepository;
 
 
+	@Transactional
 	@Override
 	public void saveGrade(GradeDTO gradeDTO) {
 
@@ -50,7 +52,7 @@ public class GradeServiceImpl implements GradeService {
 				? gradeRepository.getOne(gradeDTO.getId())
 				: new Grade();
 
-		BeanUtils.copyProperties(gradeDTO,grade,PropertyUtils.getNullPropertyNames(gradeDTO));
+		PropertyUtils.copyNoNullProperties(gradeDTO,grade);
 		gradeRepository.save(grade);
 	}
 
@@ -96,27 +98,18 @@ public class GradeServiceImpl implements GradeService {
 
 	@Transactional
 	@Override
-	public void saveGradeCourse(GradeCourseParameter gradeCourseParameter) {
-		Grade grade = gradeRepository.getOne(gradeCourseParameter.getGradeId());
-		List<Long> analyse = ParameterUtils.analyse(gradeCourseParameter.getCourseIds());
+	public void saveGradeCourse(GradeDTO gradeDTO) {
+
+		Grade grade = getGrade(gradeDTO);
+		List<Long> analyse = ParameterUtils.analyse(gradeDTO.getCourseIds());
 		List<Course> courses = courseRepository.findAllById(analyse);
-		grade.setCourses(courses);
-		gradeRepository.save(grade);
+		courses.forEach(e-> e.getGrades().add(grade));
 	}
 
-	@Override
-	public List<CourseDTO> findGradeCourse(GradeCourseParameter gradeCourseParameter) {
-		Long gradeId = gradeCourseParameter.getGradeId();
-		Grade grade = gradeRepository.getOne(gradeId);
-		List<Course> courses = grade.getCourses();
-		List<CourseDTO> courseDTOList = new ArrayList<>();
-		/*封装数据*/
-		courses.forEach( course -> {
-			CourseDTO courseDTO = new CourseDTO();
-			BeanUtils.copyProperties(course,courseDTO);
-			courseDTOList.add(courseDTO);
-		});
-		return courseDTOList;
+	private Grade getGrade(GradeDTO gradeDTO) {
+		if(!gradeRepository.existsById(gradeDTO.getId())){
+			throw new GlobalException("年级不存在");
+		}
+		return gradeRepository.getOne(gradeDTO.getId());
 	}
-
 }

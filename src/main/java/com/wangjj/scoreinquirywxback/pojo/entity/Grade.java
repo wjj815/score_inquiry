@@ -46,15 +46,15 @@ public class Grade {
 	@ApiModelProperty(hidden = true)
 	private Date updatedTime ;
 
-	@OneToMany(mappedBy = "grade",fetch = FetchType.LAZY)
-	private List<Exam> exams = new ArrayList<>(0);
+	@OneToMany(mappedBy = "grade",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private final Set<Exam> exams = new HashSet<>(0);
 
-	@OneToMany(mappedBy = "grade",fetch = FetchType.LAZY)
-	private List<Clazz> clazzes = new ArrayList<>(0);
+	@OneToMany(mappedBy = "grade",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private final Set<Clazz> clazzes = new HashSet<>(0);
 
-	@OneToMany(mappedBy = "grade",fetch = FetchType.LAZY)
-	private List<Student> students = new ArrayList<>(0);
+	@OneToMany(mappedBy = "grade",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private final Set<Student> students = new HashSet<>(0);
 
-	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private List<Course> courses = new ArrayList<>(0);
+	@ManyToMany(mappedBy = "grades",fetch = FetchType.LAZY)
+	private final Set<Course> courses = new HashSet<>(0);
 }

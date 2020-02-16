@@ -46,16 +46,16 @@ public class CourseController {
 	})
 	public APIResultBean coursePage(@RequestParam Integer page,
 									@RequestParam Integer limit) {
-		Page<Course> coursePage = courseService.getCoursePage(PageRequest.of(page - 1, limit));
-		return APIResultBean.ok(coursePage).build();
+		/*Page<Course> coursePage = courseService.getCoursePage(PageRequest.of(page - 1, limit));*/
+		return APIResultBean.ok(/*coursePage*/).build();
 	}
 
 	@ApiOperation(value = "得到课程信息列表")
 	@GetMapping("/list")
 	@ApiImplicitParams({})
 	public APIResultBean courseList() {
-		List<Course> courseList = courseService.getCourseList();
-		return APIResultBean.ok(courseList).build();
+		/*List<Course> courseList = courseService.getCourseList();*/
+		return APIResultBean.ok(/*courseList*/).build();
 	}
 
 	@ApiOperation(value = "删除课程信息")

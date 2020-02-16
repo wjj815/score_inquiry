@@ -1,10 +1,8 @@
 package com.wangjj.scoreinquirywxback.service;
 
 import com.wangjj.scoreinquirywxback.pojo.dto.TeacherDTO;
-import com.wangjj.scoreinquirywxback.pojo.entity.ClazzCourseTeacher;
 import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.io.InputStream;
@@ -44,7 +42,4 @@ public interface TeacherService {
 
 	Teacher getTeacherById(Long teacherId);
 
-	void saveClazzCourse(ClazzCourseTeacher clazzCourseTeacher);
-
-	PageResult<ClazzCourseTeacher> findClazzCoursePageByTeacherId(Long teacherId, Pageable pageable);
 }

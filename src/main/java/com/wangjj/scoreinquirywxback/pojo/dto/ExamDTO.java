@@ -54,4 +54,8 @@ public class ExamDTO {
 
 	@ApiModelProperty(name = "gradeId", value = "年级Id", example = "2019")
 	private Long gradeId;//年级Id
+
+	private Long studentId;
+
+	private Long teacherId;
 }

@@ -1,5 +1,7 @@
 package com.wangjj.scoreinquirywxback.service;
 
+import com.wangjj.scoreinquirywxback.pojo.dto.CourseDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Course;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,14 +20,17 @@ public interface CourseService {
 	 * 获取所有课程
 	 * @return
 	 */
-	List<Course> getCourseList();
+
 
 
 	/**
 	 * 分页获取所有课程
 	 * @return
 	 */
-	Page<Course> getCoursePage(Pageable pageable);
+
+	List<CourseDTO> getCourseList(CourseDTO courseDTO);
+
+	PageResult<CourseDTO> getCoursePage(CourseDTO courseDTO, Pageable pageable);
 
 	/**
 	 * 添加课程

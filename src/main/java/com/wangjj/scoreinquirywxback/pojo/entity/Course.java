@@ -7,9 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 课程类
@@ -58,10 +56,10 @@ public class Course {
 	private CourseScore courseScore;
 
 
-	@ManyToMany(mappedBy = "courses",fetch = FetchType.LAZY)
-	private List<Grade> grades = new ArrayList<>(0);
+	@ManyToMany(fetch = FetchType.LAZY)
+	private final Set<Grade> grades = new HashSet<>(0);
 
 
 	@OneToMany(mappedBy = "course",fetch = FetchType.LAZY)
-	private List<ClazzCourse> clazzCourses = new ArrayList<>(0);
+	private final Set<Teacher> teachers = new HashSet<>(0);
 }

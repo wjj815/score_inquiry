@@ -1,6 +1,5 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
-import com.wangjj.scoreinquirywxback.dao.ClazzCourseTeacherRepository;
 import com.wangjj.scoreinquirywxback.pojo.dto.TeacherDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.service.TeacherService;
@@ -11,13 +10,8 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class TeacherServiceImplTest {
-
-	@Autowired
-	private ClazzCourseTeacherRepository cla;
 
 	@Autowired
 	private TeacherService teacherService;

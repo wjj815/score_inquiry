@@ -1,7 +1,6 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
 import com.alibaba.excel.EasyExcel;
-import com.wangjj.scoreinquirywxback.dao.ClazzCourseTeacherRepository;
 import com.wangjj.scoreinquirywxback.dao.ClazzRepository;
 import com.wangjj.scoreinquirywxback.dao.CourseRepository;
 import com.wangjj.scoreinquirywxback.dao.TeacherRepository;
@@ -9,18 +8,13 @@ import com.wangjj.scoreinquirywxback.excel.TeacherDataListener;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.dto.TeacherDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
-import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
-import com.wangjj.scoreinquirywxback.pojo.entity.ClazzCourseTeacher;
 import com.wangjj.scoreinquirywxback.pojo.entity.Course;
 import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import com.wangjj.scoreinquirywxback.service.TeacherService;
 import com.wangjj.scoreinquirywxback.util.ParameterUtils;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
-import com.wangjj.scoreinquirywxback.util.RepositoryUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -50,8 +44,6 @@ public class TeacherServiceImpl implements TeacherService {
 	@Autowired
 	private TeacherRepository teacherRepository;
 
-	@Autowired
-	private ClazzCourseTeacherRepository clazzCourseTeacherRepository;
 	@Autowired
 	private ClazzRepository clazzRepository;
 
@@ -122,12 +114,10 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public void deleteTeacher(String ids) {
 		List<Long> list = ParameterUtils.analyse(ids);
-		List<Teacher> teachers = RepositoryUtils.findListByIdIn(teacherRepository, list);
-		teachers.forEach(e->{
-			e.getClazzSet().forEach(c->{
-				c.getTeachers().remove(e);
-			});
-		});
+		List<Teacher> teachers = teacherRepository.findAllById(list);
+		teachers.forEach(e-> e.getClazzSet().forEach(c->{
+			c.getTeachers().remove(e);
+		}));
 		teacherRepository.deleteByIdIn(list);
 	}
 
@@ -165,37 +155,4 @@ public class TeacherServiceImpl implements TeacherService {
 		return teacherRepository.getOne(teacherId);
 	}
 
-
-	@Override
-	public void saveClazzCourse(ClazzCourseTeacher clazzCourseTeacher) {
-		if(clazzCourseTeacherRepository.exists(Example.of(clazzCourseTeacher))) {
-			throw new GlobalException("该班级课程老师已存在！");
-		}
-		clazzCourseTeacherRepository.save(clazzCourseTeacher);
-	}
-
-	public void delete(Long id) {
-		clazzCourseTeacherRepository.deleteById(id);
-	}
-
-	@Transactional
-	@Override
-	public PageResult<ClazzCourseTeacher> findClazzCoursePageByTeacherId(Long teacherId, Pageable pageable) {
-		ClazzCourseTeacher clazzCourseTeacher = ClazzCourseTeacher.builder().teacherId(teacherId).build();
-		Page<ClazzCourseTeacher> list = clazzCourseTeacherRepository.findAll(Example.of(clazzCourseTeacher),pageable);
-		PageResult<ClazzCourseTeacher> page = new PageResult<>();
-		BeanUtils.copyProperties(list,page);
-		List<ClazzCourseTeacher> l = new ArrayList<> ();
-		list.getContent().forEach(e->{
-			Clazz clazz = clazzRepository.getOne(e.getClazzId());
-			Course course= courseRepository.getOne(e.getCourseId());
-			ClazzCourseTeacher courseTeacher = ClazzCourseTeacher.builder().build();
-			BeanUtils.copyProperties(e,courseTeacher);
-			courseTeacher.setClazz(clazz);
-			courseTeacher.setCourse(course);
-			l.add(courseTeacher);
-		});
-		page.setContent(l);
-		return page;
-	}
 }

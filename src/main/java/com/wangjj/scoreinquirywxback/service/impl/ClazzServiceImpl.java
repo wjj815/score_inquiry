@@ -4,8 +4,6 @@ import com.wangjj.scoreinquirywxback.dao.ClazzRepository;
 import com.wangjj.scoreinquirywxback.dao.GradeRepository;
 import com.wangjj.scoreinquirywxback.dao.TeacherRepository;
 import com.wangjj.scoreinquirywxback.pojo.dto.ClazzDTO;
-import com.wangjj.scoreinquirywxback.pojo.dto.GradeDTO;
-import com.wangjj.scoreinquirywxback.pojo.dto.TeacherDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
@@ -14,8 +12,6 @@ import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import com.wangjj.scoreinquirywxback.service.ClazzService;
 import com.wangjj.scoreinquirywxback.util.ParameterUtils;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
-import com.wangjj.scoreinquirywxback.util.RepositoryUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +23,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * @ClassName : ClazzServiceImpl
@@ -69,6 +64,10 @@ public class ClazzServiceImpl implements ClazzService {
 
 			if (Objects.nonNull(clazz.getGradeId())) {
 				predicateList.add(criteriaBuilder.equal(root.get("grade").get("id"), clazz.getGradeId()));
+			}
+
+			if(Objects.nonNull(clazz.getTeacherId())) {
+				predicateList.add(criteriaBuilder.equal(root.joinSet("teachers").get("id"),clazz.getTeacherId()));
 			}
 
 			if (predicateList != null) {
@@ -115,7 +114,7 @@ public class ClazzServiceImpl implements ClazzService {
 	@Override
 	public void deleteClazz(String ids) {
 		List<Long> clazzIds = ParameterUtils.analyse(ids);
-		List<Clazz> clazzes = RepositoryUtils.findListByIdIn(clazzRepository, clazzIds);
+		List<Clazz> clazzes = clazzRepository.findAllById(clazzIds);
 		clazzes.forEach(e->{
 			e.getTeachers().forEach(t->{
 				t.getClazzSet().remove(e);

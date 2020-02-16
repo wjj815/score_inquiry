@@ -29,4 +29,6 @@ public class GradeDTO {
 	@NotBlank(groups = {AddGroup.class})
 	@ApiModelProperty(name = "gradeName",value = "年级名称",required = true,example = "2019级")
 	private String gradeName ;
+
+	private String courseIds;
 }

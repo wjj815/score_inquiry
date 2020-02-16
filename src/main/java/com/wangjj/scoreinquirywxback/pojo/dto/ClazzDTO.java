@@ -16,4 +16,6 @@ public class ClazzDTO {
 	private String clazzName;
 
 	private Long gradeId;
+
+	private Long teacherId;
 }

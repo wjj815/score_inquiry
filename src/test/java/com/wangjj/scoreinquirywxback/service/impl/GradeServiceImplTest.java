@@ -1,5 +1,6 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
+import com.wangjj.scoreinquirywxback.pojo.dto.GradeDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.request.GradeCourseParameter;
 import com.wangjj.scoreinquirywxback.service.GradeService;
 import org.junit.jupiter.api.Test;
@@ -41,9 +42,9 @@ class GradeServiceImplTest {
 
 	@Test
 	void addGradeCourse() {
-		GradeCourseParameter gradeCourseParameter = new GradeCourseParameter();
-		gradeCourseParameter.setGradeId(2019L);
-		gradeCourseParameter.setCourseIds("25,26,27,28");
-		gradeService.saveGradeCourse(gradeCourseParameter);
+		GradeDTO gradeDTO = new GradeDTO();
+		gradeDTO.setId(2019L);
+		gradeDTO.setCourseIds("25,26,27,28");
+		gradeService.saveGradeCourse(gradeDTO);
 	}
 }

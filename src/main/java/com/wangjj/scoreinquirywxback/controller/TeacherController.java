@@ -1,7 +1,6 @@
 package com.wangjj.scoreinquirywxback.controller;
 
 import com.alibaba.excel.EasyExcel;
-import com.wangjj.scoreinquirywxback.pojo.entity.ClazzCourseTeacher;
 import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.TeacherService;
@@ -15,7 +14,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -109,15 +107,15 @@ public class TeacherController {
 		return APIResultBean.ok("删除成功！").build();
 	}
 
-	@ApiOperation(value = "保存关联老师对应的班级课程")
+	/*@ApiOperation(value = "保存关联老师对应的班级课程")
 	@PostMapping("/clazzCourse")
 	@ApiImplicitParam(name = "clazzCourseTeacher",value = "关联数据",dataType = "ClazzCourseTeacher")
 	public APIResultBean saveClazzCourseTeacher(@RequestBody ClazzCourseTeacher clazzCourseTeacher){
 		teacherService.saveClazzCourse(clazzCourseTeacher);
 		return APIResultBean.ok("操作成功！").build();
-	}
+	}*/
 
-	@ApiOperation(value = "查询关联老师对应的班级课程")
+/*	@ApiOperation(value = "查询关联老师对应的班级课程")
 	@GetMapping("/clazzCourse/page")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "page", value = "分页参数:页码(从1开始)", dataType = "Integer",defaultValue = "1"),
@@ -129,5 +127,5 @@ public class TeacherController {
 												@RequestParam(required = false) Long teacherId){
 		PageResult<ClazzCourseTeacher> pageResult = teacherService.findClazzCoursePageByTeacherId(teacherId, PageRequest.of(page - 1, limit));
 		return APIResultBean.ok(pageResult).build();
-	}
+	}*/
 }

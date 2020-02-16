@@ -29,7 +29,5 @@ public interface GradeService {
 
 	Page<Grade> findGradePage(Grade grade, Pageable pageable);
 
-	void saveGradeCourse(GradeCourseParameter gradeCourseParameter);
-
-	List<CourseDTO> findGradeCourse(GradeCourseParameter gradeCourseParameter);
+	void saveGradeCourse(GradeDTO gradeDTO);
 }
