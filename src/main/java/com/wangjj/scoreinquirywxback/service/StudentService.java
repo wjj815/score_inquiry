@@ -2,9 +2,9 @@ package com.wangjj.scoreinquirywxback.service;
 
 import com.wangjj.scoreinquirywxback.pojo.dto.ParentDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.StudentDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Parent;
 import com.wangjj.scoreinquirywxback.pojo.entity.Student;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
@@ -19,11 +19,13 @@ import java.util.List;
  */
 public interface StudentService {
 
+	void removeRelevanceOfStudentAndParent(Long studentId, Long parentId);
+
 	/**
 	 * 绑定学生和家长信息
 	 * @param parentId
 	 */
-	void saveStudentParent(Long studentId, Long parentId);
+	void saveRelevanceOfStudentAndParent(Long studentId, Long parentId);
 
 	@Transactional
 	void saveParent(ParentDTO parentDTO);
@@ -35,21 +37,17 @@ public interface StudentService {
 	void saveStudent(StudentDTO studentDTO);
 
 	/**
-	 * 更改学生信息
-	 * @param student
-	 */
-	void updateStudent(Student student);
-
-	/**
 	 * 删除学生信息
-	 * @param student
+	 * @param studentId
 	 */
-	void deleteStudent(Student student);
+	void deleteStudent(Long studentId);
 
+
+	void deleteParent(Long parentId);
 
 	List<StudentDTO> findStudent(StudentDTO studentDTO);
 
-	Page<Student> findStudent(StudentDTO student, Pageable pageable);
+	PageResult<StudentDTO> findStudent(StudentDTO student, Pageable pageable);
 
 	Student findStudentById(Long id);
 

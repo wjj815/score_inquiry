@@ -69,7 +69,7 @@ public class Parent {
 	private Date updatedTime ;
 
 
-	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<Student> students = new HashSet<>(0);
 
 

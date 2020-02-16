@@ -9,6 +9,7 @@ import com.wangjj.scoreinquirywxback.excel.StudentDataListener;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.dto.ParentDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.StudentDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
 import com.wangjj.scoreinquirywxback.pojo.entity.Parent;
@@ -53,26 +54,33 @@ public class StudentServiceImpl implements StudentService {
 
 	@Transactional
 	@Override
-	public void saveStudentParent(Long studentId, Long parentId) {
+	public void removeRelevanceOfStudentAndParent(Long studentId, Long parentId) {
 
-		if(!studentRepository.existsById(studentId)) {
-			throw new GlobalException(String.format("不存在学号为%s的学生",studentId));
-		}
+		check(studentId, parentId);
 		Student student = studentRepository.getOne(studentId);
+		Parent parent = parentRepository.getOne(parentId);
+//		student.getParents().remove(parent);
+		parent.getStudents().remove(student);
+	}
 
-		if(!parentRepository.existsById(parentId)) {
+	private void check(Long studentId, Long parentId) {
+		if (!studentRepository.existsById(studentId)) {
+			throw new GlobalException(String.format("不存在学号为%s的学生", studentId));
+		}
+		if (!parentRepository.existsById(parentId)) {
 			throw new GlobalException(String.format("不存在该家长信息！"));
 		}
-		Parent parent = parentRepository.getOne(parentId);
+	}
 
-		/*List<Student> students = new ArrayList<>(parent.getStudents());
-		students.add(student);*/
-//		student.getParents().add(parent);
-		/*Set<Student> students = new HashSet<>(parent.getStudents());
-		students.add(student);
-		parent.setStudents(students);*/
+	@Transactional
+	@Override
+	public void saveRelevanceOfStudentAndParent(Long studentId, Long parentId) {
+
+		check(studentId, parentId);
+		Student student = studentRepository.getOne(studentId);
+		Parent parent = parentRepository.getOne(parentId);
 		parent.getStudents().add(student);
-		parentRepository.save(parent);
+//		parentRepository.save(parent);
 		/*Parent savedParent = parentRepository.save(parent);
 		if(Objects.isNull(id)) {
 			log.info("添加学生和家长的关联信息");
@@ -108,10 +116,10 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public void saveStudent(StudentDTO studentDTO) {
-		if(gradeRepository.existsById(studentDTO.getGradeId())) {
+		if(!gradeRepository.existsById(studentDTO.getGradeId())) {
 			throw new GlobalException(String.format("不存在gradeId为%s的年级",studentDTO.getGradeId()));
 		}
-		if(clazzRepository.existsById(studentDTO.getClazzId())) {
+		if(!clazzRepository.existsById(studentDTO.getClazzId())) {
 			throw new GlobalException(String.format("不存在clazzId为%s的班级",studentDTO.getGradeId()));
 		}
 		Grade grade = gradeRepository.getOne(studentDTO.getGradeId());
@@ -127,33 +135,34 @@ public class StudentServiceImpl implements StudentService {
 		studentRepository.save(student);
 	}
 
+	@Transactional
 	@Override
-	public void updateStudent(Student student) {
-		studentRepository.save(student);
+	public void deleteStudent(Long studentId) {
+		if(!studentRepository.existsById(studentId)) {
+			throw new GlobalException("该学生不存在");
+		}
+		Student student = studentRepository.getOne(studentId);
+		/*删除所有的该同学的家长关联数据 */
+		List<Parent> parents = student.getParents();
+		parents.forEach(e-> e.getStudents().remove(student));
+		studentRepository.deleteById(studentId);
 	}
 
 	@Override
-	public void deleteStudent(Student student) {
-		studentRepository.delete(student);
+	public void deleteParent(Long parentId) {
+		if(!parentRepository.existsById(parentId)) {
+			throw new GlobalException("该家长不存在");
+		}
+		Parent parent = parentRepository.getOne(parentId);
+		parent.getStudents().forEach(e->e.getParents().remove(parent));
+		parentRepository.deleteById(parentId);
 	}
-
 
 
 	@Override
 	public List<StudentDTO> findStudent(StudentDTO studentDTO) {
-
 		List<Student> students = studentRepository.findAll(getStudentSpecification(studentDTO));
-
-		List<StudentDTO> studentDTOS = new ArrayList<>();
-		students.forEach(e->{
-			StudentDTO student = new StudentDTO();
-			PropertyUtils.copyNoNullProperties(e,student);
-			student.setClazzId(e.getClazz().getId());
-			student.setGradeId(e.getGrade().getId());
-			studentDTOS.add(student);
-		});
-
-		return studentDTOS;
+		return getStudentDTO(students);
 	}
 
 	/**
@@ -191,8 +200,32 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public Page<Student> findStudent(StudentDTO student, Pageable pageable) {
-		return studentRepository.findAll(getStudentSpecification(student),pageable);
+	public PageResult<StudentDTO> findStudent(StudentDTO studentDTO, Pageable pageable) {
+		PageResult<StudentDTO> pageResult = new PageResult<>();
+
+		Page<Student> students = studentRepository.findAll(getStudentSpecification(studentDTO), pageable);
+		List<StudentDTO> studentDTO1 = getStudentDTO(students.getContent());
+		PropertyUtils.copyNoNullProperties(students,pageResult);
+		pageResult.setContent(studentDTO1);
+
+		return  pageResult;
+	}
+
+	/**
+	 * 转实体对象为数据传输对象
+	 * @param students
+	 * @return
+	 */
+	private List<StudentDTO> getStudentDTO(List<Student> students) {
+
+		List<StudentDTO> convert = PropertyUtils.convert(students, u -> {
+			StudentDTO s = new StudentDTO();
+			PropertyUtils.copyNoNullProperties(u, s);
+			s.setGradeId(u.getGrade().getId());
+			s.setClazzId(u.getClazz().getId());
+			return s;
+		});
+		return convert;
 	}
 
 	@Override
@@ -223,6 +256,9 @@ public class StudentServiceImpl implements StudentService {
 		List<ParentDTO> convert = PropertyUtils.convert(parents, ParentDTO.class);
 		return convert;
 	}
+
+
+
 
 	@Override
 	public List<StudentDTO> findStudentOfParent(Long parentId) {

@@ -6,9 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 班级类
@@ -50,12 +48,15 @@ public class Clazz {
 	/*@ApiModelProperty(name = "gradeId", value = "年级Id", example = "2019")
 	private Long gradeId; //班级所属年级*/
 	/*年级*/
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Grade grade;
 
-	@OneToMany(mappedBy = "clazz")
+	@OneToMany(mappedBy = "clazz",fetch = FetchType.LAZY)
 	private List<Student> students = new ArrayList<>(0);
 
-	@OneToMany(mappedBy = "clazz")
-	private List<ClazzCourse> clazzCourses = new ArrayList<>(0);
+	/*@OneToMany(mappedBy = "clazz")
+	private List<ClazzCourse> clazzCourses = new ArrayList<>(0);*/
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	private Set<Teacher> teachers = new HashSet<>(0);
 }

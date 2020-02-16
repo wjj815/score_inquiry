@@ -4,6 +4,8 @@ import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
+
 /**
  * @ClassName : ClazzRepository
  * @Author : 1090086767
@@ -13,4 +15,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface ClazzRepository extends JpaRepository<Clazz,Long>, JpaSpecificationExecutor<Clazz> {
 
 	Clazz findByGradeIdAndClazzName(Long gradeId,String ClazzName);
+
+	void deleteByIdIn(List<Long> clazzIds);
 }

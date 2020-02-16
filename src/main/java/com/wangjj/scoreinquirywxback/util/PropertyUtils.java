@@ -1,9 +1,11 @@
 package com.wangjj.scoreinquirywxback.util;
 
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.data.domain.Page;
 
 import java.util.*;
 
@@ -54,4 +56,36 @@ public class PropertyUtils {
 //		log.info("converted list data : {}", result);
 		return result;
 	}
+
+
+	/**
+	 * 转化工具
+	 * @param list
+	 * @param transformable
+	 * @param <T1>
+	 * @param <T2>
+	 * @return
+	 */
+	public static <T1,T2> List<T2> convert(Collection<T1> list,Transformable<T1,T2> transformable) {
+//		log.info("origin list data : {}", list);
+		List<T2> result = new ArrayList<>();
+		list.forEach(e -> {
+			T2 transform = transformable.transform(e);
+			result.add(transform);
+		});
+
+//		log.info("converted list data : {}", result);
+		return result;
+	}
+	public static <T1,T2> PageResult<T2> convert(Page<T1> page, Transformable<T1,T2> transformable) {
+//		log.info("origin list data : {}", list);
+		PageResult<T2> pageResult = new PageResult<>();
+		copyNoNullProperties(page,pageResult);
+		List<T2> convert = convert(page.getContent(), transformable);
+		pageResult.setContent(convert);
+//		log.info("converted list data : {}", result);
+		return pageResult;
+	}
+
+
 }

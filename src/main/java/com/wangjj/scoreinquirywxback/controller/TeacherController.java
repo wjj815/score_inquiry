@@ -42,7 +42,7 @@ public class TeacherController {
 	@PostMapping
 	@ApiImplicitParam(name = "teacher",dataType = "Teacher")
 	public APIResultBean saveCourse(@RequestBody Teacher teacher) {
-		teacherService.saveTeacher(teacher);
+		/*teacherService.saveTeacher(teacher);*/
 		return APIResultBean.ok("操作成功！").build();
 	}
 
@@ -54,9 +54,9 @@ public class TeacherController {
 	})
 	public APIResultBean coursePage(@RequestParam Integer page,
 									@RequestParam Integer limit) {
-		Page<Teacher> teacherPage = teacherService.getTeacherPage(
-				Teacher.builder().build(), PageRequest.of(page - 1, limit));
-		return APIResultBean.ok(teacherPage).build();
+		/*Page<Teacher> teacherPage = teacherService.getTeacherPage(
+				Teacher.builder().build(), PageRequest.of(page - 1, limit));*/
+		return APIResultBean.ok(/*teacherPage*/).build();
 	}
 
 	@PostMapping("/excel")
@@ -81,7 +81,7 @@ public class TeacherController {
 	})
 	public APIResultBean exportTeacherList() {
 		HttpServletResponse response = HttpUtils.getExcelResponse("教师信息");
-		List<Teacher> teacherList = teacherService.getTeacherList();
+		List<Teacher> teacherList=null; /*= teacherService.getTeacherList(null);*/
 		try {
 			EasyExcel.write(response.getOutputStream(),Teacher.class).sheet().doWrite(teacherList);
 		} catch (IOException e) {

@@ -3,10 +3,12 @@ package com.wangjj.scoreinquirywxback.service.impl;
 
 import com.wangjj.scoreinquirywxback.pojo.dto.ParentDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.StudentDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.service.StudentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,7 +23,7 @@ class StudentServiceImplTest {
 	@Test
 	void addStudentParent() {
 
-		studentService.saveStudentParent(20190102L,113L);
+		studentService.saveRelevanceOfStudentAndParent(201901011L,115L);
 	}
 
 	@Test
@@ -36,7 +38,7 @@ class StudentServiceImplTest {
 	@Test
 	void addStudent() {
 		StudentDTO studentDTO = new StudentDTO();
-		studentDTO.setId(201901011L);
+		studentDTO.setId(20190102L);
 		studentDTO.setStudentName("王大大");
 		studentDTO.setGradeId(2019L);
 		studentDTO.setClazzId(1L);
@@ -66,7 +68,9 @@ class StudentServiceImplTest {
 	}
 
 	@Test
-	void findStudent1() {
+	void deleteStudent() {
+//		studentService.deleteStudent(201901011L);
+		studentService.deleteParent(115L);
 	}
 
 	@Test
@@ -94,5 +98,19 @@ class StudentServiceImplTest {
 	@Test
 	void findStudentOfParent() {
 		System.out.println(studentService.findStudentOfParent(113L));
+	}
+
+	@Test
+	void removeRelevanceOfStudentAndParent() {
+
+		studentService.removeRelevanceOfStudentAndParent(20190102L,113L);
+	}
+
+	@Test
+	void findStudent2() {
+		StudentDTO studentDTO = new StudentDTO();
+		studentDTO.setGradeId(2019L);
+		PageResult<StudentDTO> student = studentService.findStudent(studentDTO, PageRequest.of(0, 10));
+		System.out.println(student);
 	}
 }

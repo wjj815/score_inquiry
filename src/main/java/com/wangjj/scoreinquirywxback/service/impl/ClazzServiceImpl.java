@@ -2,14 +2,19 @@ package com.wangjj.scoreinquirywxback.service.impl;
 
 import com.wangjj.scoreinquirywxback.dao.ClazzRepository;
 import com.wangjj.scoreinquirywxback.dao.GradeRepository;
+import com.wangjj.scoreinquirywxback.dao.TeacherRepository;
 import com.wangjj.scoreinquirywxback.pojo.dto.ClazzDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.GradeDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.TeacherDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
+import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import com.wangjj.scoreinquirywxback.service.ClazzService;
+import com.wangjj.scoreinquirywxback.util.ParameterUtils;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
+import com.wangjj.scoreinquirywxback.util.RepositoryUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,9 +23,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @ClassName : ClazzServiceImpl
@@ -36,23 +43,29 @@ public class ClazzServiceImpl implements ClazzService {
 	@Autowired
 	private GradeRepository gradeRepository;
 
+	@Autowired
+	private TeacherRepository teacherRepository;
+
 	@Override
 	public List<ClazzDTO> getClazzList(ClazzDTO clazzDTO) {
 		List<Clazz> clazzes = clazzRepository.findAll(getClazzSpecification(clazzDTO));
-		List<ClazzDTO> list = new ArrayList<>();
-		clazzes.forEach(e -> {
-			ClazzDTO dto = new ClazzDTO();
-			PropertyUtils.copyNoNullProperties(e,dto);
-			dto.setGradeId(e.getGrade().getId());
-			list.add(dto);
+
+		List<ClazzDTO> convert = PropertyUtils.convert(clazzes, u -> {
+			ClazzDTO dto = getClazzDTO(u);
+			return dto;
 		});
 
-		return list;
+		return convert;
 	}
 
 	private Specification<Clazz> getClazzSpecification(ClazzDTO clazz) {
 		return (Specification<Clazz>) (root, query, criteriaBuilder) -> {
 			List<Predicate> predicateList = new ArrayList<>();
+
+			if(Objects.nonNull(clazz.getId())) {
+				predicateList.add(criteriaBuilder.equal(root.get("id"),clazz.getId()));
+			}
+
 
 			if (Objects.nonNull(clazz.getGradeId())) {
 				predicateList.add(criteriaBuilder.equal(root.get("grade").get("id"), clazz.getGradeId()));
@@ -67,22 +80,27 @@ public class ClazzServiceImpl implements ClazzService {
 
 	@Override
 	public PageResult<ClazzDTO> getClazzListByPage(ClazzDTO clazzDTO, Pageable pageable) {
-
+		Page<Clazz> clazzPage = clazzRepository.findAll(getClazzSpecification(clazzDTO), pageable);
+		PropertyUtils.convert(clazzPage,u -> {
+			ClazzDTO dto = getClazzDTO(u);
+			return dto;
+		});
 //		Page<Clazz> page = clazzRepository.findAll(getClazzSpecification(clazz),pageable);
 		return null;
 	}
 
-	@Override
-	public void addClazz(Clazz clazz) {
-
-		/*if(!gradeRepository.existsById(clazz.getGradeId())) {
-			throw new GlobalException(String.format("年级编号为%s的年级不存在！",clazz.getGradeId().toString()));
-		}*/
-		if(isExist(clazz)) {
-			throw new GlobalException("班级已存在");
-		}
-		clazzRepository.save(clazz);
+	/**
+	 * 转化成数据传输对象
+	 * @param u
+	 * @return
+	 */
+	private ClazzDTO getClazzDTO(Clazz u) {
+		ClazzDTO dto = new ClazzDTO();
+		PropertyUtils.copyNoNullProperties(u, dto);
+		dto.setGradeId(u.getGrade().getId());
+		return dto;
 	}
+
 
 	@Override
 	public boolean isExist(Clazz clazz) {
@@ -93,10 +111,19 @@ public class ClazzServiceImpl implements ClazzService {
 		return Objects.nonNull(null);
 	}
 
+	@Transactional
 	@Override
-	public void deleteClazz(Long id) {
-		clazzRepository.deleteById(id);
+	public void deleteClazz(String ids) {
+		List<Long> clazzIds = ParameterUtils.analyse(ids);
+		List<Clazz> clazzes = RepositoryUtils.findListByIdIn(clazzRepository, clazzIds);
+		clazzes.forEach(e->{
+			e.getTeachers().forEach(t->{
+				t.getClazzSet().remove(e);
+			});
+		});
+		clazzRepository.deleteByIdIn(clazzIds);
 	}
+
 
 
 	@Override
@@ -120,6 +147,20 @@ public class ClazzServiceImpl implements ClazzService {
 		PropertyUtils.copyNoNullProperties(clazzDTO,clazz);
 		clazz.setGrade(grade);
 		clazzRepository.save(clazz);
+	}
+
+	@Transactional
+	@Override
+	public void saveClazzTeacher(Long clazzId, Long teacherId){
+		if(!clazzRepository.existsById(clazzId)) {
+			throw new GlobalException("班级不存在");
+		}
+		if(!teacherRepository.existsById(teacherId)) {
+			throw new GlobalException("老师不存在");
+		}
+		Clazz clazz = clazzRepository.getOne(clazzId);
+		Teacher teacher = teacherRepository.getOne(teacherId);
+		clazz.getTeachers().add(teacher);
 	}
 
 }

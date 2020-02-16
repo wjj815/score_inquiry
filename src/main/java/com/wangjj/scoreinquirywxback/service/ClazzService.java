@@ -6,6 +6,7 @@ import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -25,21 +26,19 @@ public interface ClazzService {
 
 	PageResult<ClazzDTO> getClazzListByPage(ClazzDTO clazzDTO, Pageable pageable);
 
-	/**
-	 * 添加班级
-	 * @param clazz
-	 */
-	void addClazz(Clazz clazz);
 
 	boolean isExist(Clazz clazz);
 
 	/**
 	 * 删除班级
-	 * @param id
+	 * @param ids
 	 */
-	void deleteClazz(Long id);
+	void deleteClazz(String ids);
 
 	Clazz findById(Long id);
 
 	void saveClazz(ClazzDTO clazzDTO);
+
+	@Transactional
+	void saveClazzTeacher(Long clazzId, Long teacherId);
 }

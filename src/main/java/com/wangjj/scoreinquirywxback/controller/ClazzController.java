@@ -64,7 +64,7 @@ public class ClazzController {
 	@ApiOperation(value = "增加班级")
 	@ApiImplicitParam(name = "clazz", value = "班级信息", dataType = "Clazz")
 	public APIResultBean addClazz(@RequestBody Clazz clazz) {
-		clazzService.addClazz(clazz);
+		/*clazzService.addClazz(clazz);*/
 		return APIResultBean.ok("添加成功").build();
 	}
 
@@ -72,7 +72,7 @@ public class ClazzController {
 	@ApiOperation(value = "删除班级")
 	@ApiImplicitParam(name = "clazzId", value = "班级id", dataType = "Long")
 	public APIResultBean deleteClazz(@RequestParam Long clazzId) {
-		clazzService.deleteClazz(clazzId);
+		/*clazzService.deleteClazz(clazzId);*/
 		return APIResultBean.ok("删除成功").build();
 	}
 	/*@GetMapping

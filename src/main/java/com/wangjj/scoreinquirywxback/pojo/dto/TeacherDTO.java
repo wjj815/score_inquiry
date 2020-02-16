@@ -1,33 +1,30 @@
-package com.wangjj.scoreinquirywxback.pojo.entity;
+package com.wangjj.scoreinquirywxback.pojo.dto;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
+import com.wangjj.scoreinquirywxback.pojo.entity.Course;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.util.Date;
+import java.util.List;
 
 /**
- * 教师类
- *
+ * @ClassName : TeacherDTO
+ * @Author : wangJJ
+ * @Date : 2020/2/16 12:15
+ * @Description : TODO
  */
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
-@ApiModel(description = "教师实体")
-@Entity
-@ToString
 @Data
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "t_teacher")
-public class Teacher {
+public class TeacherDTO {
 
 	@ExcelProperty(value="教师编号")
 	@ColumnWidth(value = 20)
@@ -97,11 +94,10 @@ public class Teacher {
 	@ApiModelProperty(hidden = true)
 	private String weiXin;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Course course;
 
-	@ManyToMany(mappedBy = "teachers",fetch = FetchType.LAZY)
-	private Set<Clazz> clazzSet = new HashSet<>(0);
-	/*@OneToMany(mappedBy = "teacher")
-	private List<ClazzCourse> clazzCourses = new ArrayList<>(0);*/
+
+	private Long courseId;
+
+	private String clazzId;
+
 }

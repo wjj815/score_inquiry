@@ -44,4 +44,39 @@ class ClazzServiceImplTest {
 		clazzDTO.setClazzName("1班");
 		clazzService.saveClazz(clazzDTO);
 	}
+
+	@Test
+	void getClazzList1() {
+	}
+
+	@Test
+	void getClazzListByPage() {
+	}
+
+	@Test
+	void addClazz1() {
+	}
+
+	@Test
+	void isExist() {
+	}
+
+	@Test
+	void deleteClazz() {
+		clazzService.deleteClazz("1");
+	}
+
+	@Test
+	void findById() {
+	}
+
+	@Test
+	void saveClazz1() {
+	}
+
+	@Test
+	void saveClazzTeacher() {
+
+		clazzService.saveClazzTeacher(1L,2019002L);
+	}
 }

@@ -16,7 +16,7 @@ import java.util.List;
 public class PageResult<T> {
 
 
-	private int totalElements;
+	private long totalElements;
 	private int totalPages;
 	private boolean last;
 	private int number;

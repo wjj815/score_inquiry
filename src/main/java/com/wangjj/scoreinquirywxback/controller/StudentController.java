@@ -162,7 +162,7 @@ public class StudentController {
 				studentService.findParentByStudentIdAndParentId(studentId,parent.getId()) : new Parent();
 
 		BeanUtils.copyProperties(parent,originalParent, PropertyUtils.getNullPropertyNames(parent));
-//		studentService.saveStudentParent(studentId,originalParent);
+//		studentService.saveRelevanceOfStudentAndParent(studentId,originalParent);
 		return APIResultBean.ok("操作成功！").build();
 	}
 

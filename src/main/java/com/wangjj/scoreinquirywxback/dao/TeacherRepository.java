@@ -15,4 +15,5 @@ import java.util.List;
 public interface TeacherRepository  extends JpaRepository<Teacher,Long>, JpaSpecificationExecutor<Teacher> {
 
 	int deleteByIdIn(List<Long> ids);
+
 }

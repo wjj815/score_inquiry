@@ -45,9 +45,6 @@ public class GradeServiceImpl implements GradeService {
 
 	@Override
 	public void saveGrade(GradeDTO gradeDTO) {
-		if(Objects.isNull(gradeDTO.getId())) {
-			throw new GlobalException("年级编号为空！");
-		}
 
 		Grade grade = gradeRepository.existsById(gradeDTO.getId())
 				? gradeRepository.getOne(gradeDTO.getId())
