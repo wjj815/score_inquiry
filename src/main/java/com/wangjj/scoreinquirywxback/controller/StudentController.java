@@ -1,6 +1,5 @@
 package com.wangjj.scoreinquirywxback.controller;
 
-import com.alibaba.excel.EasyExcel;
 import com.wangjj.scoreinquirywxback.pojo.entity.Parent;
 import com.wangjj.scoreinquirywxback.pojo.entity.Student;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
@@ -15,7 +14,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -26,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.Objects;
 
 

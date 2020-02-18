@@ -15,9 +15,6 @@ import java.util.*;
 @ApiModel(description = "年级实体")
 @Getter
 @Setter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "t_grade",
 		uniqueConstraints = {@UniqueConstraint(columnNames = {"gradeName"})})
@@ -55,6 +52,6 @@ public class Grade {
 	@OneToMany(mappedBy = "grade",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private final Set<Student> students = new HashSet<>(0);
 
-	@ManyToMany(mappedBy = "grades",fetch = FetchType.LAZY)
-	private final Set<Course> courses = new HashSet<>(0);
+	@ManyToMany(fetch = FetchType.LAZY)
+	private List<Course> courses = new ArrayList<>(0);
 }

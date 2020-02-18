@@ -8,6 +8,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.data.domain.Page;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @ClassName : PropertyUtils
@@ -37,27 +38,6 @@ public class PropertyUtils {
 	}
 
 
-	public static <T> List<T> convert(Collection<?> list, Class<T> aClass) {
-//		log.info("origin list data : {}", list);
-		List<T> result = new ArrayList<>();
-		list.forEach(e -> {
-			try {
-				T t = aClass.newInstance();
-				BeanUtils.copyProperties(e,t,getNullPropertyNames(e));
-//				log.info("---{}",t.toString());
-				result.add(t);
-			} catch (InstantiationException e1) {
-				e1.printStackTrace();
-			} catch (IllegalAccessException e1) {
-				e1.printStackTrace();
-			}
-		});
-
-//		log.info("converted list data : {}", result);
-		return result;
-	}
-
-
 	/**
 	 * 转化工具
 	 * @param list
@@ -66,18 +46,20 @@ public class PropertyUtils {
 	 * @param <T2>
 	 * @return
 	 */
-	public static <T1,T2> List<T2> convert(Collection<T1> list,Transformable<T1,T2> transformable) {
+	public static <T1,T2> List<T2> convert(Collection<T1> list, Function<T1,T2> transformable) {
 //		log.info("origin list data : {}", list);
 		List<T2> result = new ArrayList<>();
 		list.forEach(e -> {
-			T2 transform = transformable.transform(e);
+			T2 transform = transformable.apply(e);
 			result.add(transform);
 		});
 
 //		log.info("converted list data : {}", result);
 		return result;
 	}
-	public static <T1,T2> PageResult<T2> convert(Page<T1> page, Transformable<T1,T2> transformable) {
+
+
+	public static <T1,T2> PageResult<T2> convert(Page<T1> page, Function<T1,T2> transformable) {
 //		log.info("origin list data : {}", list);
 		PageResult<T2> pageResult = new PageResult<>();
 		copyNoNullProperties(page,pageResult);

@@ -2,6 +2,7 @@ package com.wangjj.scoreinquirywxback.controller;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.wangjj.scoreinquirywxback.util.HttpClientUtil;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
 import lombok.extern.slf4j.Slf4j;
@@ -30,10 +31,12 @@ public class WeChatLoginController {
 	private String appsecret;
 
 	public String GETTOKEN = "" +
-			"https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
+			"https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code";
 
 	public String USERINFO = "" +
-			"https://api.weixin.qq.com/sns/userinfo?access_token=TOKEN&openid=OPENID";
+			"https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+
+	public String GETACCESS_TOKEN="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=SECRET";
 	/**
 	 * 用户扫描确认登录后的回调执行，此处应对应redirect_uri
 	 * 注意：要保证回调域名和当前网络环境通畅，如果想要本地测试，
@@ -46,16 +49,20 @@ public class WeChatLoginController {
 	public APIResultBean callBack(@RequestParam String code){
 		//回调获得code，通过用户授权的code去获取微信令牌
 		String token = HttpClientUtil.doGet(
-				GETTOKEN.replaceAll("CODE", code)
+				GETTOKEN.replaceAll("JSCODE", code)
 						.replaceAll("SECRET",appsecret)
 						.replaceAll("APPID",appid)
 		);
 		Map map = JSON.parseObject(token);
 		//获取到了关键的令牌和openid后，
 		//就可以正式开始查询微信用户的信息，完成我们要做的微信绑定
-		String access_token = (String) map.get("access_token");
+		String s = HttpClientUtil.doGet(GETACCESS_TOKEN.replaceAll("SECRET", appsecret)
+				.replaceAll("APPID", appid));
+
+		String access_token = (String) JSONObject.parseObject(s).get("access_token");
 		String openid = (String) map.get("openid");
-		String userInfo = HttpClientUtil.doGet(USERINFO.replaceAll("TOKEN", access_token).replaceAll("OPENID", openid));
+		String userInfo = HttpClientUtil.doGet(USERINFO.replaceAll("ACCESS_TOKEN", access_token).replaceAll("OPENID", openid));
+		log.info("userInfo:{}",userInfo);
 		Map info = JSON.parseObject(userInfo);
 		return APIResultBean.ok(info).build();
 //		return new ModelAndView("personal","userInfo",info);

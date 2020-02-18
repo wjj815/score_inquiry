@@ -1,17 +1,24 @@
 package com.wangjj.scoreinquirywxback.service;
 
+import com.wangjj.scoreinquirywxback.dao.MenuRepository;
 import com.wangjj.scoreinquirywxback.pojo.entity.Menu;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 /**
  * @ClassName : MenuService
- * @Author : 1090086767
- * @Date : 2020/1/7 22:18
- * @Description : 菜单业务处理
+ * @Author : wangJJ
+ * @Date : 2020/1/7 22:22
+ * @Description : 菜单业务的实现类
  */
-public interface MenuService {
+public class MenuService {
+
+	@Autowired
+	private MenuRepository menuRepository;
 
 
-	List<Menu> findMenuList();
+	public List<Menu> findMenuList() {
+		return null;
+	}
 }

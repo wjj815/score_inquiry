@@ -1,13 +1,11 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
 import com.wangjj.scoreinquirywxback.pojo.dto.GradeDTO;
-import com.wangjj.scoreinquirywxback.pojo.dto.request.GradeCourseParameter;
+import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
 import com.wangjj.scoreinquirywxback.service.GradeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class GradeServiceImplTest {
@@ -18,6 +16,10 @@ class GradeServiceImplTest {
 	@Test
 	void addGrade() {
 
+		GradeDTO gradeDTO = new GradeDTO();
+		gradeDTO.setId(2019L);
+		gradeDTO.setCourseIds("25");
+		gradeService.saveGrade(gradeDTO);
 	}
 
 	@Test
@@ -30,6 +32,7 @@ class GradeServiceImplTest {
 
 	@Test
 	void deleteGradeById() {
+        gradeService.deleteGradeById(2019L);
 	}
 
 	@Test
@@ -42,9 +45,5 @@ class GradeServiceImplTest {
 
 	@Test
 	void addGradeCourse() {
-		GradeDTO gradeDTO = new GradeDTO();
-		gradeDTO.setId(2019L);
-		gradeDTO.setCourseIds("25,26,27,28");
-		gradeService.saveGradeCourse(gradeDTO);
 	}
 }

@@ -1,5 +1,8 @@
 package com.wangjj.scoreinquirywxback.controller;
 
+import com.wangjj.scoreinquirywxback.pojo.dto.ClazzDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.request.IdsParameter;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import com.wangjj.scoreinquirywxback.service.ClazzService;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
@@ -37,14 +40,11 @@ public class ClazzController {
 	})
 	public APIResultBean clazzPage(@RequestParam Integer page,
 								   @RequestParam Integer limit,
-								   @RequestParam(required = false) Long gradeId) {
+								   ClazzDTO clazzDTO) {
 		System.out.println(page + " " + limit);
 		PageRequest pageRequest = PageRequest.of(page - 1,limit);
-		/*Page<Clazz> clazzPage = clazzService.getClazzListByPage(Clazz.builder()
-				*//*.gradeId(gradeId)*//*
-				.build(),
-				pageRequest);*/
-		return APIResultBean.ok(/*clazzPage*/).build();
+		PageResult<ClazzDTO> clazzListByPage = clazzService.getClazzListByPage(clazzDTO, pageRequest);
+		return APIResultBean.ok(clazzListByPage).build();
 	}
 
 	@GetMapping("/list")
@@ -52,27 +52,25 @@ public class ClazzController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "gradeId", value = "年级Id", defaultValue = "2019")
 	})
-	public APIResultBean clazzList(@RequestParam Long gradeId) {
+	public APIResultBean clazzList(ClazzDTO clazzDTO) {
 
-		/*List<Clazz> clazzList = clazzService.getClazzList(Clazz.builder()
-						*//*.gradeId(gradeId)*//*
-						.build());*/
-		return APIResultBean.ok(/*clazzList*/).build();
+		List<ClazzDTO> clazzList = clazzService.getClazzList(clazzDTO);
+		return APIResultBean.ok(clazzList).build();
 	}
 
 	@PostMapping
 	@ApiOperation(value = "增加班级")
 	@ApiImplicitParam(name = "clazz", value = "班级信息", dataType = "Clazz")
-	public APIResultBean addClazz(@RequestBody Clazz clazz) {
-		/*clazzService.addClazz(clazz);*/
+	public APIResultBean addClazz(@RequestBody ClazzDTO clazz) {
+		clazzService.saveClazz(clazz);
 		return APIResultBean.ok("添加成功").build();
 	}
 
 	@DeleteMapping
 	@ApiOperation(value = "删除班级")
-	@ApiImplicitParam(name = "clazzId", value = "班级id", dataType = "Long")
-	public APIResultBean deleteClazz(@RequestParam Long clazzId) {
-		/*clazzService.deleteClazz(clazzId);*/
+	@ApiImplicitParam(name = "idsParameter", value = "班级ids", dataType = "IdsParameter")
+	public APIResultBean deleteClazz(IdsParameter idsParameter) {
+		clazzService.deleteClazz(idsParameter.getIds());
 		return APIResultBean.ok("删除成功").build();
 	}
 	/*@GetMapping

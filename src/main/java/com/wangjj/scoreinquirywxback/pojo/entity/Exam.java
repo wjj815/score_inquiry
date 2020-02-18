@@ -8,9 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 考试类
@@ -90,5 +88,5 @@ public class Exam {
 	private List<Student> students = new ArrayList<> ();*/
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<CourseScore> courseScores = new ArrayList<>(0);
+	private Set<CourseScore> courseScores = new HashSet<>(0);
 }

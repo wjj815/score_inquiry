@@ -1,15 +1,16 @@
 package com.wangjj.scoreinquirywxback.controller;
 
+import com.wangjj.scoreinquirywxback.pojo.dto.CourseDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Course;
-import com.wangjj.scoreinquirywxback.service.CourseService;
 import com.wangjj.scoreinquirywxback.pojo.dto.request.IdsParameter;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
+import com.wangjj.scoreinquirywxback.service.CourseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +34,8 @@ public class CourseController {
 	@ApiOperation(value = "新增/修改课程")
 	@PostMapping
 	@ApiImplicitParam(name = "course",dataType = "Course")
-	public APIResultBean saveCourse(@RequestBody Course course) {
-		courseService.saveCourse(course);
+	public APIResultBean saveCourse(@RequestBody CourseDTO courseDTO) {
+		courseService.saveCourse(courseDTO);
 		return APIResultBean.ok("操作成功！").build();
 	}
 
@@ -45,17 +46,17 @@ public class CourseController {
 			@ApiImplicitParam(name = "limit", value = "分页参数:页大小", dataType = "Integer",defaultValue = "10"),
 	})
 	public APIResultBean coursePage(@RequestParam Integer page,
-									@RequestParam Integer limit) {
-		/*Page<Course> coursePage = courseService.getCoursePage(PageRequest.of(page - 1, limit));*/
-		return APIResultBean.ok(/*coursePage*/).build();
+									@RequestParam Integer limit,
+									CourseDTO courseDTO) {
+		PageResult<CourseDTO> coursePage = courseService.getCoursePage(courseDTO, PageRequest.of(page - 1, limit));
+		return APIResultBean.ok(coursePage).build();
 	}
 
 	@ApiOperation(value = "得到课程信息列表")
 	@GetMapping("/list")
-	@ApiImplicitParams({})
-	public APIResultBean courseList() {
-		/*List<Course> courseList = courseService.getCourseList();*/
-		return APIResultBean.ok(/*courseList*/).build();
+	public APIResultBean courseList(CourseDTO courseDTO) {
+		List<CourseDTO> courseList = courseService.getCourseList(courseDTO);
+		return APIResultBean.ok(courseList).build();
 	}
 
 	@ApiOperation(value = "删除课程信息")

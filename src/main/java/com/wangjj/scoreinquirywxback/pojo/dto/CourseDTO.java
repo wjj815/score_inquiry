@@ -27,4 +27,6 @@ public class CourseDTO {
 	private String introduction ;
 
 	private Long gradeId;
+
+	private Long studentId;
 }

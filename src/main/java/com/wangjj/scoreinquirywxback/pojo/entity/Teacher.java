@@ -18,14 +18,10 @@ import java.util.*;
  * 教师类
  *
  */
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
-@ApiModel(description = "教师实体")
 @Entity
-@ToString
-@Data
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
+@ToString(exclude = {"course","courseScores","clazzSet"})
+@Setter
+@Getter
 @Table(name = "t_teacher")
 public class Teacher {
 
@@ -104,4 +100,7 @@ public class Teacher {
 	private Set<Clazz> clazzSet = new HashSet<>(0);
 	/*@OneToMany(mappedBy = "teacher")
 	private List<ClazzCourse> clazzCourses = new ArrayList<>(0);*/
+
+	@OneToMany(mappedBy = "teacher",fetch = FetchType.LAZY)
+	private Set<CourseScore> courseScores = new HashSet<>(0);
 }

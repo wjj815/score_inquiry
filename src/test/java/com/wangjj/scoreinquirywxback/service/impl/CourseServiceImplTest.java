@@ -1,5 +1,6 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.wangjj.scoreinquirywxback.pojo.dto.CourseDTO;
 import com.wangjj.scoreinquirywxback.pojo.entity.Course;
 import com.wangjj.scoreinquirywxback.service.CourseService;
@@ -17,18 +18,18 @@ class CourseServiceImplTest {
 	@Test
 	void getCourseList() {
 		CourseDTO courseDTO = new CourseDTO();
-		courseDTO.setGradeId(2019L);
+		courseDTO.setStudentId(20190101L);
 		List<CourseDTO> courseList = courseService.getCourseList(courseDTO);
-		System.out.println(courseList);
+		System.out.println(JSON.toJSONString(courseList));
 	}
 
 	@Test
 	void saveCourse() {
-		Course course = Course.builder().
+		/*Course course = Course.builder().
 				id(126L)
 				.courseName("语文")
-				.build();
-		courseService.saveCourse(course);
+				.build();*/
+//		courseService.saveCourse(courseServiceourse);
 	}
 
 	@Test

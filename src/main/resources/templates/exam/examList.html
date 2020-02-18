@@ -1,11 +1,165 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
     <meta charset="UTF-8">
     <title>考试列表</title>
 </head>
 <body>
+<div>
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <form class="layui-form ">
+                        <div class="layui-inline">
+                            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" style="width: 40px" id="addBtn">
+                                <i class="iconfont layui-extendjia-"></i>
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" style="width: 40px" id="deleteBtn">
+                                <i class="iconfont layui-extenddelete"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
-    这是考试列表
+                <div class="layui-card-body">
+                    <table class="layui-table"  id="test" lay-filter="test"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">查询考试详情</a>
+</script>
 </body>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+
+<script>
+    layui.use(['table','form','jquery'], function () {
+        var table = layui.table,
+            $ = layui.jquery,
+            form = layui.form;
+
+
+
+        var t = table.render({
+            elem: '#test'
+            , url: apiPrefix+'/exam/page'
+            // , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            // , defaultToolbar: ['filter', 'exports']
+            ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , title: '课程列表'
+            , cols: [ [
+                {type: 'checkbox',align:'center', fixed: 'left',width:'5%'}
+                , {field:'id', title: '考试编号', width: '10%',align:'center'}
+                , {field: 'examName', title: '考试名称', width: '15%',align:'center'}
+                , {field: 'examTime', title: '考试时间', width: '15%',align:'center'}
+                , {field: 'examType', title: '考试类型', width: '15%',align:'center'}
+                , {field: 'gradeId', title: '考试年级', width: '15%',align:'center'}
+                , {field: 'clazzId', title: '考试班级', width: '15%',align:'center'}
+                , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '10%' }
+            ]],
+            id: 'idTest'
+            , page: true
+            ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": res.resultCode, //解析接口状态
+                    "msg": res.resultMsg, //解析提示文本
+                    "count": res.data.totalElements, //解析数据长度
+                    "data": res.data.content //解析数据列表
+                };
+            }
+        });
+
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            //console.controllerLog(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                openModel("/examScore?gradeId="+data.gradeId,parent.layer,"考试成绩详情",function(layero,index){
+
+                },function() {
+
+                });
+               /* layer.prompt({
+                    formType: 2
+                    , value: data.email
+                }, function (value, index) {
+                    obj.update({
+                        email: value
+                    });
+                    layer.close(index);
+                });*/
+            }
+        });
+
+
+
+        $("#addBtn").click(function () {
+           openModel('/examDetail',layer,'考试信息',function(layero,index){
+
+           },function() {
+
+           });
+        });
+
+        var $ = layui.$, active = {
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('idTest')
+                    ,data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }
+            ,delete: function(){ //获取选中数目
+                var checkStatus = table.checkStatus('idTest')
+                    ,data = checkStatus.data;
+                if(data.length <= 0) {
+                    layer.msg("未选中数据");
+                    return;
+                }
+                var ids = '';
+                for(var x in data) {
+                    ids+=data[x].id+",";
+                }
+                var json = {};
+                json['ids'] = ids;
+                layer.confirm('<font color="red">您确定要删除吗？</font>', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    ajaxDelete($,'/course',JSON.stringify(json),function (data) {
+                        if(data.success) {
+                            t.reload();
+                        }
+                        layer.msg(data.resultMsg);
+                    });
+                }, function(){
+
+                });
+
+            }
+            ,isAll: function(){ //验证是否全选
+                var checkStatus = table.checkStatus('idTest');
+                layer.msg(checkStatus.isAll ? '全选': '未全选')
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        $("#deleteBtn").click(function () {
+            active['delete'].call();
+        });
+    });
+
+
+</script>
 </html>

@@ -1,8 +1,12 @@
 package com.wangjj.scoreinquirywxback.controller;
 
+import com.wangjj.scoreinquirywxback.pojo.dto.GradeDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
-import com.wangjj.scoreinquirywxback.service.GradeService;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
+import com.wangjj.scoreinquirywxback.service.GradeService;
+import com.wangjj.scoreinquirywxback.valid.AddGroup;
+import com.wangjj.scoreinquirywxback.valid.DeleteGroup;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -10,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,18 +34,16 @@ public class GradeController {
 	private GradeService gradeService;
 
 	@PostMapping
-	@ApiOperation(value = "增加年级信息")
-	@ApiImplicitParam(name = "grade",value ="年级信息",dataType = "Grade")
-	public APIResultBean addGrade(@RequestBody Grade grade) {
-		/*gradeService.addGrade(grade);*/
+	@ApiOperation(value = "保存年级信息")
+	public APIResultBean addGrade(@RequestBody @Validated({AddGroup.class}) GradeDTO gradeDTO) {
+		gradeService.saveGrade(gradeDTO);
 		return APIResultBean.ok("添加成功").build();
 	}
 
 	@DeleteMapping
 	@ApiOperation(value = "根据id删除年级信息(慎用)")
-	@ApiImplicitParam(name = "id",value ="年级id",dataType = "Long")
-	public APIResultBean deleteGrade(Long id) {
-		gradeService.deleteGradeById(id);
+	public APIResultBean deleteGrade(@Validated({DeleteGroup.class}) GradeDTO gradeDTO) {
+		gradeService.deleteGradeById(gradeDTO.getId());
 		return APIResultBean.ok("删除成功！").build();
 	}
 
@@ -61,17 +64,17 @@ public class GradeController {
 	})
 	public APIResultBean findGradePage(@RequestParam Integer page,
 									   @RequestParam Integer limit,
-									   @RequestParam(required = false) Long gradeId) {
-		Page<Grade> gradePage = gradeService.findGradePage(
-				Grade.builder().id(gradeId).build(),
-				PageRequest.of(page - 1, limit));
+									   GradeDTO gradeDTO) {
+
+		PageRequest of = PageRequest.of(page - 1, limit);
+		PageResult<GradeDTO> gradePage = gradeService.findGradePage(gradeDTO, of);
 		return APIResultBean.ok(gradePage).build();
 	}
 
 	@GetMapping("/list")
 	@ApiOperation(value = "获取年级列表")
-	public APIResultBean findGradeList() {
-		List<Grade> gradeList = gradeService.findGradeList();
+	public APIResultBean findGradeList(GradeDTO gradeDTO) {
+		List<GradeDTO> gradeList = gradeService.findGradeList(gradeDTO);
 		return APIResultBean.ok(gradeList).build();
 	}
 }

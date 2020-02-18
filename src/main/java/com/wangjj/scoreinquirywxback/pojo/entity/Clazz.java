@@ -51,8 +51,9 @@ public class Clazz {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Grade grade;
 
-	@OneToMany(mappedBy = "clazz",fetch = FetchType.LAZY)
-	private List<Student> students = new ArrayList<>(0);
+	/*班级删除时，班级下的所有学生也会被删除*/
+	@OneToMany(mappedBy = "clazz",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private Set<Student> students = new HashSet<>(0);
 
 	/*@OneToMany(mappedBy = "clazz")
 	private List<ClazzCourse> clazzCourses = new ArrayList<>(0);*/

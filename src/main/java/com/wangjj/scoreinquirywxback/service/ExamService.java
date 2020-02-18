@@ -1,74 +1,149 @@
 package com.wangjj.scoreinquirywxback.service;
 
+import com.wangjj.scoreinquirywxback.dao.ExamRepository;
+import com.wangjj.scoreinquirywxback.dao.GradeRepository;
 import com.wangjj.scoreinquirywxback.pojo.dto.ExamDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.CourseScore;
 import com.wangjj.scoreinquirywxback.pojo.entity.Exam;
+import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
+import com.wangjj.scoreinquirywxback.util.PropertyUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * @ClassName : ExamService
+ * @ClassName : ExamServiceImpl
  * @Author : wangJJ
- * @Date : 2019/12/25 17:16
- * @Description : 考试业务
+ * @Date : 2020/2/14 18:16
+ * @Description : 考试业务的实现类
  */
-public interface ExamService {
+@Slf4j
+@Service
+public class ExamService {
 
-	/**
-	 * 分页获取考试信息
-	 * @param pageable
-	 * @return
-	 */
-	Page<Exam> getExamPage(Exam exam,Pageable pageable);
+	@Autowired
+	private ExamRepository examRepository;
 
-	/**
-	 * 获取考试信息列表
-	 * @return
-	 */
-	List<ExamDTO> getExamList(ExamDTO examDTO);
+	@Autowired
+	private GradeRepository gradeRepository;
 
 
-	/**
-	 * 保存考试
-	 * @param examDTO
-	 */
-	void saveExam(ExamDTO examDTO);
 
 
-	/**
-	 * 删除考试
-	 */
-	void deleteExam(Long id);
+	public Page<Exam> getExamPage(Exam exam, Pageable pageable) {
+
+		return null;
+	}
 
 
-	/**
-	 * 分页获取考试成绩
-	 * @param examDTO
-	 * @param pageable
-	 * @return
-	 */
-	PageResult<ExamDTO> getExamScorePage(ExamDTO examDTO, Pageable pageable);
+	public List<ExamDTO> getExamList(ExamDTO examDTO) {
+		List<Exam> exams = examRepository.findAll(getExamSpecification(examDTO));
 
-	/**
-	 * 获取考试成绩列表
-	 * @param courseScore
-	 * @return
-	 */
-	List<CourseScore> getExamScoreList(CourseScore courseScore);
+		return PropertyUtils.convert(exams, this::getExamDTO);
+	}
 
-	/**
-	 * 保存成绩
-	 * @param courseScore
-	 */
-	void saveExamScore(CourseScore courseScore);
+	public void saveExam(ExamDTO examDTO) {
+		/*如果id不为空，则修改考试信息*/
+		Exam origin;
+		/*如果已经存在考试则得到考试信息*/
+		if(Objects.nonNull(examDTO.getId())&& examRepository.existsById(examDTO.getId())) {
+			origin = examRepository.getOne(examDTO.getId());
+		} else {
+			origin = new Exam();
+		}
+		/*修改考试信息*/
+		PropertyUtils.copyNoNullProperties(examDTO,origin);
+		/*查询年级信息是否存在*/
+		if(gradeRepository.existsById(examDTO.getGradeId())) {
+			Grade grade = gradeRepository.getOne(examDTO.getGradeId());
+			origin.setGrade(grade);
+		}
 
-	/**
-	 * 删除考试成绩
-	 * @param id
-	 */
-	void deleteExamScore(Long id);
+		examRepository.save(origin);
+	}
 
+
+
+	public void deleteExam(Long examId) {
+		examRepository.deleteById(examId);
+	}
+
+
+	public PageResult<ExamDTO> getExamScorePage(ExamDTO examDTO, Pageable pageable) {
+
+		Page<Exam> exams = examRepository.findAll(getExamSpecification(examDTO), pageable);
+
+		return PropertyUtils.convert(exams, this::getExamDTO);
+	}
+
+	private ExamDTO getExamDTO(Exam u) {
+		ExamDTO dto = new ExamDTO();
+		PropertyUtils.copyNoNullProperties(u, dto);
+		dto.setGradeId(u.getGrade().getId());
+		return dto;
+	}
+
+	private Specification<Exam> getExamSpecification(ExamDTO examDTO) {
+		return (root, query, criteriaBuilder) ->{
+			List<Predicate> predicates = new ArrayList<>();
+
+			if(Objects.nonNull(examDTO.getId())) {
+				predicates.add(criteriaBuilder.equal(root.get("id"),examDTO.getId()));
+			}
+
+			if(Objects.nonNull(examDTO.getGradeId())) {
+				predicates.add(criteriaBuilder.equal(root.get("grade").get("id"),examDTO.getGradeId()));
+			}
+
+			if(Objects.nonNull(examDTO.getExamTime())) {
+				predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("examTime"),examDTO.getExamTime()));
+			}
+
+			if(Objects.nonNull(examDTO.getTeacherId())) {
+				predicates.add(criteriaBuilder.equal(
+						root.join("grade")
+								.joinSet("courses")
+								.joinSet("teachers").get("id")
+						,examDTO.getTeacherId()));
+			}
+
+			if(Objects.nonNull(examDTO.getStudentId())) {
+				predicates.add(criteriaBuilder.equal(
+						root.join("grade")
+								.joinSet("students")
+								.get("id")
+						,examDTO.getStudentId()
+				));
+			}
+
+			query.where(predicates.toArray(new Predicate[predicates.size()]));
+
+			query.orderBy(criteriaBuilder.desc(root.get("examTime")));
+			return null;
+		};
+	}
+
+
+	public List<CourseScore> getExamScoreList(CourseScore courseScore) {
+		return null;
+	}
+
+
+	public void saveExamScore(CourseScore courseScore) {
+
+	}
+
+
+	public void deleteExamScore(Long id) {
+
+	}
 }

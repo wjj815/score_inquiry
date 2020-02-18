@@ -8,13 +8,11 @@ import com.wangjj.scoreinquirywxback.util.ExcelUtils;
 import com.wangjj.scoreinquirywxback.util.HttpUtils;
 import com.wangjj.scoreinquirywxback.pojo.dto.request.IdsParameter;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
-import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

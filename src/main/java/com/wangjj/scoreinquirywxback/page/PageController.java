@@ -1,6 +1,6 @@
 package com.wangjj.scoreinquirywxback.page;
 
-import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
+import com.wangjj.scoreinquirywxback.pojo.dto.GradeDTO;
 import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
 import com.wangjj.scoreinquirywxback.pojo.entity.Student;
 import com.wangjj.scoreinquirywxback.pojo.entity.User;
@@ -107,12 +107,18 @@ public class PageController {
 		return "student/parentDetail";
 	}
 
+	@ApiOperation(value = "年级详情页面")
+	@GetMapping("/gradeDetail")
+	public String gradeDetail() {
+		return "clazz/gradeDetail";
+	}
+
 	@GetMapping("/student/{id}")
 	public String studentDetail(@PathVariable Long id,Model model) {
 		Student student = new Student();
-		List<Grade> gradeList = gradeService.findGradeList();
+//		List<Grade> gradeList = gradeService.findGradeList(new GradeDTO());
 //		log.info("student:{}", JSON.toJSON(student));
-		model.addAttribute("gradeList",gradeList);
+//		model.addAttribute("gradeList",gradeList);
 		/*List<Clazz> clazzList = clazzService.getClazzList(Clazz.builder().gradeId(student.getGradeId()).build());
 		model.addAttribute("clazzList",clazzList);*/
 		model.addAttribute("student",student);

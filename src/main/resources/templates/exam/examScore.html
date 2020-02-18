@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
+    <meta charset="UTF-8">
+    <title>考试成绩详情</title>
+</head>
+<body>
+
+<div class="layui-row">
+    <div class="layui-card">
+        <div class="layui-card-header" style="height: auto">
+            <form class="layui-form " action="">
+               <!-- <div class="layui-inline">
+                    <label class="layui-form-label">年级:</label>
+                    <div class="layui-input-inline">
+                        <select name="grade" id="grade" lay-filter="grade">
+                            &lt;!&ndash;<option value="2013">2013级</option>&ndash;&gt;
+                            &lt;!&ndash;<option value="2014">2014级</option>&ndash;&gt;
+                            &lt;!&ndash;<option value="2015">2015级</option>&ndash;&gt;
+                        </select>
+                    </div>
+                </div>-->
+                <div class="layui-inline">
+                    <label class="layui-form-label">班级:</label>
+                    <div class="layui-input-inline">
+                        <select name="clazz" id="clazz" lay-filter="clazz" lay-search="">
+                            <!-- <option value="2013">201901</option>
+                             <option value="2014">201902</option>
+                             <option value="2015">201903</option>-->
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" onclick="downloadTemplate()" class="layui-btn" >导入模版下载</button>
+                    <button type="button"  class="layui-btn layui-btn-normal" id="uploadBtn">
+                        <i class="iconfont layui-extendcloud-upload"></i>
+                        导入
+                    </button>
+                    <button type="button" onclick="downloadExcel()" class="layui-btn">
+                        <i class="iconfont layui-extendcloud-download"></i>
+                        导出
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="layui-card-body">
+           <!-- <table class="layui-hide"  id="test" lay-filter="test"></table>-->
+            <table  id="test" lay-filter="parse-table-demo">
+                <thead>
+                <tr>
+                    <th lay-data="{field:'clazzId',width:100,align:'center'}">班级</th>
+                    <th lay-data="{field:'studentId',width:100,align:'center'}">学号</th>
+                    <th lay-data="{field:'studentName',width:80,align:'center'}">姓名</th>
+                    <th:block th:each="item,stat : ${courseList}">
+                        <th th:attr="lay-data='{field:'+${item.id}+', width:60,align:\'center\'}'" th:text="${item.courseName}"></th>
+                    </th:block>
+                    <th lay-data="{field:'totalScore',width:60,align:'center'}">总分</th>
+                    <!--<th lay-data="{field:'clazzRank',width:100}">班级排名</th>-->
+                    <th lay-data="{field:'gradeRank',width:100,align:'center'}">年级排名</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+<script>
+    layui.use(['jquery','table', 'form', 'layer'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            layer = layui.layer,
+        table = layui.table;
+        var index = parent.layer.getFrameIndex(window.name);
+
+        var loadIndex = layer.load(1, {
+            shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
+        table.init('parse-table-demo', { //转化静态表格
+            //height: 'full-500'
+            url: apiPrefix+'/exam/39',
+            page:true,
+            parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": res.resultCode, //解析接口状态
+                    "msg": res.resultMsg, //解析提示文本
+                    "count": res.data.totalElements, //解析数据长度
+                    "data": res.data.content //解析数据列表
+                };
+            },
+            done:function(data) {
+                layer.close(loadIndex);
+            }
+        });
+       /* var t = table.render({
+            elem: '#test'
+            , url: apiPrefix+'/exam/39'
+               // , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板*!/
+            , defaultToolbar: [/!*'filter', *!/'exports']
+            ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , title: '学生信息'
+            ,id: 'testReload'
+            , page: true
+            ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": res.resultCode, //解析接口状态
+                    "msg": res.resultMsg, //解析提示文本
+                    "count": res.data.totalElements, //解析数据长度
+                    "data": res.data.content //解析数据列表
+                };
+            }
+        });*/
+    });
+
+
+</script>
+</body>
+</html>

@@ -9,9 +9,9 @@ import java.util.Date;
  * 考试成绩类
  *
  */
-@ToString(exclude = {"student"})
+@ToString(exclude = {"student","exam"})
 @Getter
-@Builder(toBuilder = true)
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -31,12 +31,13 @@ public class CourseScore {
 	/** 更新时间 */
 	private Date updatedTime ;
 	/**考试科目*/
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private Course course;
-
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Teacher teacher;
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Student student;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Exam exam;
 }

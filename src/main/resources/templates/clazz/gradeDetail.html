@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
+    <meta charset="UTF-8">
+    <title>年级详情页</title>
+</head>
+<body>
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <legend>年级基本信息</legend>
+    <form class="layui-form"  lay-filter="parentForm" action="">
+
+        <div class="layui-form-item" pane>
+                <label class="layui-form-label">年级编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="id" name="id"  autocomplete="off" class="layui-input">
+                </div>
+
+                <label class="layui-form-label">年级名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="gradeName" name="gradeName"  autocomplete="off" class="layui-input">
+                </div>
+
+        </div>
+
+        <div class="layui-form-item">
+                <label class="layui-form-label">年级课程</label>
+                <div class="layui-input-inline">
+                    <div id="demo1"></div>
+                </div>
+        </div>
+
+
+        <div class="layui-form-item" align="center">
+            <div class="layui-inline">
+                <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">提交</button>
+            </div>
+
+        </div>
+    </form>
+</fieldset>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+<script>
+    //加载组件
+    layui.config({
+        base: '/static/layui_ext/xmSelect/'
+    }).extend({
+        xmSelect: 'xm-select'
+    });
+    layui.use(['jquery','form','layer','xmSelect'],function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            layer = layui.layer,
+        xmSelect = layui.xmSelect;
+
+        //渲染多选
+        var demo1 = xmSelect.render({
+            el: '#demo1',
+            autoRow: true,
+            filterable: true,
+            prop:{
+                name:"courseName",
+                value:'id'
+            }
+        })
+
+        ajaxGet($,"/course/list",function(res) {
+            console.log(res);
+            demo1.update({
+                data: res.data,
+            })
+        });
+        var index = parent.layer.getFrameIndex(window.name);
+
+        function fillFormData(data) {
+            console.log(JSON.stringify(data));
+            form.val("parentForm",{
+                studentId:data.studentId,
+                id:data.id,
+                name:data.name,
+                studentName:data.studentName,
+                sex:data.sex,
+                age:data.age,
+                idCardNo:data.idCardNo,
+                phone:data.phone,
+                studentRelation:data.studentRelation
+            });
+
+        }
+
+        layui.fillData = function(data) {
+            var loadIndex = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+            fillFormData(data);
+            layer.close(loadIndex);
+        }
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            var studentId = $('#studentId').val();
+            var url = '/student/' + studentId + '/parent';
+            // alert(JSON.stringify(data.field));
+            ajaxPost($,url,JSON.stringify(data.field),function(data){
+                if(data.success) {
+                    parent.layer.msg(data.resultMsg);
+                    parent.layer.close(index);
+                }
+                layer.msg(data.resultMsg);
+            });
+
+            return false;
+        });
+    });
+
+
+</script>
+</body>
+</html>

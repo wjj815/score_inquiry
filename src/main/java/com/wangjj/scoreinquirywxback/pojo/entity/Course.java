@@ -1,27 +1,27 @@
 package com.wangjj.scoreinquirywxback.pojo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.*;
+import javax.validation.Constraint;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 课程类
  *
  */
 /*@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})*/
-@ApiModel(description = "课程实体")
-@ToString(exclude = {"grades","clazzCourses","courseScore"})
+@ToString(exclude = {"grades","courseScore"})
+@Setter
 @Getter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Table(name = "t_course")
+@Table(name = "t_course",uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"courseName"})
+})
 @EqualsAndHashCode
 public class Course {
 	@ApiModelProperty(hidden = true)
@@ -56,10 +56,10 @@ public class Course {
 	private CourseScore courseScore;
 
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "courses",fetch = FetchType.LAZY)
 	private final Set<Grade> grades = new HashSet<>(0);
 
 
-	@OneToMany(mappedBy = "course",fetch = FetchType.LAZY)
-	private final Set<Teacher> teachers = new HashSet<>(0);
+	/*@OneToMany(mappedBy = "course",fetch = FetchType.LAZY)
+	private final Set<Teacher> teachers = new HashSet<>(0);*/
 }

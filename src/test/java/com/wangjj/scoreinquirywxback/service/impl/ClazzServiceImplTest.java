@@ -29,8 +29,6 @@ class ClazzServiceImplTest {
 	@Test
 	void getClazzList() {
 		ClazzDTO clazzDTO = new ClazzDTO();
-		clazzDTO.setGradeId(2019L);
-		clazzDTO.setTeacherId(2019002L);
 		List<ClazzDTO> clazzList = clazzService.getClazzList(clazzDTO);
 		System.out.println(clazzList);
 	}

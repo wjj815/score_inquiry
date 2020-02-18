@@ -42,8 +42,8 @@ swagger2:
   enable: true
 #微信身份认证
 wechat:
-  appid: wxf677c993702b8418
-  appsecret: 0eb08d1e3c74e6274de375eddcbcfb29
+  appid: wxaea6a8e1cbdc644b
+  appsecret: a66479d55904ecadd24b4b2ae5b7d14a
 logging:
   file: log/score-inquiry.log
 

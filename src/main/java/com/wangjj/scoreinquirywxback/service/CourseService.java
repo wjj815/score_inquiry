@@ -1,46 +1,99 @@
 package com.wangjj.scoreinquirywxback.service;
 
+import com.wangjj.scoreinquirywxback.dao.CourseRepository;
 import com.wangjj.scoreinquirywxback.pojo.dto.CourseDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Course;
+import com.wangjj.scoreinquirywxback.exception.GlobalException;
+import com.wangjj.scoreinquirywxback.util.ParameterUtils;
+import com.wangjj.scoreinquirywxback.util.PropertyUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * @ClassName : CourseService
- * @Author : 1090086767
- * @Date : 2019/12/25 17:34
- * @Description : 课程业务
+ * @ClassName : CourseServiceImpl
+ * @Author : wangJJ
+ * @Date : 2020/2/4 19:29
+ * @Description : 课程业务的实现类
  */
-public interface CourseService {
+@Slf4j
+@Service
+public class CourseService  {
 
-	/**
-	 * 获取所有课程
-	 * @return
-	 */
+	@Autowired
+	private CourseRepository courseRepository;
+
+	public List<CourseDTO> getCourseList(CourseDTO courseDTO) {
+		List<Course> courses = courseRepository.findAll(getCourseSpecification(courseDTO));
+		return PropertyUtils.convert(courses, this::getCourseDTO);
+	}
+
+	private CourseDTO getCourseDTO(Course u) {
+		CourseDTO dto = new CourseDTO();
+		PropertyUtils.copyNoNullProperties(u,dto);
+		return dto;
+	}
+
+	private Specification<Course> getCourseSpecification(CourseDTO courseDTO) {
+		return (root, query, criteriaBuilder) -> {
+			List<Predicate> predicates = new ArrayList<>();
+			if(Objects.nonNull(courseDTO.getId())) {
+				predicates.add(criteriaBuilder.equal(root.get("id"),courseDTO.getId()));
+			}
+
+			if(Objects.nonNull(courseDTO.getStudentId())) {
+				predicates.add(criteriaBuilder.equal(
+						root.joinSet("teachers")
+								.joinSet("clazzSet")
+								.joinSet("students").get("id")
+						,courseDTO.getStudentId()));
+			}
+
+			if(Objects.nonNull(courseDTO.getGradeId())) {
+				predicates.add(criteriaBuilder.equal(root.joinSet("grades").get("id"),courseDTO.getGradeId()));
+			}
 
 
 
-	/**
-	 * 分页获取所有课程
-	 * @return
-	 */
+			query.where(predicates.toArray(new Predicate[predicates.size()]));
+			return null;
+		};
+	}
 
-	List<CourseDTO> getCourseList(CourseDTO courseDTO);
 
-	PageResult<CourseDTO> getCoursePage(CourseDTO courseDTO, Pageable pageable);
+	public PageResult<CourseDTO> getCoursePage(CourseDTO courseDTO, Pageable pageable) {
+		Page<Course> coursePage = courseRepository.findAll(this.getCourseSpecification(courseDTO), pageable);
+		return PropertyUtils.convert(coursePage,this::getCourseDTO);
+	}
 
-	/**
-	 * 添加课程
-	 * @param course
-	 */
-	 void saveCourse(Course course);
 
-	/**
-	 * 批量删除课程
-	 * @param courseIds
-	 */
-	void deleteCourse(String courseIds);
+	@Transactional
+	public void saveCourse(CourseDTO courseDTO) {
+
+		Course course;
+		if(Objects.nonNull(courseDTO.getId())&&courseRepository.existsById(courseDTO.getId())) {
+			course = courseRepository.getOne(courseDTO.getId());
+		} else {
+			course = new Course();
+		}
+		PropertyUtils.copyNoNullProperties(courseDTO,course);
+		courseRepository.save(course);
+	}
+
+	@Transactional
+	public void deleteCourse(String courseIds) {
+		List<Long> collect = ParameterUtils.analyse(courseIds);
+		courseRepository.deleteByIdIn(collect);
+	}
 }
