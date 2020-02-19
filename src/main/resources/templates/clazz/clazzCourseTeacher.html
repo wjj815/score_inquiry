@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
+    <meta charset="UTF-8">
+    <title>班级课程老师</title>
+</head>
+<body>
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+
+    <form class="layui-form" lay-filter="mForm"  action="">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">班级编号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="clazzId"  disabled autocomplete="off" class="layui-input">
+            </div>
+
+            <label class="layui-form-label">班级名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="clazzName" disabled  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">课程编号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="courseId" disabled autocomplete="off" class="layui-input">
+            </div>
+
+            <label class="layui-form-label">课程名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="courseName" disabled autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择教师</label>
+            <div class="layui-input-inline">
+                <div id="teacher"></div>
+            </div>
+            <div class="layui-input-inline" style="text-align: center">
+                <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">提交</button>
+            </div>
+        </div>
+    </form>
+</fieldset>
+</body>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+<script>
+    //加载组件
+    layui.config({
+        base: '/static/layui_ext/xmSelect/'
+    }).extend({
+        xmSelect: 'xm-select'
+    });
+
+
+    layui.use(['jquery','form','layer','xmSelect','table'],function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            layer = layui.layer,
+            xmSelect = layui.xmSelect;
+
+
+        //渲染单选
+        var teacher = xmSelect.render({
+            el: '#teacher',
+            radio: true,
+            filterable: true,
+            clickClose: true,
+            name:'id',
+            prop:{
+                name:"teacherName",
+                value:'id'
+            }
+        });
+
+        var index = parent.layer.getFrameIndex(window.name);
+
+        function fillFormData(data) {
+            console.log(JSON.stringify(data));
+            form.val("mForm",{
+                courseId:data.id,
+                courseName:data.courseName,
+                clazzName:data.clazzName,
+                clazzId:data.clazzId
+            });
+        }
+
+        layui.fillData = function(data) {
+            var loadIndex = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+            renderSelect(data.id);
+            fillFormData(data);
+            layer.close(loadIndex);
+        }
+        //监听提交
+        form.on('submit(demo1)', function(data){
+
+            var url = '/teacher/clazz';
+            // layer.alert(JSON.stringify(data.field));
+            ajaxPost($,url,JSON.stringify(data.field),function(data){
+                if(data.success) {
+                    parent.layer.msg(data.resultMsg);
+                    parent.layer.close(index);
+                }
+                layer.msg(data.resultMsg);
+            });
+
+            return false;
+        });
+
+        function renderSelect(id){
+
+            ajaxGet($,'/teacher/list?courseId='+id,function(res) {
+                if(res.success) {
+                    teacher.update({
+                        data: res.data
+                    });
+                }
+            });
+        }
+
+    });
+</script>
+
+</html>

@@ -2,6 +2,7 @@ package com.wangjj.scoreinquirywxback.service;
 
 import com.wangjj.scoreinquirywxback.dao.CourseRepository;
 import com.wangjj.scoreinquirywxback.pojo.dto.CourseDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.request.IdsParameter;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Course;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,6 +62,14 @@ public class CourseService  {
 						,courseDTO.getStudentId()));
 			}
 
+			if(Objects.nonNull(courseDTO.getClazzId())) {
+				predicates.add(criteriaBuilder.equal(
+						root.joinSet("grades").joinSet("clazzes").get("id"),
+						courseDTO.getClazzId()
+				));
+			}
+
+
 			if(Objects.nonNull(courseDTO.getGradeId())) {
 				predicates.add(criteriaBuilder.equal(root.joinSet("grades").get("id"),courseDTO.getGradeId()));
 			}
@@ -69,6 +79,14 @@ public class CourseService  {
 			query.where(predicates.toArray(new Predicate[predicates.size()]));
 			return null;
 		};
+	}
+
+	public List<CourseDTO> findAllByIds(IdsParameter idsParameter) {
+		List<Long> analyse = ParameterUtils.analyse(idsParameter.getIds());
+		if(analyse.isEmpty())
+			return Collections.emptyList();
+		List<Course> allById = courseRepository.findAllById(analyse);
+		return PropertyUtils.convert(allById,this::getCourseDTO);
 	}
 
 

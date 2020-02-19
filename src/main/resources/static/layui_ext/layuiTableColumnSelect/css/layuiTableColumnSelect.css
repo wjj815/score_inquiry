@@ -1,0 +1,115 @@
+.layui-table-select-div-chrome-up{
+    position: absolute;
+    left: 0;
+    top: auto;
+    padding: 5px 0;
+    z-index: 899;
+    min-width: 100%;
+    border: 1px solid #d2d2d2;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.12);
+    box-sizing: border-box;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    bottom: 24px;
+}
+
+.layui-table-select-div-chrome-down{
+    position: absolute;
+    left: 0;
+    top: 24px;
+    padding: 5px 0;
+    z-index: 899;
+    min-width: 100%;
+    border: 1px solid #d2d2d2;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.12);
+    box-sizing: border-box;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.layui-table-select-dd-this{
+    background-color:#5FB878;
+    color: #fff;
+}
+
+.layui-table-select-div-ie-up{
+    position: absolute;
+    left: 0;
+    top: auto;
+    padding: 5px 0;
+    z-index: 899;
+    min-width: 100%;
+    border: 1px solid #d2d2d2;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.12);
+    box-sizing: border-box;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    bottom: 36px;
+}
+
+.layui-table-select-div-ie-down{
+    position: absolute;
+    left: 0;
+    top: 38px;
+    padding: 5px 0;
+    z-index: 899;
+    min-width: 100%;
+    border: 1px solid #d2d2d2;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.12);
+    box-sizing: border-box;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.layui-table-select-dd{
+    display: block;
+    padding: 0 10px;
+    line-height: 36px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.layui-table-select-div dd:hover {
+    background-color: #44aedb;
+    -webkit-transition: .5s all;
+    transition: .5s all;
+}
+
+.layui-table-select-edge{
+    position: absolute;
+    right: 3px;
+    top: 50%;
+    margin-top: -13px;
+    cursor: pointer;
+    border-width: 6px;
+    border-top-color: #c2c2c2;
+    border-top-style: solid;
+    -webkit-transition: all .3s;
+    border-style: dashed;
+    border-color: transparent;
+}

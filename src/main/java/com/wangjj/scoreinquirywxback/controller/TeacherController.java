@@ -1,6 +1,7 @@
 package com.wangjj.scoreinquirywxback.controller;
 
 import com.alibaba.excel.EasyExcel;
+import com.wangjj.scoreinquirywxback.pojo.dto.TeacherDTO;
 import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.TeacherService;
@@ -55,6 +56,26 @@ public class TeacherController {
 		return APIResultBean.ok(/*teacherPage*/).build();
 	}
 
+	@ApiOperation(value = "查询老师信息列表")
+	@GetMapping("/list")
+	public APIResultBean teacherList(TeacherDTO teacherDTO) {
+		List<TeacherDTO> teacherList = teacherService.getTeacherList(teacherDTO);
+		return APIResultBean.ok(teacherList).build();
+	}
+
+	@ApiOperation(value = "查询单个老师信息")
+	@GetMapping
+	public APIResultBean getTeacher(TeacherDTO teacherDTO) {
+		List<TeacherDTO> teacherList = teacherService.getTeacherList(teacherDTO);
+		if(teacherList.size() > 1) {
+			throw new GlobalException("该接口只能查询单个老师信息");
+		}
+		TeacherDTO dto = teacherList.size()==1?
+				teacherList.get(0):
+				new TeacherDTO();
+		return APIResultBean.ok(dto).build();
+	}
+
 	@PostMapping("/excel")
 	@ApiOperation(value = "导入教师信息excel")
 	@ApiImplicitParam(name = "file" ,value = "excel文件(最大允许上传文件大小为100M)", dataTypeClass = MultipartFile.class)
@@ -105,13 +126,13 @@ public class TeacherController {
 		return APIResultBean.ok("删除成功！").build();
 	}
 
-	/*@ApiOperation(value = "保存关联老师对应的班级课程")
-	@PostMapping("/clazzCourse")
+	@ApiOperation(value = "保存关联老师对应的班级")
+	@PostMapping("/clazz")
 	@ApiImplicitParam(name = "clazzCourseTeacher",value = "关联数据",dataType = "ClazzCourseTeacher")
-	public APIResultBean saveClazzCourseTeacher(@RequestBody ClazzCourseTeacher clazzCourseTeacher){
-		teacherService.saveClazzCourse(clazzCourseTeacher);
+	public APIResultBean saveClazzCourseTeacher(@RequestBody TeacherDTO teacherDTO){
+		teacherService.saveClazzTeacher(teacherDTO);
 		return APIResultBean.ok("操作成功！").build();
-	}*/
+	}
 
 /*	@ApiOperation(value = "查询关联老师对应的班级课程")
 	@GetMapping("/clazzCourse/page")

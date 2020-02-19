@@ -1,10 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>班级详情页</title>
 </head>
 <body>
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <legend>班级基本信息</legend>
+    <form class="layui-form" lay-filter="gradeForm"  action="">
 
+        <div class="layui-form-item">
+            <label class="layui-form-label">班级编号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="id" autocomplete="off" class="layui-input">
+            </div>
+
+            <label class="layui-form-label">班级名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="clazzName" id="clazzName"  autocomplete="off" class="layui-input">
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属年级</label>
+            <div class="layui-input-inline">
+                <div id="grade"></div>
+            </div>
+            <div class="layui-input-inline" style="text-align: center">
+                <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">提交</button>
+            </div>
+        </div>
+    </form>
+</fieldset>
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <legend>班级课程老师</legend>
+    <table class="layui-table" id="test3" lay-filter="test3"></table>
+</fieldset>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit">
+        <i class="iconfont layui-extendedit-fill"></i>编辑教师</a>
+    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">
+        <i class="iconfont layui-extenddelete"></i>删除</a>-->
+</script>
 </body>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+<script>
+    //加载组件
+    layui.config({
+        base: '/static/layui_ext/xmSelect/'
+    }).extend({
+        xmSelect: 'xm-select'
+    });
+
+
+    layui.use(['jquery','form','layer','xmSelect','table'],function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            layer = layui.layer,
+            xmSelect = layui.xmSelect,
+        table = layui.table;
+
+        var clazzId='';
+
+        //渲染单选
+        var grade = xmSelect.render({
+            el: '#grade',
+            radio: true,
+            filterable: true,
+            clickClose: true,
+            name:'gradeId',
+            prop:{
+                name:"gradeName",
+                value:'id'
+            }
+        });
+
+        var index = parent.layer.getFrameIndex(window.name);
+
+        function fillFormData(data) {
+            console.log(JSON.stringify(data));
+            form.val("gradeForm",{
+                id:data.id,
+                clazzName:data.clazzName,
+            });
+
+            var arr =[];
+            arr[0] = data.gradeId;
+
+            grade.update({
+                initValue:arr
+            });
+
+        }
+
+        var courseTeacher;
+        function renderTable() {
+            courseTeacher = table.render({
+                elem: '#test3'
+                , url: apiPrefix+'/course/page'
+                // , toolbar: '#toolbar1' //开启头部工具栏，并为其绑定左侧模板
+                , defaultToolbar: [/*'filter', */'exports']
+                ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , title: '班级列表'
+                , height: 500
+                , cols: [ [
+                    {type: 'numbers',align:'center', fixed: 'left',width:'5%'}
+                    , { title: '班级编号', width: '20%',align:'center',templet:function(res) {
+                            return clazzId;
+                        }}
+                    , {field: 'courseName', title: '课程名称', width: '20%',align:'center'}
+                    , { title: '带课教师编号', width: '20%',align:'center',templet:function(item) {
+                        return '<div id="teacherId_'+item.id+'"></div>';
+                        }}
+                    , { title: '带课教师姓名', width: '20%',align:'center',templet:function(item){
+                           return '<div id="teacherName_'+item.id+'"></div>'
+                        }}
+                    , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '15%' }
+                ]],
+                where:{
+                    clazzId:clazzId
+                }
+                ,id:'test3'
+                , page: true
+                ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                    return {
+                        "code": res.resultCode, //解析接口状态
+                        "msg": res.resultMsg, //解析提示文本
+                        "count": res.data.totalElements, //解析数据长度
+                        "data": res.data.content //解析数据列表
+                    };
+                },done:function(res) {
+                    var data = res.data;
+
+                    $.each(data,function(i,val) {
+                       ajaxGet($,"/teacher?clazzId="+clazzId+"&courseId="+val.id,function(d) {
+                           if(d.success){
+                               $("#teacherId_"+val.id).html(d.data.id);
+                               $("#teacherName_"+val.id).html(d.data.teacherName);
+                           }
+                       });
+                    });
+
+                }
+            });
+        }
+
+        renderSelect();
+
+        layui.fillData = function(data) {
+            clazzId = data.id;
+            var loadIndex = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+            renderTable();
+            fillFormData(data);
+            layer.close(loadIndex);
+        }
+        //监听提交
+        form.on('submit(demo1)', function(data){
+
+            var url = '/clazz';
+            // layer.alert(JSON.stringify(data.field));
+            ajaxPost($,url,JSON.stringify(data.field),function(data){
+                if(data.success) {
+                    parent.layer.msg(data.resultMsg);
+                    parent.layer.close(index);
+                }
+                layer.msg(data.resultMsg);
+            });
+
+            return false;
+        });
+
+        function renderSelect(){
+
+            ajaxGet($,'/grade/list',function(res) {
+                if(res.success) {
+                    grade.update({
+                        data: res.data
+                    });
+                }
+            });
+        }
+
+
+        //监听行工具事件
+        table.on('tool(test3)', function (obj) {
+            var data = obj.data;
+            console.log(data);
+            if (obj.event === 'edit') {
+                 openModel("/clazzCourseTeacher",parent.layer,"添加班级课程教师",function(layero,index) {
+                     setTimeout(function(){
+                         var iframe = parent.window['layui-layer-iframe'+index];
+                         var json = data;
+                         json['clazzId'] = clazzId;
+                         json['clazzName'] = $('#clazzName').val();
+                         iframe.layui.fillData(json);
+                     },100);
+
+                 },function() {
+                     courseTeacher.reload();
+                 })
+            }
+        });
+    });
+</script>
+
 </html>

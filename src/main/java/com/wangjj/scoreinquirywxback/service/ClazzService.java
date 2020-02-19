@@ -5,6 +5,7 @@ import com.wangjj.scoreinquirywxback.dao.GradeRepository;
 import com.wangjj.scoreinquirywxback.dao.TeacherRepository;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.dto.ClazzDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.TeacherDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
@@ -43,10 +44,7 @@ public class ClazzService {
 	public List<ClazzDTO> getClazzList(ClazzDTO clazzDTO) {
 		List<Clazz> clazzes = clazzRepository.findAll(getClazzSpecification(clazzDTO));
 
-		List<ClazzDTO> convert = PropertyUtils.convert(clazzes, u -> {
-			ClazzDTO dto = getClazzDTO(u);
-			return dto;
-		});
+		List<ClazzDTO> convert = PropertyUtils.convert(clazzes, u -> getClazzDTO(u));
 
 		return convert;
 	}
@@ -63,6 +61,7 @@ public class ClazzService {
 			if (Objects.nonNull(clazz.getGradeId())) {
 				predicateList.add(criteriaBuilder.equal(root.get("grade").get("id"), clazz.getGradeId()));
 			}
+
 
 			if(Objects.nonNull(clazz.getTeacherId())) {
 				predicateList.add(criteriaBuilder.equal(root.joinSet("teachers").get("id"),clazz.getTeacherId()));
@@ -126,7 +125,7 @@ public class ClazzService {
 
 
 	public void saveClazz(ClazzDTO clazzDTO) {
-		if(gradeRepository.existsById(clazzDTO.getGradeId())) {
+		if(!gradeRepository.existsById(clazzDTO.getGradeId())) {
 			throw new GlobalException(String.format("不存在gradeId为%s的年级",clazzDTO.getGradeId()));
 		}
 
@@ -140,16 +139,5 @@ public class ClazzService {
 		clazzRepository.save(clazz);
 	}
 
-	@Transactional
-	public void saveClazzTeacher(Long clazzId, Long teacherId){
-		if(!clazzRepository.existsById(clazzId)) {
-			throw new GlobalException("班级不存在");
-		}
-		if(!teacherRepository.existsById(teacherId)) {
-			throw new GlobalException("老师不存在");
-		}
-		Clazz clazz = clazzRepository.getOne(clazzId);
-		Teacher teacher = teacherRepository.getOne(teacherId);
-		clazz.getTeachers().add(teacher);
-	}
+
 }

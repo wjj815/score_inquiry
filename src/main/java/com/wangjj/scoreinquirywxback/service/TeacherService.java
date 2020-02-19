@@ -8,6 +8,7 @@ import com.wangjj.scoreinquirywxback.excel.TeacherDataListener;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.dto.TeacherDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
+import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import com.wangjj.scoreinquirywxback.pojo.entity.Course;
 import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import com.wangjj.scoreinquirywxback.util.ParameterUtils;
@@ -68,15 +69,11 @@ public class TeacherService {
 
 		Page<Teacher> teacherPage = teacherRepository.findAll(getTeacherSpecification(teacherDTO), pageable);
 		/*将查询出来的数据实体转化为数据传输对象*/
-		PageResult<TeacherDTO> convert = PropertyUtils.convert(teacherPage, u -> {
-			TeacherDTO teacherDTO1 = getTeacherDTO(u);
-			return teacherDTO1;
-		});
-		return convert;
+		return PropertyUtils.convert(teacherPage, this::getTeacherDTO);
 	}
 
 	private Specification<Teacher> getTeacherSpecification(TeacherDTO teacherDTO) {
-		List<Long> clazzIds = ParameterUtils.analyse(teacherDTO.getClazzId());
+
 		return (root, query, criteriaBuilder) -> {
 			List<Predicate> predicateList = new ArrayList<>();
 
@@ -92,14 +89,9 @@ public class TeacherService {
 				predicateList.add(criteriaBuilder.equal(root.get("course").get("id"),teacherDTO.getCourseId()));
 			}
 
-			if(!CollectionUtils.isEmpty(clazzIds)) {
+			if(Objects.nonNull(teacherDTO.getClazzId())) {
 
-				Path<Object> objectPath = root.joinSet("clazzSet").get("id");
-				CriteriaBuilder.In<Object> in = criteriaBuilder.in(objectPath);
-				for (Long clazzId : clazzIds) {
-					in.value(clazzId);
-				}
-				predicateList.add(criteriaBuilder.and(in));
+				predicateList.add(criteriaBuilder.equal(root.joinSet("clazzSet").get("id"),teacherDTO.getClazzId()));
 			}
 
 			query.where(predicateList.toArray(new Predicate[predicateList.size()]));
@@ -140,10 +132,33 @@ public class TeacherService {
 	private TeacherDTO getTeacherDTO(Teacher u) {
 		TeacherDTO teacherDTO1 = new TeacherDTO();
 		PropertyUtils.copyNoNullProperties(u, teacherDTO1);
-		teacherDTO1.setCourseId(u.getCourse().getId());
+		if(Objects.nonNull(u.getCourse())) {
+			teacherDTO1.setCourseId(u.getCourse().getId());
+		}
 		return teacherDTO1;
 	}
 
+	@Transactional
+	public void saveClazzTeacher(TeacherDTO teacherDTO){
+		if(!clazzRepository.existsById(teacherDTO.getClazzId())) {
+			throw new GlobalException("班级不存在");
+		}
+		if(!teacherRepository.existsById(teacherDTO.getId())) {
+			throw new GlobalException("老师不存在");
+		}
+		TeacherDTO dto = new TeacherDTO();
+		dto.setClazzId(teacherDTO.getClazzId());
+		dto.setCourseId(teacherDTO.getCourseId());
+		List<Teacher> teacherList = teacherRepository.findAll(getTeacherSpecification(dto));
+		/*if(!CollectionUtils.isEmpty(teacherList)) {
+			throw new GlobalException("该班级老师已存在");
+		}*/
+
+		Clazz clazz = clazzRepository.getOne(teacherDTO.getClazzId());
+		clazz.getTeachers().removeAll(teacherList);
+		Teacher teacher = teacherRepository.getOne(teacherDTO.getId());
+		clazz.getTeachers().add(teacher);
+	}
 
 	public Teacher getTeacherById(Long teacherId) {
 		return teacherRepository.getOne(teacherId);

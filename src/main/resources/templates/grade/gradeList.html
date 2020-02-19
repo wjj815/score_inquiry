@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
+    <meta charset="UTF-8">
+    <title>年级列表</title>
+</head>
+<body>
+<div>
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header"><h3>年级列表</h3>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-table"  id="test" lay-filter="test"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">
+        <i class="iconfont layui-extendedit-fill"></i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">
+        <i class="iconfont layui-extenddelete"></i>删除</a>
+</script>
+
+
+<script type="text/html" id="toolbar">
+    <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" style="width: 40px" lay-event="addData">
+        <i class="iconfont layui-extendjia-"></i>
+    </button>
+</script>
+
+</body>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+
+<script>
+    layui.config({
+        base: '/static/layui_ext/xmSelect/'
+    }).extend({
+        xmSelect: 'xm-select'
+    });
+    layui.use(['table','form','jquery','xmSelect'], function () {
+        var table = layui.table,
+            $ = layui.jquery,
+            form = layui.form,
+            xmSelect = layui.xmSelect;
+//----------------grade---------------------------------------------
+        var gradeTable = table.render({
+            elem: '#test'
+            , url: apiPrefix+'/grade/page'
+            , toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
+            , defaultToolbar: [/*'filter',*/ 'exports']
+            ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , title: '年级列表'
+            , cols: [ [
+                {type: 'numbers',title:'序号',align:'center', fixed: 'left',width:'10%'}
+                , {field:'id', title: '年级编号', width: '10%',align:'center'}
+                , {field: 'gradeName', title: '年级名称', width: '20%',align:'center'}
+
+                /*加入同步请求，实现班级课程的显示*/
+                , { title: '班级课程', width: '30%',align:'center',templet:function(res) {
+                        return '<div id="c_' + res.id + '" ></div>'
+                    }}
+                , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '30%' }
+            ]]
+            , page: true
+            ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": res.resultCode, //解析接口状态
+                    "msg": res.resultMsg, //解析提示文本
+                    "count": res.data.totalElements, //解析数据长度
+                    "data": res.data.content //解析数据列表
+                };
+            },done:function(res) {
+                //异步加载课程
+                $.each(res.data,function (i, val) {
+
+                    ajaxGet($,"/course?ids="+res.data[i]['courseIds'],function (data) {
+                        var result = ' | ';
+                        $.each(data.data,function(i,val) {
+                            result += val.courseName+" | ";
+                        });
+                        $("#c_"+val.id).html(result);
+                    })
+                })
+            }
+        });
+
+
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'addData':
+                    /*var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));*/
+                    openModel("/gradeDetail",layer,"年级详情",function() {
+
+                    },function () {
+                        gradeTable.reload();
+                    })
+                    break;
+            }
+            ;
+        });
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            //console.controllerLog(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    ajaxDelete($,"/grade?id="+data.id,null,function (res) {
+                        if(res.success) {
+                            gradeTable.reload();
+                        }
+                        layer.msg(res.resultMsg);
+                    })
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                openModel("/gradeDetail",layer,"编辑年级信息",function(layero,index) {
+                    var iframe = window['layui-layer-iframe'+index];
+                    var json = data;
+                    iframe.layui.fillData(json);
+                },function() {
+                    gradeTable.reload();
+                })
+            }
+        });
+//------------------------grade-end---------------------------------------------
+    });
+</script>
+</html>

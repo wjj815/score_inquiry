@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 	 * @return
 	 */
 	@ExceptionHandler(value = {BindException.class,MethodArgumentNotValidException.class})
-	public Object handlerArgumentValidException(BindException ex) {
+	public Object handlerArgumentValidException(MethodArgumentNotValidException ex) {
 		BindingResult bindingResult = ex.getBindingResult();
 		StringBuilder stringBuffer = new StringBuilder();
 		if(bindingResult.hasErrors()){
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
 				//该格式仅仅作为response展示和log作用，前端应自己做校验
 				stringBuffer.append("--")
 						.append(fieldError.getDefaultMessage())
-						.append(" ");
+						.append("<br>");
 			}
 		}
 		log.error("参数校验错误：{}",stringBuffer.toString());

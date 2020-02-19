@@ -18,7 +18,7 @@ class CourseServiceImplTest {
 	@Test
 	void getCourseList() {
 		CourseDTO courseDTO = new CourseDTO();
-		courseDTO.setStudentId(20190101L);
+		courseDTO.setClazzId(1L);
 		List<CourseDTO> courseList = courseService.getCourseList(courseDTO);
 		System.out.println(JSON.toJSONString(courseList));
 	}

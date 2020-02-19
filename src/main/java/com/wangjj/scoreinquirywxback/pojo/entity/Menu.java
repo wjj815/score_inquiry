@@ -39,14 +39,13 @@ public class Menu {
 	/*菜单顺序*/
 	private Integer menuOrder;
 	/*一个子菜单只能对应一个父菜单*/
-	@OneToMany(mappedBy = "parentMenu",cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "parentMenu",cascade = CascadeType.ALL)
 	private final List<Menu> childMenu = new ArrayList<>();
 	/*父菜单*/
-	@JsonIgnore
 	@ManyToOne
 	private Menu parentMenu;
-	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.PERSIST)
+
+	@ManyToMany
 	@JoinTable(name = "t_role_menu",
 			joinColumns = @JoinColumn(name = "menu_id",referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))

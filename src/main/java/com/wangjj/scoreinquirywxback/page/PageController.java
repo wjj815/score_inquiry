@@ -1,7 +1,5 @@
 package com.wangjj.scoreinquirywxback.page;
 
-import com.wangjj.scoreinquirywxback.pojo.dto.GradeDTO;
-import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
 import com.wangjj.scoreinquirywxback.pojo.entity.Student;
 import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import com.wangjj.scoreinquirywxback.service.ClazzService;
@@ -16,8 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.List;
 
 /**
  * @ClassName : PageController
@@ -95,12 +91,6 @@ public class PageController {
 		return "teacher/teacherDetail";
 	}
 
-	@ApiOperation(value = "教师关联班级课程页面")
-	@GetMapping("/clazzCourseTeacher")
-	public String clazzCourseTeacher() {
-		return "teacher/clazzCourseTeacher";
-	}
-
 	@ApiOperation(value = "家长信息详情页面")
 	@GetMapping("/parent")
 	public String studentParent() {
@@ -110,7 +100,22 @@ public class PageController {
 	@ApiOperation(value = "年级详情页面")
 	@GetMapping("/gradeDetail")
 	public String gradeDetail() {
-		return "clazz/gradeDetail";
+		return "grade/gradeDetail";
+	}
+
+	@GetMapping("/clazzDetail")
+	public String clazzDetail() {
+		return "clazz/clazzDetail";
+	}
+
+	@GetMapping("/grade")
+	public String grade() {
+		return "grade/gradeList";
+	}
+
+	@GetMapping("/clazzCourseTeacher")
+	public String courseTeacher() {
+		return "clazz/clazzCourseTeacher";
 	}
 
 	@GetMapping("/student/{id}")

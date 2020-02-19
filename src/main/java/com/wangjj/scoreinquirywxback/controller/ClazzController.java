@@ -6,13 +6,12 @@ import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import com.wangjj.scoreinquirywxback.service.ClazzService;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import com.wangjj.scoreinquirywxback.valid.AddGroup;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,12 +58,12 @@ public class ClazzController {
 	}
 
 	@PostMapping
-	@ApiOperation(value = "增加班级")
-	@ApiImplicitParam(name = "clazz", value = "班级信息", dataType = "Clazz")
-	public APIResultBean addClazz(@RequestBody ClazzDTO clazz) {
+	@ApiOperation(value = "保存班级")
+	public APIResultBean addClazz(@RequestBody @Validated({AddGroup.class}) ClazzDTO clazz) {
 		clazzService.saveClazz(clazz);
 		return APIResultBean.ok("添加成功").build();
 	}
+
 
 	@DeleteMapping
 	@ApiOperation(value = "删除班级")

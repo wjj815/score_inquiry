@@ -26,11 +26,11 @@ public class GradeDTO {
 	@ApiModelProperty(name = "id",value = "年级编号,([添加，删除，更改]（必须）)",example = "2019")
 	private Long id; //ID
 	/** 年级名称 */
-	@NotBlank(groups = {AddGroup.class})
+	@NotBlank(groups = {AddGroup.class},message = "年级名称不能为空")
 	@ApiModelProperty(name = "gradeName",value = "年级名称:([添加]（必须）)",example = "2019级")
 	private String gradeName ;
 
-	@NotNull(groups = {AddGroup.class,UpdateGroup.class})
+	@NotBlank(groups = {AddGroup.class,UpdateGroup.class},message = "年级课程不能为空")
 	@ApiModelProperty(name = "courseIds",value = "课程ids,为年级的课程([添加，更改]（必须）)}")
 	private String courseIds;
 }

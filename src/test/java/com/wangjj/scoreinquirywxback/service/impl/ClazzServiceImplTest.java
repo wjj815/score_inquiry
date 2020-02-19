@@ -75,6 +75,6 @@ class ClazzServiceImplTest {
 	@Test
 	void saveClazzTeacher() {
 
-		clazzService.saveClazzTeacher(1L,2019002L);
+//		clazzService.saveClazzTeacher(1L,2019002L);
 	}
 }

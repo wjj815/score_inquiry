@@ -29,4 +29,6 @@ public class CourseDTO {
 	private Long gradeId;
 
 	private Long studentId;
+
+	private Long clazzId;
 }

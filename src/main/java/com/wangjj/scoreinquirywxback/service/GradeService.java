@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName : GradeService
@@ -120,6 +121,10 @@ public class GradeService  {
 	private GradeDTO getGradeDTO(Grade u) {
 		GradeDTO gradeDTO1 = new GradeDTO();
 		PropertyUtils.copyNoNullProperties(u,gradeDTO1);
+		String collect = u.getCourses().stream()
+				.map(e->String.valueOf(e.getId()))
+				.collect(Collectors.joining(","));
+		gradeDTO1.setCourseIds(collect);
 		return gradeDTO1;
 	}
 

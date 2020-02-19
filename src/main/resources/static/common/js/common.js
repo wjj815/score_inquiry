@@ -53,6 +53,16 @@ function ajaxDelete($,url,data,fun)
     });
 }
 
+function ajaxGetBySync($,url,fun)
+{
+    $.ajax({
+        url: apiPrefix+url,
+        type: 'get',
+        async:false,
+        dataType: 'json',
+        success: fun
+    });
+}
 function ajaxGet($,url,fun)
 {
     $.ajax({

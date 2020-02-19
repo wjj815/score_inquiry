@@ -37,7 +37,7 @@ public class GradeController {
 	@ApiOperation(value = "保存年级信息")
 	public APIResultBean addGrade(@RequestBody @Validated({AddGroup.class}) GradeDTO gradeDTO) {
 		gradeService.saveGrade(gradeDTO);
-		return APIResultBean.ok("添加成功").build();
+		return APIResultBean.ok("操作成功！").build();
 	}
 
 	@DeleteMapping

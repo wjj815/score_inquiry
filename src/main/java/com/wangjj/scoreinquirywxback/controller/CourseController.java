@@ -6,6 +6,7 @@ import com.wangjj.scoreinquirywxback.pojo.entity.Course;
 import com.wangjj.scoreinquirywxback.pojo.dto.request.IdsParameter;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
 import com.wangjj.scoreinquirywxback.service.CourseService;
+import com.wangjj.scoreinquirywxback.util.ParameterUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -39,6 +40,8 @@ public class CourseController {
 		return APIResultBean.ok("操作成功！").build();
 	}
 
+
+
 	@ApiOperation(value = "分页得到课程信息")
 	@GetMapping("/page")
 	@ApiImplicitParams({
@@ -56,6 +59,14 @@ public class CourseController {
 	@GetMapping("/list")
 	public APIResultBean courseList(CourseDTO courseDTO) {
 		List<CourseDTO> courseList = courseService.getCourseList(courseDTO);
+		return APIResultBean.ok(courseList).build();
+	}
+
+
+	@ApiOperation(value = "通过ids得到课程信息")
+	@GetMapping
+	public APIResultBean course(IdsParameter idsParameter) {
+		List<CourseDTO> courseList = courseService.findAllByIds(idsParameter);
 		return APIResultBean.ok(courseList).build();
 	}
 

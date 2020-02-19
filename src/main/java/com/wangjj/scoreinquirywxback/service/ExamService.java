@@ -2,6 +2,7 @@ package com.wangjj.scoreinquirywxback.service;
 
 import com.wangjj.scoreinquirywxback.dao.ExamRepository;
 import com.wangjj.scoreinquirywxback.dao.GradeRepository;
+import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.dto.ExamDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.CourseScore;
@@ -63,11 +64,11 @@ public class ExamService {
 		/*修改考试信息*/
 		PropertyUtils.copyNoNullProperties(examDTO,origin);
 		/*查询年级信息是否存在*/
-		if(gradeRepository.existsById(examDTO.getGradeId())) {
-			Grade grade = gradeRepository.getOne(examDTO.getGradeId());
-			origin.setGrade(grade);
+		if(!gradeRepository.existsById(examDTO.getGradeId())) {
+			throw new GlobalException("年纪不存在");
 		}
-
+		Grade grade = gradeRepository.getOne(examDTO.getGradeId());
+		origin.setGrade(grade);
 		examRepository.save(origin);
 	}
 

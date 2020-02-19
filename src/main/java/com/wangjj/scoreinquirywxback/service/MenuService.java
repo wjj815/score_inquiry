@@ -1,6 +1,7 @@
 package com.wangjj.scoreinquirywxback.service;
 
 import com.wangjj.scoreinquirywxback.dao.MenuRepository;
+import com.wangjj.scoreinquirywxback.pojo.dto.MenuDTO;
 import com.wangjj.scoreinquirywxback.pojo.entity.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,7 +19,7 @@ public class MenuService {
 	private MenuRepository menuRepository;
 
 
-	public List<Menu> findMenuList() {
+	public List<Menu> findMenuList(MenuDTO menuDTO) {
 		return null;
 	}
 }

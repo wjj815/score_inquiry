@@ -37,8 +37,8 @@ class TeacherServiceImplTest {
 	@Test
 	void getTeacherPage() {
 		TeacherDTO teacherDTO = new TeacherDTO();
-//		teacherDTO.setCourseId(25L);
-		teacherDTO.setClazzId("1");
+		teacherDTO.setCourseId(25L);
+		teacherDTO.setClazzId(1L);
 		PageResult<TeacherDTO> teacherPage = teacherService.getTeacherPage(teacherDTO, PageRequest.of(0, 10));
 		System.out.println(teacherPage);
 	}
@@ -76,8 +76,17 @@ class TeacherServiceImplTest {
 	void getTeacherList1() {
 		TeacherDTO teacherDTO = new TeacherDTO();
 		teacherDTO.setCourseId(25L);
-		teacherDTO.setClazzId("201901");
+		teacherDTO.setClazzId(1L);
 		List<TeacherDTO> teacherList = teacherService.getTeacherList(teacherDTO);
 		System.out.println(teacherList);
+	}
+
+	@Test
+	void saveClazzTeacher() {
+		TeacherDTO teacherDTO = new TeacherDTO();
+		teacherDTO.setId(2019003L);
+		teacherDTO.setCourseId(25L);
+		teacherDTO.setClazzId(1L);
+		teacherService.saveClazzTeacher(teacherDTO);
 	}
 }

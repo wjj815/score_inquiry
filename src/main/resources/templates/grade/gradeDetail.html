@@ -7,9 +7,9 @@
 <body>
 <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
     <legend>年级基本信息</legend>
-    <form class="layui-form"  lay-filter="parentForm" action="">
+    <form class="layui-form" lay-filter="gradeForm"  action="">
 
-        <div class="layui-form-item" pane>
+        <div class="layui-form-item">
                 <label class="layui-form-label">年级编号</label>
                 <div class="layui-input-inline">
                     <input type="text" id="id" name="id"  autocomplete="off" class="layui-input">
@@ -58,6 +58,7 @@
             el: '#demo1',
             autoRow: true,
             filterable: true,
+            name:'courseIds',
             prop:{
                 name:"courseName",
                 value:'id'
@@ -74,16 +75,17 @@
 
         function fillFormData(data) {
             console.log(JSON.stringify(data));
-            form.val("parentForm",{
-                studentId:data.studentId,
+            form.val("gradeForm",{
                 id:data.id,
-                name:data.name,
-                studentName:data.studentName,
-                sex:data.sex,
-                age:data.age,
-                idCardNo:data.idCardNo,
-                phone:data.phone,
-                studentRelation:data.studentRelation
+                gradeName:data.gradeName,
+                courseIds:data.courseIds
+            });
+
+            var arr = data.courseIds.split(",");
+
+            console.log(arr);
+            demo1.update({
+                initValue:arr
             });
 
         }
@@ -97,9 +99,9 @@
         }
         //监听提交
         form.on('submit(demo1)', function(data){
-            var studentId = $('#studentId').val();
-            var url = '/student/' + studentId + '/parent';
-            // alert(JSON.stringify(data.field));
+
+            var url = '/grade';
+            // layer.alert(JSON.stringify(data.field));
             ajaxPost($,url,JSON.stringify(data.field),function(data){
                 if(data.success) {
                     parent.layer.msg(data.resultMsg);

@@ -95,6 +95,6 @@ public class TeacherDTO {
 
 	private Long courseId;
 
-	private String clazzId;
+	private Long clazzId;
 
 }
