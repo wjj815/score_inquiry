@@ -7,68 +7,62 @@
 
 <body>
 
-<div class="layui-row">
-        <div class="layui-card">
-            <div class="layui-card-header" style="height: auto">
-                <form class="layui-form " action="">
-                    <div class="layui-inline">
-                        <button class="layui-btn layui-btn-normal layui-btn-sm" style="width: 40px" lay-event="getCheckData">
-                            <i class="iconfont layui-extendjia-"></i>
-                        </button>
-                        <button class="layui-btn layui-btn-danger layui-btn-sm" style="width: 40px" lay-event="getCheckLength">
-                            <i class="iconfont layui-extenddelete"></i>
-                        </button>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">年级:</label>
-                        <div class="layui-input-inline">
-                            <select name="grade" id="grade" lay-filter="grade">
-                                <!--<option value="2013">2013级</option>-->
-                                <!--<option value="2014">2014级</option>-->
-                                <!--<option value="2015">2015级</option>-->
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">班级:</label>
-                        <div class="layui-input-inline">
-                            <select name="clazz" id="clazz" lay-filter="clazz" lay-search="">
-                               <!-- <option value="2013">201901</option>
-                                <option value="2014">201902</option>
-                                <option value="2015">201903</option>-->
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <button type="button" onclick="downloadTemplate()" class="layui-btn" >导入模版下载</button>
-                        <button type="button"  class="layui-btn layui-btn-normal" id="uploadBtn">
-                            <i class="iconfont layui-extendcloud-upload"></i>
-                            导入
-                        </button>
-                        <button type="button" onclick="downloadExcel()" class="layui-btn">
-                            <i class="iconfont layui-extendcloud-download"></i>
-                            导出
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <div class="layui-card-body">
-                <table class="layui-hide"  id="test" lay-filter="test"></table>
+<div class="layui-row" style="margin-top: 20px">
+    <form class="layui-form " action="">
+        <div class="layui-inline" style="padding-left: 10px">
+            <button type="button" class="layui-btn layui-btn-warm layui-btn-sm"  id="addStudentBtn">
+                <i class="iconfont layui-extendjia-"></i><strong>添加</strong>
+            </button>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">年级/班级:</label>
+            <div class="layui-input-inline">
+                <cascader id="demo1"></cascader>
             </div>
         </div>
+
+        <div class="layui-inline">
+            <button type="button" onclick="downloadTemplate()" class="layui-btn" >导入模版下载</button>
+            <button type="button"  class="layui-btn layui-btn-normal" id="uploadBtn">
+                <i class="iconfont layui-extendcloud-upload"></i>
+                导入
+            </button>
+            <button type="button" onclick="downloadExcel()" class="layui-btn">
+                <i class="iconfont layui-extendcloud-download"></i>
+                导出
+            </button>
+        </div>
+    </form>
+</div>
+<div class="layui-row">
+    <table class="layui-hide"  id="test" lay-filter="test"></table>
 </div>
 
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit">
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">
         <i class="iconfont layui-extendedit-fill"></i>编辑
     </a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">
+        <i class="iconfont layui-extenddelete"></i>删除
+    </a>
+</script>
+
+<script type="text/html" id="uploadForm">
+
+
 </script>
 </body>
 <!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
 <!--/*/</th:block>/*/-->
 
 <script>
+
+    layui.config({
+        base: '/static/layui_ext/ajaxCascader/'
+        ,version: '1.6'
+    });
 
     function downloadTemplate() {
         window.location.href = '/static/importTemplates/导入学生模版.xlsx';
@@ -77,26 +71,91 @@
     function downloadExcel() {
         window.location.href = apiPrefix+'/student/excel';
     }
-    layui.use(['jquery','table','upload','layer','form'], function () {
+    layui.use(['jquery','table','upload','layer','form','ajaxCascader'], function () {
         var table = layui.table,
         upload = layui.upload,
         layer = layui.layer,
         $ = layui.jquery,
         form = layui.form;
 
+        var cascader = layui.ajaxCascader;
+
         var gradeId = '';
         var clazzId = '';
+
+        ajaxGet($,'/grade/list',function(res){
+            var arr = [];
+            data = res.data;
+
+            $.each(data,function(i,val){
+                var o = {};
+                o.label = val.gradeName;
+                o.value = val.id;
+                o.hasChild = true;
+                arr[i] = o;
+
+            })
+           renderCascader(arr);
+        });
+        // Ajax传参模式
+        function renderCascader(data){
+            cascader.load({
+                elem: '#demo1'
+                ,search: {
+                    show: true
+                     /*minLabel: 1,
+                     placeholder: '请输入搜索词'*/
+                }
+                ,clear: true
+                ,value: 0
+                ,data:data
+                ,getChildren: function(value,callback){
+                    console.log("getChilden");
+                    var data = []
+                    ajaxGet($,'/clazz/list?gradeId='+value,function(res){
+                        data = res.data;
+                        $.each(data,function(i,val){
+                            var o = {};
+                            o.label = val.clazzName;
+                            o.value = val.id;
+                            data[i] = o;
+                        });
+                        callback(data);
+                    });
+                }
+            });
+            cascader.on('click','#demo1',function(data){
+                var chooseData = cascader.getChooseData('#demo1');
+                if(chooseData[0] !== undefined) {
+                    gradeId = chooseData[0];
+                }
+                if(chooseData[1] !== undefined) {
+                    clazzId = chooseData[1];
+                }
+
+                active['reload'].call();
+
+                // 获取当前已选中的数据,可单独使用
+            });
+            $("i.layui-icon-close").click(function() {
+                gradeId = '';
+                clazzId = '';
+
+                active['reload'].call();
+            });
+        }
+
         var t = table.render({
             elem: '#test'
-            , url: apiPrefix+'/student/list'
+            , url: apiPrefix+'/student/page'
          /*   , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板*/
             , defaultToolbar: [/*'filter', 'exports'*/]
             ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             , title: '学生信息'
             , cols: [ [
-                {type: 'checkbox',align:'center',width:'5%'}
+               /* {type: 'checkbox',align:'center',width:'5%'}*/
                /* , {type:'numbers', title: '序号', width: '5%',align:'center'}*/
-                , {field: 'id', title: '学号', width: '10%',align:'center'}
+                 {field: 'id', title: '学号', width: '15%',align:'center'}
                 , {field: 'studentName', title: '姓名', width: '15%',align:'center'}
                 , {field: 'sex', title: '性别', width: '7%',align:'center'}
                 , {field: 'age', title: '年龄', width: '7%',align:'center'}
@@ -149,16 +208,24 @@
             var data = obj.data;
             //console.controllerLog(obj)
             if (obj.event === 'del') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
+                layer.confirm('<i class="layui-icon layui-icon-tips" style="color: red"></i>真的删除该学生信息吗？', function (index) {
+                    ajaxDelete($,'/student/'+data.id,null,function(res) {
+                        if(res.success) {
+                            // active['reload'].call();
+                            obj.del();
+                        }
+                       layer.msg(res.resultMsg);
+                    });
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
-                openModel("/student/"+data.id,layer,"编辑学生信息",function(layero,index){
+                openModel("/studentDetail",layer,"编辑学生信息",function(layero,index){
                     ajaxGet($,"/student/"+data.id,function (data) {
-                        var iframe = window['layui-layer-iframe'+index];
-                        var json = data.data;
-                        iframe.layui.fillData(json);
+                       setTimeout(function(){
+                           var iframe = window['layui-layer-iframe'+index];
+                           var json = data.data;
+                           iframe.layui.fillData(json);
+                       },50);
                     });
                 },function () {
                    t.reload();
@@ -166,27 +233,26 @@
             }
         });
 
-        function uploadFun() {
-            upload.render({
-                elem: '#uploadBtn'
-                , url: apiPrefix + '/student/excel' //改成您自己的上传接口
-                , accept: 'file' //普通文件
-                , method: 'post'
-                , done: function (res) {
-                    if (res.success) {
-                        layer.alert(res.resultMsg);
-                        t.reload();
-                    }
-                    console.log(res);
-                    uploadFun();
-                }
-            });
-        }
+       $("#uploadBtn").click(function() {
+           if(gradeId === ''|| clazzId == '') {
+               layer.msg("请选择年级和班级，然后进行导入！");
+               return;
+           }
+           openMiniModel("/uploadForm",layer,"导入学生excel",function (layero, index) {
+               setTimeout(function(){
+                   var json = {};
+                   json['gradeId'] = gradeId;
+                   json['clazzId'] = clazzId;
+                   var iframe = window['layui-layer-iframe'+index];
+                   iframe.layui.fillData(json);
+               },50);
+           },function() {
+               active['reload'].call();
+           })
+       });
 
-        uploadFun();
 
-
-        var $ = layui.$, active = {
+        var active = {
             reload: function(){
                 // alert(gradeId);
                 //执行重载
@@ -202,40 +268,12 @@
             }
         };
 
+        $('#addStudentBtn').click(function() {
+            openModel('/studentDetail',layer,"添加学生",function() {
 
-        //异步填充年级内容
-        layuiSelect($,"/grade/list",function (htmls,data) {
-            for(var x in data) {
-                htmls += '<option value="'+data[x].id+'">'+data[x].gradeName+'</option>'
-            }
-            $('#grade').html(htmls);
-            form.render('select');//需要渲染一下
-        });
-
-        //监听复选框
-        form.on('select(grade)', function (data) {
-            var value = data.value;
-
-            if(value == ''){
-                // var htmls = '<option value="">请选择</option>'; //全局变量
-                $('#clazz').html('');
-                form.render('select');//需要渲染一下
-                return;
-            }
-            layuiSelect($,"/clazz/list?gradeId="+data.value,function (htmls,data) {
-                for(var x in data) {
-                    htmls += '<option value="'+data[x].id+'">'+data[x].clazzName+'</option>'
-                }
-                $('#clazz').html(htmls);
-                form.render('select');//需要渲染一下
+            },function() {
+               t.reload();
             });
-            gradeId = value;
-            active['reload'].call(this);
-        });
-        //监听复选框
-        form.on('select(clazz)', function (data) {
-            clazzId = data.value;
-            active['reload'].call(this);
         });
 
 

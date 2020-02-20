@@ -1,7 +1,13 @@
 package com.wangjj.scoreinquirywxback.excel;
 
+import com.wangjj.scoreinquirywxback.dao.StudentRepository;
+import com.wangjj.scoreinquirywxback.pojo.bo.GradeAndClazz;
+import com.wangjj.scoreinquirywxback.pojo.dto.StudentDTO;
+import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
+import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
 import com.wangjj.scoreinquirywxback.pojo.entity.Student;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -17,8 +23,13 @@ import java.util.Calendar;
 public class StudentDataListener extends BaseDataListener<Student> {
 
 
-	public StudentDataListener(JpaRepository<Student, Long> jpaRepository) {
-		super(jpaRepository);
+	private GradeAndClazz gradeAndClazz;
+
+
+	public StudentDataListener(StudentRepository studentRepository, GradeAndClazz gradeAndClazz) {
+			super(studentRepository);
+			this.gradeAndClazz = gradeAndClazz;
+
 	}
 
 	@Override
@@ -27,6 +38,8 @@ public class StudentDataListener extends BaseDataListener<Student> {
 		instance.setTime(data.getBirthday());
 //		controllerLog.info("{}当前年份, {} 生日年份， {}相差年份",LocalDate.now().getYear(), );
 		data.setAge(LocalDate.now().getYear() - instance.get(Calendar.YEAR));
+		data.setGrade(gradeAndClazz.getGrade());
+		data.setClazz(gradeAndClazz.getClazz());
 	}
 
 

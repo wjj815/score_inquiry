@@ -4,6 +4,7 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.exception.ExcelDataConvertException;
 import com.alibaba.fastjson.JSON;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -17,11 +18,12 @@ import java.util.List;
  * @Description : TODO
  */
 @Slf4j
+@NoArgsConstructor
 public abstract class BaseDataListener<T> extends AnalysisEventListener<T> {
 
 
-	/*每隔20条存储数据库，实际使用可以3000条然后清理list，方便回收*/
-	private static final int BATCH_COUNT = 20;
+	/*每隔100条存储数据库，实际使用可以3000条然后清理list，方便回收*/
+	private static final int BATCH_COUNT = 100;
 	List<T> list = new ArrayList<>();
 
 	private JpaRepository<T,Long> jpaRepository;
@@ -31,13 +33,10 @@ public abstract class BaseDataListener<T> extends AnalysisEventListener<T> {
 
 
 	public BaseDataListener(JpaRepository<T,Long> jpaRepository) {
-		this(new StringBuffer(),jpaRepository);
+		this.jpaRepository = jpaRepository;
+		stringBuffer = new StringBuffer();
 	}
 
-	public BaseDataListener(StringBuffer stringBuffer,JpaRepository<T,Long> jpaRepository) {
-		this.jpaRepository = jpaRepository;
-		this.stringBuffer = stringBuffer;
-	}
 
 	@Override
 	public void invoke(T data, AnalysisContext context) {

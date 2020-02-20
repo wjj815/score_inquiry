@@ -40,10 +40,10 @@ public class Role {
 	/** 更新时间 */
 	private Date updatedTime ;
 	@JsonIgnore
-	@OneToMany(mappedBy = "role")
+	@OneToMany(mappedBy = "role",fetch = FetchType.LAZY)
 	private final List<User> user = new ArrayList<>();
 
-	@ManyToMany(mappedBy = "roleList")
+	@ManyToMany(mappedBy = "roleList",fetch = FetchType.LAZY)
 	private final List<Menu> menuList = new ArrayList<>();
 
 }

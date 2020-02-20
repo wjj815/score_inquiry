@@ -22,7 +22,7 @@ public class ExcelUtils {
 
 		if(!(multipartFile.getOriginalFilename().endsWith(".xls")||
 				multipartFile.getOriginalFilename().endsWith(".xlsx"))){
-			throw new GlobalException("导入文件格式错误！");
+			throw new GlobalException("导入文件格式错误！仅支持Excel文件");
 		}
 	}
 }

@@ -94,7 +94,7 @@ public class PageController {
 	@ApiOperation(value = "家长信息详情页面")
 	@GetMapping("/parent")
 	public String studentParent() {
-		return "student/parentDetail";
+		return "parent/parentDetail";
 	}
 
 	@ApiOperation(value = "年级详情页面")
@@ -118,15 +118,14 @@ public class PageController {
 		return "clazz/clazzCourseTeacher";
 	}
 
-	@GetMapping("/student/{id}")
-	public String studentDetail(@PathVariable Long id,Model model) {
-		Student student = new Student();
-//		List<Grade> gradeList = gradeService.findGradeList(new GradeDTO());
-//		log.info("student:{}", JSON.toJSON(student));
-//		model.addAttribute("gradeList",gradeList);
-		/*List<Clazz> clazzList = clazzService.getClazzList(Clazz.builder().gradeId(student.getGradeId()).build());
-		model.addAttribute("clazzList",clazzList);*/
-		model.addAttribute("student",student);
+	@GetMapping("/uploadForm")
+	public String uploadForm() {
+		return "upload/uploadForm";
+	}
+
+
+	@GetMapping("/studentDetail")
+	public String studentDetail() {
 		return "student/studentDetail";
 	}
 }

@@ -12,9 +12,9 @@ import lombok.Data;
  */
 @Data
 @ApiModel(description = "分页参数")
-public class PageParameter {
+public class  PageParameter {
 	@ApiModelProperty(value = "分页参数:页码(从1开始)", name = "page",dataType = "int",required = true, example = "0")
 	private int page;
 	@ApiModelProperty(value = "分页参数:页大小", name = "size",dataType = "int", required = true, example = "10")
-	private int size;
+	private int limit;
 }

@@ -1,5 +1,7 @@
 package com.wangjj.scoreinquirywxback.controller;
 
+import com.wangjj.scoreinquirywxback.pojo.dto.StudentDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Parent;
 import com.wangjj.scoreinquirywxback.pojo.entity.Student;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -46,26 +49,31 @@ public class StudentController {
 
 	@PostMapping
 	@ApiOperation(value = "增加/修改学生信息")
-	@ApiImplicitParam(name = "student",value = "学生信息", dataType = "Student")
-	public APIResultBean saveStudent(@RequestBody Student student) {
+	public APIResultBean saveStudent(@RequestBody StudentDTO studentDTO) {
 		//如果id为空，则该学生不存在，执行新增操作，如果id不为空，则进行局部更新操作
-		Student originalStudent = Objects.isNull(student.getId()) ?
-				new Student() : studentService.findStudentById(student.getId());
-		BeanUtils.copyProperties(student,originalStudent, PropertyUtils.getNullPropertyNames(student));
-//		studentService.saveStudent(originalStudent);
+		studentService.saveStudent(studentDTO);
 		return APIResultBean.ok("操作成功！").build();
 	}
 
-	@PostMapping("/excel")
+	@PostMapping("/excel/{gradeIdAndClazzId}")
 	@ApiOperation(value = "导入学生信息excel")
 	@ApiImplicitParam(name = "file" ,value = "excel文件(最大允许上传文件大小为100M)", dataTypeClass = MultipartFile.class)
-	public APIResultBean importStudentList(@RequestParam("file") MultipartFile multipartFile) {
+	public APIResultBean importStudentList(@RequestParam("file") MultipartFile multipartFile,@PathVariable String gradeIdAndClazzId) {
+		String[] split = gradeIdAndClazzId.split("-");
+
+		if(split.length != 2) {
+			throw new GlobalException("导入失败：年级和班级不能为空！");
+		}
 		log.info("导入文件名:{}",multipartFile.getOriginalFilename());
 		//检查文件是否合法
 		ExcelUtils.check(multipartFile);
+		StudentDTO studentDTO = new StudentDTO();
+		studentDTO.setGradeId(Long.parseLong(split[0]));
+		studentDTO.setClazzId(Long.parseLong(split[1]));
 		try {
-			String s = studentService.importStudentList(multipartFile.getInputStream());
-			return APIResultBean.ok("导入成功!"+s).build();
+			String s = studentService.importStudentList(multipartFile.getInputStream(),studentDTO);
+
+			return APIResultBean.ok("导入结果!"+s).build();
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new GlobalException("导入失败,请检查您的导入数据");
@@ -108,45 +116,38 @@ public class StudentController {
 	}
 
 
-	@GetMapping("/list")
+	@GetMapping("/page")
 	@ApiOperation(value = "分页获得学生信息")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "page", value = "分页参数:页码(从1开始)", dataType = "Integer",defaultValue = "1"),
 			@ApiImplicitParam(name = "limit", value = "分页参数:页大小", dataType = "Integer",defaultValue = "10"),
-			@ApiImplicitParam(name="clazzId",value = "班级id",dataType = "Long"),
-			@ApiImplicitParam(name="gradeId",value = "年级id",dataType = "Long")
 	})
-	public APIResultBean studentList(@RequestParam Integer page,
-							 @RequestParam Integer limit,
-							 @RequestParam(required = false) Long clazzId,
-							 @RequestParam(required = false) Long gradeId) {
+	public APIResultBean studentPage(@RequestParam Integer page,
+									 @RequestParam Integer limit,
+									 StudentDTO studentDTO) {
 		PageRequest pageRequest = PageRequest.of(page - 1,limit);
 
-//		Page<Student> studentPage = studentService.findStudent(
-//				new Student().toBuilder()
-//						.clazzId(clazzId)
-//						/*.gradeId(gradeId)*/
-//						.build(),pageRequest);
-		return APIResultBean.ok(/*studentPage*/).build();
+		PageResult<StudentDTO> studentPage = studentService.findStudentPage(studentDTO, pageRequest);
+		return APIResultBean.ok(studentPage).build();
+	}
+
+	@GetMapping("/list")
+	@ApiOperation(value = "获得学生信息列表")
+	public APIResultBean studentList(StudentDTO studentDTO) {
+		List<StudentDTO> studentList = studentService.findStudentList(studentDTO);
+		return APIResultBean.ok(studentList).build();
 	}
 
 	@GetMapping("/{studentId}")
 	@ApiOperation(value = "根据id获取学生详情")
 	@ApiImplicitParam(name = "studentId",value = "学生学号",dataType = "Long")
 	public APIResultBean getStudent(@PathVariable Long studentId) {
-		Student student = studentService.findStudentById(studentId);
+		StudentDTO student = studentService.findStudentById(studentId);
 		return APIResultBean.ok(student).build();
 	}
 
-	/*@PostMapping("{studentId}")
-	@ApiOperation(value = "根据id修改学生信息")
-	@ApiImplicitParam(name = "studentId",value = "学生学号",dataType = "Long")
-	public APIResultBean getStudent(@PathVariable Long studentId,@RequestBody Student student) {
-		Student student = studentService.findStudentById(studentId);
-		return APIResultBean.ok(student).build();
-	}*/
 
-	@ApiOperation(value = "根据学生id保存学生家长")
+	/*@ApiOperation(value = "根据学生id保存学生家长")
 	@PostMapping("/{studentId}/parent")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "studentId",value = "学生id",dataType = "Long"),
@@ -161,8 +162,14 @@ public class StudentController {
 		BeanUtils.copyProperties(parent,originalParent, PropertyUtils.getNullPropertyNames(parent));
 //		studentService.saveRelevanceOfStudentAndParent(studentId,originalParent);
 		return APIResultBean.ok("操作成功！").build();
-	}
+	}*/
 
+	@DeleteMapping("/{studentId}")
+	@ApiOperation(value = "根据id删除学生信息")
+	public APIResultBean deleteStudent(@PathVariable Long studentId) {
+		studentService.deleteStudent(studentId);
+		return APIResultBean.ok("删除成功").build();
+	}
 
 	@ApiOperation(value = "根据学生id查询学生家长")
 	@GetMapping("/{studentId}/parent")
@@ -172,13 +179,13 @@ public class StudentController {
 		return APIResultBean.ok(/*parents*/).build();
 	}
 
-	@ApiOperation(value = "根据学生id和家长id查询学生家长")
+	/*@ApiOperation(value = "根据学生id和家长id查询学生家长")
 	@GetMapping("/{studentId}/parent/{parentId}")
 	@ApiImplicitParam(name = "studentId",value = "学生id",dataType = "Long")
 	public APIResultBean findStudentParent(@PathVariable("studentId") Long studentId,
 										   @PathVariable Long parentId) {
 		Parent parent = studentService.findParentByStudentIdAndParentId(studentId,parentId);
 		return APIResultBean.ok(parent).build();
-	}
+	}*/
 
 }

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
+    <meta charset="UTF-8">
+    <title>文件上传表单</title>
+</head>
+<body>
+<form class="layui-form"style="margin: 20px" lay-filter="gradeForm"  action="">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">年级编号</label>
+        <div class="layui-input-inline">
+            <input type="text" id="gradeId"  disabled autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">班级编号</label>
+        <div class="layui-input-inline">
+            <input type="text" id="clazzId" disabled  autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+
+        <label class="layui-form-label">Excel文件</label>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn layui-btn-normal" id="test8">选择文件</button>
+            <button type="button" class="layui-btn upload" id="test9">开始上传</button>
+        </div>
+
+    </div>
+</form>
+
+
+</body>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+<script>
+    layui.use(['upload','layer','jquery','laydate','form'], function(){
+        var upload = layui.upload;
+        var layer = layui.layer;
+        var $ = layui.jquery;
+
+        var loadIndex;
+        layui.fillData=function(data) {
+            var loadIndex = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+           $('#gradeId').val(data.gradeId);
+           $('#clazzId').val(data.clazzId);
+            var url = apiPrefix+ "/student/excel/"+data.gradeId+'-'+data.clazzId;
+            renderUpload(url);
+            layer.close(loadIndex);
+        }
+
+        function renderUpload(url) {
+            console.log(url);
+            upload.render({
+                elem: '#test8'
+                ,url: url //改成您自己的上传接口
+                ,auto: false
+                //,multiple: true
+                ,accept:'file'
+                ,bindAction: '#test9'
+                , before: function (obj) {
+                    layer.tips('接口地址：'+ this.url, this.item, {tips: 1});
+                    console.log(this.url);
+                    loadIndex = layer.load(1, {
+                        shade: [0.1,'#fff'] //0.1透明度的白色背景
+                    });
+                }
+                , done: function (res) { //上传完毕回调
+                    if(res.success) {
+                        parent.layer.close(index);
+                        parent.layer.alert(res.resultMsg);
+                    }
+                    layer.msg(res.resultMsg);
+                    layer.close(loadIndex);
+                }
+                , error: function () {   //请求异常回调
+
+                }
+            });
+        }
+       /* $(document).on('change', '.upload', function () {
+            //上传接口
+            var url = apiPrefix+ "/student/excel/"+gradeId+'-'+clazzId;
+            console.log("change"+url);
+            //执行实例
+            upload.render({
+                elem: '#' + $(this).attr('id')//绑定元素
+                , url: url
+                , accept: 'file'
+                , multiple: false
+                , auto: false
+                , bindAction: '#fileUploadAction'
+                , before: function (obj) {
+                    layer.msg("文件上传中....")
+                }
+                , done: function (res) { //上传完毕回调
+
+                }
+                , error: function () {   //请求异常回调
+
+                }
+            });
+
+            //鼠标点击事件执行附件上传操作
+            $("#fileUploadAction").click();
+        });*/
+
+        var index = parent.layer.getFrameIndex(window.name);
+
+
+        //选完文件后不自动上传
+
+
+
+    });
+</script>
+</html>

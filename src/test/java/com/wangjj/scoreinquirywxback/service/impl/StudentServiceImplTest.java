@@ -1,7 +1,6 @@
 package com.wangjj.scoreinquirywxback.service.impl;
 
 
-import com.wangjj.scoreinquirywxback.pojo.dto.ParentDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.StudentDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.service.StudentService;
@@ -20,16 +19,17 @@ class StudentServiceImplTest {
 	@Autowired
 	private StudentService studentService;
 
-	@Test
-	void addStudentParent() {
 
-		studentService.saveRelevanceOfStudentAndParent(201901011L,115L);
-	}
 
 	@Test
 	void importStudentList() {
 		try {
-			studentService.importStudentList(new FileInputStream("C:\\Users\\1090086767\\Desktop\\导入学生模版.xlsx"));
+			long l = System.currentTimeMillis();
+			StudentDTO studentDTO = new StudentDTO();
+			studentDTO.setGradeId(2019L);
+			studentDTO.setClazzId(1L);
+			studentService.importStudentList(new FileInputStream("C:\\Users\\1090086767\\Desktop\\毕业设计\\导入学生模版.xlsx"), studentDTO);
+			System.out.println(System.currentTimeMillis() - l);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -59,7 +59,7 @@ class StudentServiceImplTest {
 		StudentDTO studentDTO = new StudentDTO() ;
 		studentDTO.setGradeId(2019L);
 		studentDTO.setId(20190101L);
-		List<StudentDTO> student = studentService.findStudent(studentDTO);
+		List<StudentDTO> student = studentService.findStudentList(studentDTO);
 		System.out.println(student);
 	}
 
@@ -67,50 +67,26 @@ class StudentServiceImplTest {
 	void findStudentById() {
 	}
 
-	@Test
-	void deleteStudent() {
-//		studentService.deleteStudent(201901011L);
-		studentService.deleteParent(115L);
-	}
 
 	@Test
 	void findStudentById1() {
 	}
 
-	@Test
-	void saveParent() {
 
-		ParentDTO parentDTO = new ParentDTO();
-		parentDTO.setId(114L);
-		parentDTO.setName("王大锤呀123");
 
-		studentService.saveParent(parentDTO);
 
-	}
-
-	@Test
-	void findStudentParent() {
-
-		List<ParentDTO> studentParent = studentService.findParentOfStudent(20190102L);
-		System.out.println(studentParent);
-	}
 
 	@Test
 	void findStudentOfParent() {
 		System.out.println(studentService.findStudentOfParent(113L));
 	}
 
-	@Test
-	void removeRelevanceOfStudentAndParent() {
-
-		studentService.removeRelevanceOfStudentAndParent(20190102L,113L);
-	}
 
 	@Test
 	void findStudent2() {
 		StudentDTO studentDTO = new StudentDTO();
 		studentDTO.setGradeId(2019L);
-		PageResult<StudentDTO> student = studentService.findStudent(studentDTO, PageRequest.of(0, 10));
+		PageResult<StudentDTO> student = studentService.findStudentPage(studentDTO, PageRequest.of(0, 10));
 		System.out.println(student);
 	}
 }

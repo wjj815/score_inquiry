@@ -16,6 +16,22 @@ function openModel(url,layer,title,fun,endFun)
     });
 }
 
+function openMiniModel(url,layer,title,fun,endFun)
+{
+    layer.open({
+        title:title,
+        type: 2,
+        offset: 'auto',
+        area: ['500px', '300px'],
+        skin:'layui-layer-molv',
+        fixed: false,
+        shadeClose: false, //点击遮罩关闭
+        content: url,
+        success:fun,
+        end:endFun
+    });
+}
+
 
 function openModelNoArea(url,layer,namastr)
 {

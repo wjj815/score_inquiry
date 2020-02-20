@@ -41,6 +41,6 @@ public class User  {
 	/** 更新时间 */
 	private Date updatedTime ;
 	/**角色*/
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Role role;
 }

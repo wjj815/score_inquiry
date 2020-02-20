@@ -32,10 +32,12 @@
         </div>
     </form>
 </fieldset>
-<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-    <legend>班级课程老师</legend>
-    <table class="layui-table" id="test3" lay-filter="test3"></table>
-</fieldset>
+<div id="teacherInfo" style="display: none">
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+        <legend>班级课程老师</legend>
+        <table class="layui-table" id="test3" lay-filter="test3"></table>
+    </fieldset>
+</div>
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit">
         <i class="iconfont layui-extendedit-fill"></i>编辑教师</a>
@@ -149,6 +151,7 @@
         renderSelect();
 
         layui.fillData = function(data) {
+            $('#teacherInfo').show();
             clazzId = data.id;
             var loadIndex = layer.load(1, {
                 shade: [0.1,'#fff'] //0.1透明度的白色背景

@@ -3,6 +3,9 @@ package com.wangjj.scoreinquirywxback.pojo.dto;
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
+import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
@@ -74,5 +77,6 @@ public class StudentDTO {
 	@ApiModelProperty(name = "gradeId", value = "年级Id",example = "年级id")
 	@ExcelProperty(value = "年级编号")
 	private Long gradeId;
+
 
 }

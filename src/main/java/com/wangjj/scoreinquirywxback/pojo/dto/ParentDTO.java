@@ -34,4 +34,6 @@ public class ParentDTO {
 	/** 身份证号 */
 	@ApiModelProperty( name = "idCardNo",value = "家长身份证号",required = true)
 	private String idCardNo ;
+
+	private Long studentId;
 }

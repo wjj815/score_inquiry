@@ -8,7 +8,6 @@
 <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
     <legend>家长信息</legend>
 <form class="layui-form"  lay-filter="parentForm" action="">
-    <input type="hidden" id="studentId" name="studentId">
     <input type="hidden" id="id" name = "id">
     <div class="layui-form-item">
         <div class="layui-inline">
@@ -78,14 +77,12 @@
         layer = layui.layer;
         var index = parent.layer.getFrameIndex(window.name);
 
-        var loadIndex = layer.load(1, {
-            shade: [0.1,'#fff'] //0.1透明度的白色背景
-        });
+
 
         function fillFormData(data) {
+
             console.log(data);
             form.val("parentForm",{
-                studentId:data.studentId,
                 id:data.id,
                 name:data.name,
                 studentName:data.studentName,
@@ -99,13 +96,15 @@
         }
 
         layui.fillData = function(data) {
+            var loadIndex = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
             fillFormData(data);
             layer.close(loadIndex);
         }
         //监听提交
         form.on('submit(demo1)', function(data){
-            var studentId = $('#studentId').val();
-            var url = '/student/' + studentId + '/parent';
+            var url = '/parent';
            // alert(JSON.stringify(data.field));
             ajaxPost($,url,JSON.stringify(data.field),function(data){
                 if(data.success) {

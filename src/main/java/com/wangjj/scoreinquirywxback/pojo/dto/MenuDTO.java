@@ -1,6 +1,5 @@
 package com.wangjj.scoreinquirywxback.pojo.dto;
 
-import com.wangjj.scoreinquirywxback.pojo.entity.Role;
 import lombok.Data;
 
 import java.util.List;

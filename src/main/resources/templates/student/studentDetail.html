@@ -20,7 +20,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">姓名</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="studentName" id="studentName" th:value="${student.studentName}" lay-verify="studentName" autocomplete="off" class="layui-input">
+                        <input type="text" name="studentName" id="studentName" lay-verify="studentName" autocomplete="off" class="layui-input">
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">年龄</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="age" id="age" lay-verify="studentName" th:value="${student.age}" autocomplete="off" class="layui-input">
+                        <input type="text" name="age" id="age" lay-verify="studentName" autocomplete="off" class="layui-input">
                     </div>
                 </div>
             </div>
@@ -47,13 +47,13 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">生日</label>
                     <div class="layui-input-inline">
-                        <input type="text" id="birthday"  placeholder="yyyy-MM-dd"  name="birthday" th:value="${student.birthday}" autocomplete="off" class="layui-input">
+                        <input type="text" id="birthday"  placeholder="yyyy-MM-dd"  name="birthday"  autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">籍贯</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="domicilePlace" id="domicilePlace" lay-verify="studentName" th:value="${student.domicilePlace}" autocomplete="off" class="layui-input">
+                        <input type="text" name="domicilePlace" id="domicilePlace" lay-verify="studentName"  autocomplete="off" class="layui-input">
                     </div>
                 </div>
             </div>
@@ -62,13 +62,13 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">身份证号</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="idCardNo" id="idCardNo" th:value="${student.idCardNo}"  autocomplete="off" class="layui-input">
+                        <input type="text" name="idCardNo" id="idCardNo"   autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">手机号</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="mobilePhone" id="mobilePhone" th:value="${student.mobilePhone}" lay-verify="studentName" autocomplete="off" class="layui-input">
+                        <input type="text" name="mobilePhone" id="mobilePhone"  lay-verify="studentName" autocomplete="off" class="layui-input">
                     </div>
                 </div>
             </div>
@@ -103,19 +103,21 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">居住地址</label>
                 <div class="layui-input-block" style="width: 67%">
-                    <input type="text" name="presentAddress" th:value="${student.presentAddress}" autocomplete="off" class="layui-input">
+                    <input type="text" name="presentAddress" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <legend>家长信息</legend>
-            <hr>
-            <table class="layui-hide"  id="test"  lay-filter="test"></table>
+            <div id="parentInfo" style=" display: none">
+                <legend>家长信息</legend>
+                <hr>
+                <table class="layui-hide"  id="test"  lay-filter="test"></table>
+            </div>
             <div class="layui-form-item" align="center">
                 <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">提交</button>
                 </div>
 
                 <div class="layui-inline">
-                    <button type="button" id="addParent" class="layui-btn layui-btn">添加家长</button>
+                    <button type="button" id="addParentBtn" style="display: none" class="layui-btn">添加家长</button>
                 </div>
             </div>
         </form>
@@ -137,15 +139,38 @@
         var form = layui.form;
         var laydate = layui.laydate;
         var studentId = '';
-
-        var loadIndex = layer.load(1, {
-            shade: [0.1,'#fff'] //0.1透明度的白色背景
+        //异步填充年级内容
+        layuiSelect($,"/grade/list",function (htmls,data) {
+            for(var x in data) {
+                htmls += '<option value="'+data[x].id+'">'+data[x].gradeName+'</option>'
+            }
+            $('#gradeId').html(htmls);
+            form.render('select');//需要渲染一下
         });
+
+        //监听复选框
+        form.on('select(grade)', function (data) {
+            var value = data.value;
+            if(value == ''){
+                // var htmls = '<option value="">请选择</option>'; //全局变量
+                $('#clazzId').html('');
+                form.render('select');//需要渲染一下
+                return;
+            }
+            layuiSelect($,"/clazz/list?gradeId="+data.value,function (htmls,data) {
+                for(var x in data) {
+                    htmls += '<option value="'+data[x].id+'">'+data[x].clazzName+'</option>'
+                }
+                $('#clazzId').html(htmls);
+                form.render('select');//需要渲染一下
+            });
+        });
+
         var t;
         function renderTable(){
             t = table.render({
                 elem: '#test'
-                ,url:apiPrefix+'/student/'+ studentId+'/parent'
+                ,url:apiPrefix+'/parent/list'
                 // ,cellMinWidth: 150 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 ,page : false
@@ -160,6 +185,9 @@
                     ,{field:'studentRelation', title: '关系',align:'center', width: '15%'} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     ,{title: '操作', fixed: 'right', toolbar:"#barDemo",align:'center',width:'15%'} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
                 ]]
+                ,where:{
+                    studentId:studentId
+                }
                 ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
                     return {
                         "code": res.resultCode, //解析接口状态
@@ -181,13 +209,11 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
-
                 var url = '/parent';
-                openModel(url,layer,"编辑家长详情",function (layero,index) {
-                    ajaxGet($,"/student/"+studentId+'/parent/'+data.id,function (data) {
-                        var iframe = window['layui-layer-iframe'+index];
+                openModel(url,parent.layer,"编辑家长详情",function (layero,index) {
+                    ajaxGet($,'/parent/'+data.id,function (data) {
+                        var iframe = parent.window['layui-layer-iframe'+index];
                         var json = data.data;
-                        json['studentId'] = studentId;
                         iframe.layui.fillData(json);
                     });
                    /* var content = layero.find("iframe")[0].contentWindow.document;
@@ -216,7 +242,7 @@
         });
 
 
-        $("#addParent").click(function () {
+        $("#addParentBtnBtn").click(function () {
             openModel("/parent",parent.layer,"增加家长",function (layero, index) {
                 var stuId = $("#studentId", layero.find("iframe")[0].contentWindow.document);
                 stuId.val(studentId);
@@ -256,7 +282,13 @@
             });
         }
 
+
         layui.fillData=function(data) {
+            $("#parentInfo").show();
+            $("#addParentBtn").show();
+            var loadIndex = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
             studentId = data.id;
             renderTable();
             // console.log(JSON.stringify(data));
@@ -272,34 +304,6 @@
                 layer.close(loadIndex);
             });
         }
-
-
-        //异步填充年级内容
-        layuiSelect($,"/grade/list",function (htmls,data) {
-            for(var x in data) {
-                htmls += '<option value="'+data[x].id+'">'+data[x].gradeName+'</option>'
-            }
-            $('#gradeId').html(htmls);
-            form.render('select');//需要渲染一下
-        });
-
-        //监听复选框
-        form.on('select(grade)', function (data) {
-            var value = data.value;
-            if(value == ''){
-                // var htmls = '<option value="">请选择</option>'; //全局变量
-                $('#clazzId').html('');
-                form.render('select');//需要渲染一下
-                return;
-            }
-            layuiSelect($,"/clazz/list?gradeId="+data.value,function (htmls,data) {
-                for(var x in data) {
-                    htmls += '<option value="'+data[x].id+'">'+data[x].clazzName+'</option>'
-                }
-                $('#clazzId').html(htmls);
-                form.render('select');//需要渲染一下
-            });
-        });
 
     });
 </script>
