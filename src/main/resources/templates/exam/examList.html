@@ -31,7 +31,8 @@
 </div>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">查询考试详情</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">
+        <i class="iconfont layui-extendedit-fill"></i>编辑</a>
 </script>
 </body>
 <!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
@@ -57,9 +58,17 @@
                 , {field:'id', title: '考试编号', width: '10%',align:'center'}
                 , {field: 'examName', title: '考试名称', width: '15%',align:'center'}
                 , {field: 'examTime', title: '考试时间', width: '15%',align:'center'}
-                , {field: 'examType', title: '考试类型', width: '15%',align:'center'}
+                , {field: 'examType', title: '考试类型', width: '15%',align:'center',templet:function(obj) {
+                    if(obj.examType == 1) {
+                        return '年级考试'
+                    } else if(obj.examType == 0) {
+                        return '班级考试'
+                    }else {
+                        return '';
+                    }
+                    }}
                 , {field: 'gradeId', title: '考试年级', width: '15%',align:'center'}
-                , {field: 'clazzId', title: '考试班级', width: '15%',align:'center'}
+             /*   , {field: 'clazzId', title: '考试班级', width: '15%',align:'center'}*/
                 , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '10%' }
             ]],
             id: 'idTest'
@@ -85,27 +94,25 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
-                openModel("/examScore?gradeId="+data.gradeId,parent.layer,"考试成绩详情",function(layero,index){
-
-                },function() {
+                openMiniModel("/examDetail",layer,"编辑考试信息",function(layero,index) {
+                    ajaxGet($,'/exam/'+data.id,function(res) {
+                        if(res.success) {
+                            setTimeout(function () {
+                                var iframe = window['layui-layer-iframe' + index];
+                                var json = res.data;
+                                iframe.layui.fillData(json);
+                            }, 10);
+                        }
+                    });
 
                 });
-               /* layer.prompt({
-                    formType: 2
-                    , value: data.email
-                }, function (value, index) {
-                    obj.update({
-                        email: value
-                    });
-                    layer.close(index);
-                });*/
             }
         });
 
 
 
         $("#addBtn").click(function () {
-           openModel('/examDetail',layer,'考试信息',function(layero,index){
+           openMiniModel('/examDetail',layer,'考试信息',function(layero,index){
 
            },function() {
 
@@ -125,6 +132,7 @@
                     layer.msg("未选中数据");
                     return;
                 }
+                //拼装所选中的数据的id
                 var ids = '';
                 for(var x in data) {
                     ids+=data[x].id+",";
@@ -134,7 +142,7 @@
                 layer.confirm('<font color="red">您确定要删除吗？</font>', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
-                    ajaxDelete($,'/course',JSON.stringify(json),function (data) {
+                    ajaxDelete($,'/exam/list',JSON.stringify(json),function (data) {
                         if(data.success) {
                             t.reload();
                         }

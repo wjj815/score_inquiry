@@ -43,16 +43,16 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul id="left_nav" class="layui-nav layui-nav-tree" lay-filter="test">
-                <th:block  th:each="m,stat : ${user.role.menuList}">
+                <th:block  th:each="m,stat : ${menuList}">
                 <li class="layui-nav-item">
-                    <a th:class="${m.childMenu.size() == 0 ? 'site-demo-active' : ''}"
+                    <a th:class="${m.childrenMenu.size() == 0 ? 'site-demo-active' : ''}"
                        th:attr="data-menuId=${m.id},data-title=${m.menuName},data-src=${m.menuUrl},data-icon=${m.menuIcon}"  href="javascript:;">
                         <i th:class="${m.menuIcon}" class="layui-icon layui-icon-table"></i>
                         <span th:text="${m.menuName}">成绩统计分析 </span>
                     </a>
-                    <dl class="layui-nav-child" th:each="cm : ${m.childMenu}">
+                    <dl class="layui-nav-child" th:each="cm : ${m.childrenMenu}">
                         <dd>
-                            <a class="site-demo-active" th:class="${cm.childMenu.size() == 0 ? 'site-demo-active' : ''}"
+                            <a class="site-demo-active" th:class="${cm.childrenMenu.size() == 0 ? 'site-demo-active' : ''}"
                                th:attr="data-menuId=${cm.id},data-title=${cm.menuName},data-src=${cm.menuUrl},data-icon=${cm.menuIcon}"
                                href="javascript:;">
                                 <i th:class="${cm.menuIcon}" class="layui-icon layui-icon-table"></i>

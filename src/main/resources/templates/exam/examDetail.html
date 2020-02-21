@@ -5,10 +5,8 @@
     <title>考试详情</title>
 </head>
 <body>
-<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-    <legend>考试信息</legend>
-    <form class="layui-form"  lay-filter="parentForm" action="">
-        <input type="hidden" id="studentId" name="studentId">
+<div class="layui-row" style="margin-top: 20px">
+    <form class="layui-form"  lay-filter="examForm" action="">
         <input type="hidden" id="id" name = "id">
         <div class="layui-form-item">
             <div class="layui-inline">
@@ -20,7 +18,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">考试时间</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="examTime"  placeholder="yyyy-MM-dd"  name="examTime"  autocomplete="off" class="layui-input">
+                    <input type="text" id="examTime"  placeholder="请选择"  name="examTime"  autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
@@ -29,28 +27,30 @@
             <div class="layui-inline">
                 <label class="layui-form-label">考试类型</label>
                 <div class="layui-input-inline">
-                    <select name="sex"  id="sex" lay-filter="sex" >
-                        <option value="0">班级考试</option>
-                        <option value="1">年级考试</option>
-                    </select>
+                    <div id="examType"></div>
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">考试年级</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="idCardNo" name="idCardNo"  autocomplete="off" class="layui-input">
+                    <div id="examGrade"></div>
                 </div>
             </div>
         </div>
-
-        <div class="layui-form-item">
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">考试备注</label>
+            <div class="layui-input-block" style="width: 67%">
+                <textarea placeholder="考试备注" class="layui-textarea"  name="remark"></textarea>
+            </div>
+        </div>
+       <!-- <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">考试班级</label>
                 <div class="layui-input-inline">
                     <input type="text" id="studentRelation" name="studentRelation"  autocomplete="off" class="layui-input">
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="layui-form-item" align="center">
             <div class="layui-inline">
@@ -58,37 +58,93 @@
             </div>
 
             <div class="layui-inline">
-                <button type="reset" class="layui-btn layui-btn">重置</button>
+                <button type="reset" id="resetBtn" class="layui-btn layui-btn">重置</button>
             </div>
         </div>
     </form>
-</fieldset>
+</div>
 <!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
 <!--/*/</th:block>/*/-->
 <script>
-    layui.use(['jquery','form','layer'],function () {
+    layui.config({
+        base: '/static/layui_ext/xmSelect/'
+    }).extend({
+        xmSelect: 'xm-select'
+    });
+    layui.use(['jquery','form','layer','laydate','xmSelect'],function () {
         var $ = layui.jquery,
             form = layui.form,
-            layer = layui.layer;
+            layer = layui.layer,
+        laydate = layui.laydate,
+        xmSelect = layui.xmSelect;
+
+
+
+        var examTypeSelect = xmSelect.render({
+            el: '#examType',
+            radio: true,
+            filterable: true,
+            name:'examType',
+            clickClose: true,
+            /*prop:{
+                name:"gradeName",
+                value:'id'
+            }*/
+            data:[
+                {name:'年级考试',value:'1'}
+            ]
+        });
+
+         var examGradeSelect = xmSelect.render({
+             el:'#examGrade',
+             radio: true,
+             filterable: true,
+             name:'gradeId',
+             clickClose: true,
+             prop : {
+                 name:'gradeName',
+                 value:'id'
+             }
+        });
+
+         ajaxGet($,'/grade/list',function(res) {
+             if(res.success) {
+                 examGradeSelect.update({
+                     data:res.data
+                 });
+             }
+         });
+
         var index = parent.layer.getFrameIndex(window.name);
 
         function fillFormData(data) {
             console.log(JSON.stringify(data));
-            form.val("parentForm",{
-                studentId:data.studentId,
+            form.val("examForm",{
                 id:data.id,
-                name:data.name,
-                studentName:data.studentName,
-                sex:data.sex,
-                age:data.age,
-                idCardNo:data.idCardNo,
-                phone:data.phone,
-                studentRelation:data.studentRelation
+                examName:data.examName,
+                examTime:data.examTime,
+                remark:data.remark
             });
 
+            if(data.examType != null) {
+                var arr = [];
+                arr[0] = data.examType;
+                examTypeSelect.update({
+                    initValue: arr
+                });
+            }
+            if(data.gradeId != null) {
+                var arr1 = [];
+                arr1[0] = data.gradeId;
+                examGradeSelect.update({
+                    initValue: arr1
+                });
+            }
         }
 
         layui.fillData = function(data) {
+            $('#resetBtn').hide();
+            console.log(data);
             var loadIndex = layer.load(1, {
                 shade: [0.1,'#fff'] //0.1透明度的白色背景
             });
@@ -97,8 +153,7 @@
         }
         //监听提交
         form.on('submit(demo1)', function(data){
-            var studentId = $('#studentId').val();
-            var url = '/student/' + studentId + '/parent';
+            var url = '/exam';
             // alert(JSON.stringify(data.field));
             ajaxPost($,url,JSON.stringify(data.field),function(data){
                 if(data.success) {

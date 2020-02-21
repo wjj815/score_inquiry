@@ -8,6 +8,7 @@ import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.CourseScore;
 import com.wangjj.scoreinquirywxback.pojo.entity.Exam;
 import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
+import com.wangjj.scoreinquirywxback.util.ParameterUtils;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,18 +42,26 @@ public class ExamService {
 
 
 
-	public Page<Exam> getExamPage(Exam exam, Pageable pageable) {
-
-		return null;
+	public PageResult<ExamDTO> getExamPage(ExamDTO examDTO, Pageable pageable) {
+		Page<Exam> exams = examRepository.findAll(getExamSpecification(examDTO), pageable);
+		return PropertyUtils.convert(exams, this::getExamDTO);
 	}
 
 
 	public List<ExamDTO> getExamList(ExamDTO examDTO) {
 		List<Exam> exams = examRepository.findAll(getExamSpecification(examDTO));
-
 		return PropertyUtils.convert(exams, this::getExamDTO);
 	}
 
+	public ExamDTO getExamById(Long examId) {
+		if(!examRepository.existsById(examId)) {
+			throw new GlobalException("考试不存在");
+		}
+		Exam exam = examRepository.getOne(examId);
+		return getExamDTO(exam);
+	}
+
+	@Transactional
 	public void saveExam(ExamDTO examDTO) {
 		/*如果id不为空，则修改考试信息*/
 		Exam origin;
@@ -74,22 +84,23 @@ public class ExamService {
 
 
 
-	public void deleteExam(Long examId) {
+	@Transactional
+	public void deleteExamById(Long examId) {
 		examRepository.deleteById(examId);
 	}
 
-
-	public PageResult<ExamDTO> getExamScorePage(ExamDTO examDTO, Pageable pageable) {
-
-		Page<Exam> exams = examRepository.findAll(getExamSpecification(examDTO), pageable);
-
-		return PropertyUtils.convert(exams, this::getExamDTO);
+	@Transactional
+	public void batchDeleteExamByIds(String ids) {
+		List<Long> analyse = ParameterUtils.analyse(ids);
+		examRepository.deleteByIdIn(analyse);
 	}
 
 	private ExamDTO getExamDTO(Exam u) {
 		ExamDTO dto = new ExamDTO();
 		PropertyUtils.copyNoNullProperties(u, dto);
-		dto.setGradeId(u.getGrade().getId());
+		if(Objects.nonNull(u.getGrade())) {
+			dto.setGradeId(u.getGrade().getId());
+		}
 		return dto;
 	}
 
@@ -133,18 +144,4 @@ public class ExamService {
 		};
 	}
 
-
-	public List<CourseScore> getExamScoreList(CourseScore courseScore) {
-		return null;
-	}
-
-
-	public void saveExamScore(CourseScore courseScore) {
-
-	}
-
-
-	public void deleteExamScore(Long id) {
-
-	}
 }

@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @ClassName : Role
@@ -41,9 +39,9 @@ public class Role {
 	private Date updatedTime ;
 	@JsonIgnore
 	@OneToMany(mappedBy = "role",fetch = FetchType.LAZY)
-	private final List<User> user = new ArrayList<>();
+	private final Set<User> user = new HashSet<>(0);
 
 	@ManyToMany(mappedBy = "roleList",fetch = FetchType.LAZY)
-	private final List<Menu> menuList = new ArrayList<>();
+	private final Set<Menu> menuList = new HashSet<>(0);
 
 }

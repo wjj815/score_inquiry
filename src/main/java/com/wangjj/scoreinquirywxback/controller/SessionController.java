@@ -1,6 +1,7 @@
 package com.wangjj.scoreinquirywxback.controller;
 
 import com.wangjj.scoreinquirywxback.constant.ResultCode;
+import com.wangjj.scoreinquirywxback.pojo.dto.UserDTO;
 import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import com.wangjj.scoreinquirywxback.util.SessionUtils;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
@@ -26,7 +27,7 @@ public class SessionController {
 	@ApiOperation(value = "获得当前会话的用户")
 	@GetMapping("/user")
 	public APIResultBean geUserFromSession() {
-		User user = SessionUtils.getUser();
+		UserDTO user = SessionUtils.getUser();
 		if(Objects.isNull(user)) {
 			return APIResultBean.error(ResultCode.FAILED,"该用户未登录").build();
 		}else {

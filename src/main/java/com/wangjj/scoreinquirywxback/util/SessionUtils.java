@@ -1,5 +1,6 @@
 package com.wangjj.scoreinquirywxback.util;
 
+import com.wangjj.scoreinquirywxback.pojo.dto.UserDTO;
 import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -44,7 +45,7 @@ public class SessionUtils {
 	 * 设置User
 	 * @param user user
 	 */
-	public static void setUser(User user){
+	public static void setUser(UserDTO user){
 		getSession().setAttribute(SESSION_USER, user);
 		log.info("add it in session that is {}",user);
 	}
@@ -54,9 +55,9 @@ public class SessionUtils {
 	 * 从session中获取用户信息
 	 * @return User
 	 */
-	public static User getUser(){
+	public static UserDTO getUser(){
 		Object obj = getSession().getAttribute(SESSION_USER);
-		return Objects.isNull(obj) ? null : (User)obj ;
+		return Objects.isNull(obj) ? null : (UserDTO) obj ;
 	}
 
 

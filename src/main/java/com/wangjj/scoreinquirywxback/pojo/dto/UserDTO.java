@@ -1,24 +1,20 @@
-package com.wangjj.scoreinquirywxback.pojo.entity;
+package com.wangjj.scoreinquirywxback.pojo.dto;
 
-import lombok.*;
+import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * @ClassName : User
+ * @ClassName : UserDTO
  * @Author : wangJJ
- * @Date : 2020/1/2 16:51
- * @Description : 角色表
+ * @Date : 2020/2/21 10:41
+ * @Description : TODO
  */
-@ToString(exclude = "role")
-@Getter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "t_user")
-public class User  {
+@Data
+public class UserDTO {
+
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -41,7 +37,5 @@ public class User  {
 	/** 更新时间 */
 	private Date updatedTime ;
 	/**角色*/
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Role role;
-
+	private String roleIds;
 }

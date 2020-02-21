@@ -5,7 +5,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @ClassName : Menu
@@ -39,15 +41,15 @@ public class Menu {
 	/*菜单顺序*/
 	private Integer menuOrder;
 	/*一个子菜单只能对应一个父菜单*/
-	@OneToMany(mappedBy = "parentMenu",cascade = CascadeType.ALL)
-	private final List<Menu> childMenu = new ArrayList<>();
+	@OneToMany(mappedBy = "parentMenu",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private final Set<Menu> childMenu = new HashSet<>(0);
 	/*父菜单*/
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Menu parentMenu;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "t_role_menu",
 			joinColumns = @JoinColumn(name = "menu_id",referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))
-	private final List<Role> roleList = new ArrayList<>();
+	private final Set<Role> roleList = new HashSet<>(0);
 }

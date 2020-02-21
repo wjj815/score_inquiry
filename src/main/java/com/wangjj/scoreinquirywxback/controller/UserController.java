@@ -1,5 +1,6 @@
 package com.wangjj.scoreinquirywxback.controller;
 
+import com.wangjj.scoreinquirywxback.pojo.dto.UserDTO;
 import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import com.wangjj.scoreinquirywxback.service.UserService;
 import com.wangjj.scoreinquirywxback.util.SessionUtils;
@@ -32,8 +33,7 @@ public class UserController {
 	@ApiOperation(value = "用户登录", notes = "用户登录")
 	@ApiImplicitParam(name = "loginParameter", value = "用户登录参数", dataType = "LoginParameter")
 	public APIResultBean login(@RequestBody LoginParameter loginParameter) {
-		User user = userService.findByLoginParameter(loginParameter);
-		user.toBuilder().password(null);
+		UserDTO user = userService.findByLoginParameter(loginParameter);
 		SessionUtils.setUser(user);
 		log.info("set session that is : {}", SessionUtils.getUser());
 		return APIResultBean.ok("登录成功", user).build();

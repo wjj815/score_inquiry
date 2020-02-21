@@ -22,7 +22,7 @@ function openMiniModel(url,layer,title,fun,endFun)
         title:title,
         type: 2,
         offset: 'auto',
-        area: ['500px', '300px'],
+        area: ['500px', '400px'],
         skin:'layui-layer-molv',
         fixed: false,
         shadeClose: false, //点击遮罩关闭
