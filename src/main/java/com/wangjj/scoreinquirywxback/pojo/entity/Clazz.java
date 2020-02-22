@@ -12,14 +12,11 @@ import java.util.*;
  * 班级类
  *
  */
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+/*@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})*/
 @ApiModel(description = "班级实体")
-@ToString(exclude = {"grade","clazzCourses"})
+@ToString(exclude = {"grade", "students"})
 @Setter
 @Getter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "t_clazz")
 public class Clazz {
@@ -53,11 +50,11 @@ public class Clazz {
 
 	/*班级删除时，班级下的所有学生也会被删除*/
 	@OneToMany(mappedBy = "clazz",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private Set<Student> students = new HashSet<>(0);
+	private final Set<Student> students = new HashSet<>(0);
 
 	/*@OneToMany(mappedBy = "clazz")
 	private List<ClazzCourse> clazzCourses = new ArrayList<>(0);*/
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	private Set<Teacher> teachers = new HashSet<>(0);
+	private final Set<Teacher> teachers = new HashSet<>(0);
 }

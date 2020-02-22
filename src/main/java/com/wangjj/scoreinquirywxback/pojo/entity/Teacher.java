@@ -19,7 +19,7 @@ import java.util.*;
  *
  */
 @Entity
-@ToString(exclude = {"course","courseScores","clazzSet"})
+@ToString(exclude = {"course", "clazzSet"})
 @Setter
 @Getter
 @Table(name = "t_teacher")
@@ -101,6 +101,6 @@ public class Teacher {
 	/*@OneToMany(mappedBy = "teacher")
 	private List<ClazzCourse> clazzCourses = new ArrayList<>(0);*/
 
-	@OneToMany(mappedBy = "teacher",fetch = FetchType.LAZY)
-	private Set<CourseScore> courseScores = new HashSet<>(0);
+	/*@OneToMany(mappedBy = "teacher",fetch = FetchType.LAZY)
+	private Set<CourseScore> courseScores = new HashSet<>(0);*/
 }

@@ -114,4 +114,11 @@ public class CourseService  {
 		List<Long> collect = ParameterUtils.analyse(courseIds);
 		courseRepository.deleteByIdIn(collect);
 	}
+
+	public CourseDTO findCourseById(Long courseId) {
+		if(!courseRepository.existsById(courseId)) {
+			throw new GlobalException("课程不存在！");
+		}
+		return getCourseDTO(courseRepository.getOne(courseId));
+	}
 }

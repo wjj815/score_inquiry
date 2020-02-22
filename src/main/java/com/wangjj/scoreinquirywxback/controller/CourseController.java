@@ -24,7 +24,7 @@ import java.util.List;
  * @Description : 课程类请求的处理器
  */
 @RestController
-@Api(description = "课程类")
+@Api(value = "课程类")
 @RequestMapping("/course")
 public class CourseController {
 
@@ -76,5 +76,12 @@ public class CourseController {
 	public APIResultBean courseList(@RequestBody IdsParameter idsParameter) {
 		courseService.deleteCourse(idsParameter.getIds());
 		return APIResultBean.ok("删除成功！").build();
+	}
+
+	@GetMapping("/{courseId}")
+	@ApiOperation(value = "通过id查询课程")
+	public APIResultBean getCourseById(@PathVariable Long courseId) {
+		CourseDTO courseById = courseService.findCourseById(courseId);
+		return APIResultBean.ok(courseById).build();
 	}
 }

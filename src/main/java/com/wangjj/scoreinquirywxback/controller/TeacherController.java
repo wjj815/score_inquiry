@@ -2,6 +2,8 @@ package com.wangjj.scoreinquirywxback.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.wangjj.scoreinquirywxback.pojo.dto.TeacherDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.request.PageParameter;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.TeacherService;
@@ -14,6 +16,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +31,7 @@ import java.util.List;
  * @Description : 老师请求处理器
  */
 @RestController
-@Api(description = "老师类")
+@Api(value = "老师类")
 @RequestMapping("/teacher")
 public class TeacherController {
 
@@ -37,23 +40,17 @@ public class TeacherController {
 
 	@ApiOperation(value = "新增/修改教师")
 	@PostMapping
-	@ApiImplicitParam(name = "teacher",dataType = "Teacher")
-	public APIResultBean saveCourse(@RequestBody Teacher teacher) {
-		/*teacherService.saveTeacher(teacher);*/
+	public APIResultBean saveCourse(@RequestBody TeacherDTO teacherDTO) {
+		teacherService.saveTeacher(teacherDTO);
 		return APIResultBean.ok("操作成功！").build();
 	}
 
 	@ApiOperation(value = "分页得到老师信息")
 	@GetMapping("/page")
-	@ApiImplicitParams({
-			@ApiImplicitParam(name = "page", value = "分页参数:页码(从1开始)", dataType = "Integer",defaultValue = "1"),
-			@ApiImplicitParam(name = "limit", value = "分页参数:页大小", dataType = "Integer",defaultValue = "10"),
-	})
-	public APIResultBean coursePage(@RequestParam Integer page,
-									@RequestParam Integer limit) {
-		/*Page<Teacher> teacherPage = teacherService.getTeacherPage(
-				Teacher.builder().build(), PageRequest.of(page - 1, limit));*/
-		return APIResultBean.ok(/*teacherPage*/).build();
+	public APIResultBean teacherPage(PageParameter pageParameter,
+									TeacherDTO teacherDTO) {
+		PageResult<TeacherDTO> teacherPage = teacherService.getTeacherPage(teacherDTO, PageRequest.of(pageParameter.getPage() - 1, pageParameter.getLimit()));
+		return APIResultBean.ok(teacherPage).build();
 	}
 
 	@ApiOperation(value = "查询老师信息列表")
@@ -113,8 +110,8 @@ public class TeacherController {
 	@ApiOperation(value = "根据教师id查询详细信息")
 	@ApiImplicitParam(name = "id",value = "教师编号",dataType = "Long")
 	public APIResultBean getTeacher(@PathVariable Long id) {
-		Teacher teacherById = teacherService.getTeacherById(id);
-		return APIResultBean.ok(teacherById).build();
+		TeacherDTO teacherDTO = teacherService.getTeacherById(id);
+		return APIResultBean.ok(teacherDTO).build();
 	}
 
 

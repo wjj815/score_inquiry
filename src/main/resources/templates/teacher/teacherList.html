@@ -6,7 +6,6 @@
 </head>
 
 <body>
-
 <div class="layui-row">
     <div class="layui-card">
         <div class="layui-card-header" style="height: auto">
@@ -79,11 +78,14 @@
             , cols: [ [
                 {type: 'checkbox',align:'center',width:'5%'}
                 /* , {type:'numbers', title: '序号', width: '5%',align:'center'}*/
-                , {field: 'id', title: '教师编号', width: '20%',align:'center'}
-                , {field: 'teacherName', title: '教师姓名', width: '20%',align:'center'}
+                , {field: 'id', title: '教师编号', width: '10%',align:'center'}
+                , {field: 'teacherName', title: '教师姓名', width: '15%',align:'center'}
                 , {field: 'sex', title: '性别', width: '10%',align:'center'}
                 , {field: 'age', title: '年龄', width: '10%',align:'center'}
                 , {field: 'phone', title: '联系电话', width: '15%',align:'center'}
+                , {field: 'course', title: '教授课程', width: '15%',align:'center',templet:function(obj) {
+                    return '<div id="course_'+obj.id+'"></div>';
+                    }}
                 , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '20%' }
             ]]
             ,id: 'idTest'
@@ -95,6 +97,14 @@
                     "count": res.data.totalElements, //解析数据长度
                     "data": res.data.content //解析数据列表
                 };
+            },done:function(res) {
+                $.each(res.data,function(i,val){
+                   ajaxGet($,'/course/'+val.courseId,function (res) {
+                        if(res.success) {
+                            $('#course_'+val.id).html(res.data.courseName);
+                        }
+                   })
+                });
             }
         });
 

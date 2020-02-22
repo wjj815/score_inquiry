@@ -60,6 +60,6 @@ public class Course {
 	private final Set<Grade> grades = new HashSet<>(0);
 
 
-	/*@OneToMany(mappedBy = "course",fetch = FetchType.LAZY)
-	private final Set<Teacher> teachers = new HashSet<>(0);*/
+	@OneToMany(mappedBy = "course",fetch = FetchType.LAZY)
+	private final Set<Teacher> teachers = new HashSet<>(0);
 }

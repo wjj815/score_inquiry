@@ -19,9 +19,6 @@ import java.util.*;
 @Setter
 @Getter
 @ToString(exclude = {"students"})
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "t_parent")
 @EqualsAndHashCode

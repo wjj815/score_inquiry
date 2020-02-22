@@ -25,4 +25,6 @@ public class CourseScoreDTO {
 
 	private Long teacherId;
 
+	private Long clazzId;
+
 }

@@ -160,8 +160,8 @@ public class TeacherService {
 		clazz.getTeachers().add(teacher);
 	}
 
-	public Teacher getTeacherById(Long teacherId) {
-		return teacherRepository.getOne(teacherId);
+	public TeacherDTO getTeacherById(Long teacherId) {
+		return getTeacherDTO(teacherRepository.getOne(teacherId));
 	}
 
 }

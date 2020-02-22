@@ -63,6 +63,12 @@
                         <input type="text" id="idCardNo" name="idCardNo"  autocomplete="off" class="layui-input">
                     </div>
                 </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">教授课程</label>
+                    <div class="layui-input-inline">
+                        <div id="demo1"></div>
+                    </div>
+                </div>
             </div>
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">介绍</label>
@@ -71,16 +77,16 @@
                 </div>
             </div>
 
-            <legend>教授的班级和课程</legend>
+            <!--<legend>教授的班级和课程</legend>
             <hr>
-            <table class="layui-hide"  id="test"  lay-filter="test"></table>
+            <table class="layui-hide"  id="test"  lay-filter="test"></table>-->
             <div class="layui-form-item" align="center">
                 <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">提交</button>
                 </div>
-                <div class="layui-inline">
+                <!--<div class="layui-inline">
                     <button type="button" class="layui-btn layui-btn" id="addClazzCourse">添加教授的班级课程</button>
-                </div>
+                </div>-->
             </div>
 
         </form>
@@ -95,17 +101,44 @@
 <!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
 <!--/*/</th:block>/*/-->
 <script>
-    layui.use(['table','layer','jquery','laydate','form'], function() {
+    layui.config({
+        base: '/static/layui_ext/xmSelect/'
+    }).extend({
+        xmSelect: 'xm-select'
+    });
+    layui.use(['table','layer','jquery','laydate','form','xmSelect'], function() {
         var table = layui.table;
         var layer = layui.layer;
         var $ = layui.jquery;
         var form = layui.form;
         var laydate = layui.laydate;
+        let xmSelect = layui.xmSelect;
+        var demo1 = xmSelect.render({
+            el: '#demo1',
+            autoRow: true,
+            radio:true,
+            clickClose: true,
+            filterable: true,
+            name:'courseId',
+            prop:{
+                name:"courseName",
+                value:'id'
+            }
+        })
 
-        var loadIndex = layer.load(1, {
-            shade: [0.1,'#fff'] //0.1透明度的白色背景
+        ajaxGet($,"/course/list",function(res) {
+            console.log(res);
+            demo1.update({
+                data: res.data,
+            })
         });
+
+
+        var loadIndex;
         function init(data) {
+             loadIndex = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
             fillForm(data);
         }
 
@@ -152,6 +185,12 @@
                 idCardNo:data.idCardNo,
                 phone:data.phone,
                 introduction:data.introduction
+            });
+
+            let arr = [];
+            arr[0] = data.courseId;
+            demo1.update({
+               initValue: arr
             });
         }
         layui.fillData=function(data) {

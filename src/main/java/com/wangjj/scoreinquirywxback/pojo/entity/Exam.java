@@ -22,9 +22,6 @@ import java.util.*;
 @ApiModel(description = "考试类")
 @Getter
 @Setter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "t_exam")
 public class Exam {

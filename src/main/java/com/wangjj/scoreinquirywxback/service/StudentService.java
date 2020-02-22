@@ -123,7 +123,7 @@ public class StudentService {
 				query.where(predicates.toArray(new Predicate[predicates.size()]));
 			}
 			query.orderBy(criteriaBuilder.desc(root.get("grade").get("id")),
-					criteriaBuilder.asc(root.get("clazz").get("id")));
+					criteriaBuilder.asc(root.get("clazz").get("id")),criteriaBuilder.asc(root.get("id")));
 			return null;
 		};
 	}

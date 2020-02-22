@@ -19,15 +19,9 @@ import java.util.*;
  * 学生类
  *
  */
-
-/*@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})*/
-@ApiModel(description = "学生实体")
 @Getter
 @Setter
 @ToString(exclude = {"grade","clazz","courseScores","parents"})
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "t_student")
 @EqualsAndHashCode
