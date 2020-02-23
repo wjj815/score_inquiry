@@ -74,8 +74,7 @@ public class CourseService  {
 				predicates.add(criteriaBuilder.equal(root.joinSet("grades").get("id"),courseDTO.getGradeId()));
 			}
 
-
-
+			query.orderBy(criteriaBuilder.asc(root.get("id")));
 			query.where(predicates.toArray(new Predicate[predicates.size()]));
 			return null;
 		};

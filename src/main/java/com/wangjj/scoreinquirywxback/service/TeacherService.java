@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.wangjj.scoreinquirywxback.dao.ClazzRepository;
 import com.wangjj.scoreinquirywxback.dao.CourseRepository;
 import com.wangjj.scoreinquirywxback.dao.TeacherRepository;
+import com.wangjj.scoreinquirywxback.dao.UserRepository;
 import com.wangjj.scoreinquirywxback.excel.TeacherDataListener;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.dto.TeacherDTO;
@@ -11,6 +12,7 @@ import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import com.wangjj.scoreinquirywxback.pojo.entity.Course;
 import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
+import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import com.wangjj.scoreinquirywxback.util.ParameterUtils;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +52,9 @@ public class TeacherService {
 	@Autowired
 	private CourseRepository courseRepository;
 
+	@Autowired
+	private UserRepository userRepository;
+
 	@Transactional
 	public void saveTeacher(TeacherDTO teacherDTO) {
 
@@ -71,6 +76,8 @@ public class TeacherService {
 		/*将查询出来的数据实体转化为数据传输对象*/
 		return PropertyUtils.convert(teacherPage, this::getTeacherDTO);
 	}
+
+
 
 	private Specification<Teacher> getTeacherSpecification(TeacherDTO teacherDTO) {
 

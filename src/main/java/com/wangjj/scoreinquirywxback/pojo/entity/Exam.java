@@ -84,6 +84,6 @@ public class Exam {
 	/*@ManyToMany
 	private List<Student> students = new ArrayList<> ();*/
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "exam",cascade = CascadeType.ALL)
 	private Set<CourseScore> courseScores = new HashSet<>(0);
 }

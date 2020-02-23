@@ -44,4 +44,13 @@ public class Role {
 	@ManyToMany(mappedBy = "roleList",fetch = FetchType.LAZY)
 	private final Set<Menu> menuList = new HashSet<>(0);
 
+	@OneToMany(mappedBy = "role",fetch = FetchType.LAZY)
+	private final Set<Teacher> teachers = new HashSet<>(0);
+
+	@OneToMany(mappedBy = "role",fetch = FetchType.LAZY)
+	private final Set<Parent> parents = new HashSet<>(0);
+
+	@OneToMany(mappedBy = "role",fetch = FetchType.LAZY)
+	private final Set<Manager> managers = new HashSet<>(0);
+
 }

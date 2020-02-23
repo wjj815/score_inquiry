@@ -1,5 +1,6 @@
 package com.wangjj.scoreinquirywxback.pojo.dto;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 /**
@@ -8,6 +9,7 @@ import lombok.Data;
  * @Date : 2020/2/14 20:21
  * @Description : TODO
  */
+@ApiModel(description = "考试成绩")
 @Data
 public class CourseScoreDTO {
 

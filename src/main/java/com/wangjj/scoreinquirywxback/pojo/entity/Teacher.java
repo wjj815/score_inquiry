@@ -103,4 +103,8 @@ public class Teacher {
 
 	/*@OneToMany(mappedBy = "teacher",fetch = FetchType.LAZY)
 	private Set<CourseScore> courseScores = new HashSet<>(0);*/
+
+	/**角色*/
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Role role;
 }

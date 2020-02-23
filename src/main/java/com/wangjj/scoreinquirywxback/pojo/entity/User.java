@@ -13,12 +13,11 @@ import java.util.Date;
  */
 @ToString(exclude = "role")
 @Getter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
 @Entity
 @Table(name = "t_user")
 public class User  {
+
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -31,7 +30,7 @@ public class User  {
 	/** 头像 */
 	private String avatar ;
 	/**用户信息*/
-	private Integer infoId;
+	private Long infoId;
 	/** 创建人 */
 	private String createdBy ;
 	/** 创建时间 */

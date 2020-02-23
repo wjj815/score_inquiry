@@ -76,7 +76,8 @@
             <div class="layui-col-sm12 layui-col-md12">
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <input type="radio" name="type" value="0" title="管理员" checked="checked">
+                        <input type="radio" name="type" value="1" title="老师" >
+                        <input type="radio" name="type" value="0" checked title="管理员">
                         <!--<input type="radio" name="sex" value="" title="女">
                         <input type="radio" name="sex" value="禁" title="禁用" disabled="">-->
                     </div>
@@ -97,6 +98,7 @@
 <!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
 <!--/*/</th:block>/*/-->
 <script>
+    
     layui.use(['carousel', 'form','jquery','layer'], function(){
         var carousel = layui.carousel,
             form = layui.form,
@@ -116,6 +118,10 @@
 
         //监听提交
         form.on('submit(demo1)', function(data){
+            /*if(!data.type) {
+                layer.msg('请选择身份', {icon: 5});
+                return false;
+            }*/
             ajaxPost($,'/user/login',JSON.stringify(data.field),function(data){
                if(data.success) {
                    window.location.href = '/index';

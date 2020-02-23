@@ -177,7 +177,7 @@ public class CourseScoreService {
 				courseScoreDTO1.setCourseId(cs.getCourse().getId());
 				Integer score = Objects.nonNull(cs.getScore())?cs.getScore() : 0;
 				totalScore.addAndGet(score);
-				courseScoreDTO1.setScore(cs.getScore());
+				courseScoreDTO1.setScore(score);
 				return courseScoreDTO1;
 			});
 

@@ -37,5 +37,8 @@ public class Manager {
 	private Date updatedTime ;
 	/** 微信 */
 	private String weiXin;
+	/**角色*/
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Role role;
 
 }

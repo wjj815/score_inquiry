@@ -69,5 +69,8 @@ public class Parent {
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<Student> students = new HashSet<>(0);
 
+	/**角色*/
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Role role;
 
 }

@@ -47,11 +47,8 @@ spring:
     multipart:
       max-file-size: 31457280
       max-request-size: 31457280
-  devtools:
-    restart:
-      enabled: false
 swagger2:
-  enable: false
+  enable: true
 #微信身份认证
 wechat:
   appid: wxaea6a8e1cbdc644b

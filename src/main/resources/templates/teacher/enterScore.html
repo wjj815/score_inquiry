@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="admin/_fragments :: head( ~{ :: title})">
     <meta charset="UTF-8">
-    <title>考试列表</title>
+    <title>登记成绩</title>
 </head>
 <body>
 <div>
@@ -33,8 +33,6 @@
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">
         <i class="iconfont layui-extendedit-fill"></i>编辑</a>
-    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="scoreStat">
-        <i class="iconfont layui-extendedit-fill"></i>成绩统计</a>
 </script>
 </body>
 <!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
@@ -61,17 +59,17 @@
                 , {field: 'examName', title: '考试名称', width: '15%',align:'center'}
                 , {field: 'examTime', title: '考试时间', width: '15%',align:'center'}
                 , {field: 'examType', title: '考试类型', width: '15%',align:'center',templet:function(obj) {
-                    if(obj.examType == 1) {
-                        return '年级考试'
-                    } else if(obj.examType == 0) {
-                        return '班级考试'
-                    }else {
-                        return '';
-                    }
+                        if(obj.examType == 1) {
+                            return '年级考试'
+                        } else if(obj.examType == 0) {
+                            return '班级考试'
+                        }else {
+                            return '';
+                        }
                     }}
                 , {field: 'gradeId', title: '考试年级', width: '15%',align:'center'}
-             /*   , {field: 'clazzId', title: '考试班级', width: '15%',align:'center'}*/
-                , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '25%' }
+                /*   , {field: 'clazzId', title: '考试班级', width: '15%',align:'center'}*/
+                , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '10%' }
             ]],
             id: 'idTest'
             , page: true
@@ -108,27 +106,17 @@
                     });
 
                 });
-            }else if (obj.event === 'scoreStat') {
-                openModel("/examScore",layer,"成绩统计",function(layero,index) {
-
-                    setTimeout(function () {
-                        let iframe = window['layui-layer-iframe' + index];
-                        let json = data;
-                        iframe.layui.fillData(json);
-                    }, 200);
-
-                });
             }
         });
 
 
 
         $("#addBtn").click(function () {
-           openMiniModel('/examDetail',layer,'考试信息',function(layero,index){
+            openMiniModel('/examDetail',layer,'考试信息',function(layero,index){
 
-           },function() {
+            },function() {
 
-           });
+            });
         });
 
         var $ = layui.$, active = {

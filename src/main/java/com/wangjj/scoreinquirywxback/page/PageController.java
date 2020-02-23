@@ -1,13 +1,10 @@
 package com.wangjj.scoreinquirywxback.page;
 
+import com.wangjj.scoreinquirywxback.pojo.dto.CourseDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.MenuDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.UserDTO;
-import com.wangjj.scoreinquirywxback.service.ClazzService;
-import com.wangjj.scoreinquirywxback.service.GradeService;
-import com.wangjj.scoreinquirywxback.service.MenuService;
-import com.wangjj.scoreinquirywxback.service.StudentService;
+import com.wangjj.scoreinquirywxback.service.*;
 import com.wangjj.scoreinquirywxback.util.SessionUtils;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +28,12 @@ public class PageController {
 
 	private final MenuService menuService;
 
+	private final CourseService courseService;
+
 	@Autowired
-	public PageController(MenuService menuService) {
+	public PageController(MenuService menuService, CourseService courseService) {
 		this.menuService = menuService;
+		this.courseService = courseService;
 	}
 
 	@ApiOperation(value = "主页面")
@@ -138,5 +138,12 @@ public class PageController {
 	@GetMapping("/exam")
 	public String exam() {
 		return "exam/examList";
+	}
+
+	@GetMapping("/examScore")
+	public String examScore(Model model) {
+		List<CourseDTO> courseList = courseService.getCourseList(new CourseDTO());
+		model.addAttribute("courseList",courseList);
+		return "exam/examScore";
 	}
 }
