@@ -1,4 +1,4 @@
-var apiPrefix = "/api";
+let apiPrefix = "/api";
 /*layui的模态框封装*/
 function openModel(url,layer,title,fun,endFun)
 {

@@ -68,4 +68,14 @@ class CourseScoreServiceTest {
 		}
 
 	}
+
+	@Test
+	void getStudentScoreDTOListForCourse() {
+		CourseScoreDTO courseScoreDTO = new CourseScoreDTO();
+		courseScoreDTO.setExamId(123L);
+		courseScoreDTO.setClazzId(2L);
+		courseScoreDTO.setCourseId(25L);
+		List<CourseScoreDTO> studentScoreDTOListForCourse = courseScoreService.getCourseScoreList(courseScoreDTO);
+		System.out.println(studentScoreDTOListForCourse);
+	}
 }

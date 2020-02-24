@@ -25,6 +25,8 @@ public class CourseScoreDTO {
 
 	private Long studentId;
 
+	private String studentName;
+
 	private Long teacherId;
 
 	private Long clazzId;

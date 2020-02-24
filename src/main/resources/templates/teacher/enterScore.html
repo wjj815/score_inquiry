@@ -31,8 +31,8 @@
 </div>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">
-        <i class="iconfont layui-extendedit-fill"></i>编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">
+        <i class="iconfont layui-extendedit-fill"></i>登记成绩</a>
 </script>
 </body>
 <!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
@@ -43,8 +43,6 @@
         var table = layui.table,
             $ = layui.jquery,
             form = layui.form;
-
-
 
         var t = table.render({
             elem: '#test'
@@ -94,14 +92,14 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
-                openMiniModel("/examDetail",layer,"编辑考试信息",function(layero,index) {
+                openModel("/enterScoreDetail",layer,"登记成绩",function(layero,index) {
                     ajaxGet($,'/exam/'+data.id,function(res) {
                         if(res.success) {
                             setTimeout(function () {
                                 var iframe = window['layui-layer-iframe' + index];
                                 var json = res.data;
                                 iframe.layui.fillData(json);
-                            }, 10);
+                            }, 100);
                         }
                     });
 

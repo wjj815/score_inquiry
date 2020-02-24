@@ -57,7 +57,7 @@ public class ExamScoreController {
 		return APIResultBean.ok(file.getOriginalFilename()).build();
 	}
 
-	@GetMapping("/list")
+	@GetMapping("/scoreList")
 	@ApiOperation("获得考试成绩")
 	public APIResultBean getExamScoreList(CourseScoreDTO courseScoreDTO) {
 
@@ -75,5 +75,13 @@ public class ExamScoreController {
 		});
 		return APIResultBean.ok(maps).build();
 	}
+
+	@GetMapping("/list")
+	public APIResultBean getList(CourseScoreDTO courseScoreDTO) {
+		List<CourseScoreDTO> courseScoreList = courseScoreService.getStudentScoreDTOListForCourse(courseScoreDTO);
+		return APIResultBean.ok(courseScoreList).build();
+	}
+
+
 
 }

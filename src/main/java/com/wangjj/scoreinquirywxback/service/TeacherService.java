@@ -1,18 +1,13 @@
 package com.wangjj.scoreinquirywxback.service;
 
 import com.alibaba.excel.EasyExcel;
-import com.wangjj.scoreinquirywxback.dao.ClazzRepository;
-import com.wangjj.scoreinquirywxback.dao.CourseRepository;
-import com.wangjj.scoreinquirywxback.dao.TeacherRepository;
-import com.wangjj.scoreinquirywxback.dao.UserRepository;
+import com.wangjj.scoreinquirywxback.constant.UserType;
+import com.wangjj.scoreinquirywxback.dao.*;
 import com.wangjj.scoreinquirywxback.excel.TeacherDataListener;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.dto.TeacherDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
-import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
-import com.wangjj.scoreinquirywxback.pojo.entity.Course;
-import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
-import com.wangjj.scoreinquirywxback.pojo.entity.User;
+import com.wangjj.scoreinquirywxback.pojo.entity.*;
 import com.wangjj.scoreinquirywxback.util.ParameterUtils;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +48,10 @@ public class TeacherService {
 	private CourseRepository courseRepository;
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
+
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@Transactional
 	public void saveTeacher(TeacherDTO teacherDTO) {
@@ -67,7 +65,13 @@ public class TeacherService {
 				teacherRepository.getOne(teacherDTO.getId()) : new Teacher();
 		PropertyUtils.copyNoNullProperties(teacherDTO,teacher);
 		teacher.setCourse(course);
+		//如果未设置角色则设置
+		if(Objects.isNull(teacher.getRole())) {
+			Role role = roleRepository.getOne(UserType.TEACHER.getId());
+			teacher.setRole(role);
+		}
 		teacherRepository.save(teacher);
+		userService.addTeacherUser(teacher);
 	}
 
 	public PageResult<TeacherDTO> getTeacherPage(TeacherDTO teacherDTO,Pageable pageable) {

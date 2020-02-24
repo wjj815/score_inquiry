@@ -2,90 +2,62 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="admin/_fragments :: head( ~{ :: title})">
     <meta charset="UTF-8">
-    <title>考试成绩详情</title>
+    <title>登记成绩详情页</title>
 </head>
 <body>
+<div class="layui-row" style="margin-top: 20px">
+    <form class="layui-form" lay-filter="gradeForm"  action="">
+        <div class="layui-form-item">
 
-<div class="layui-row">
-    <div class="layui-card">
-        <div class="layui-card-header" style="height: auto">
-            <form class="layui-form " action="">
-               <!-- <div class="layui-inline">
-                    <label class="layui-form-label">年级:</label>
-                    <div class="layui-input-inline">
-                        <select name="grade" id="grade" lay-filter="grade">
-                            &lt;!&ndash;<option value="2013">2013级</option>&ndash;&gt;
-                            &lt;!&ndash;<option value="2014">2014级</option>&ndash;&gt;
-                            &lt;!&ndash;<option value="2015">2015级</option>&ndash;&gt;
-                        </select>
-                    </div>
-                </div>-->
-                <div class="layui-inline">
-                    <label class="layui-form-label" id="gradeName"></label>
+            <div class="layui-inline">
+                <label class="layui-form-label" id="gradeName"></label>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">班级</label>
+                <div class="layui-input-inline">
+                    <div id="demo1"></div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">班级:</label>
-                    <div class="layui-input-inline" style="width: 150px">
-                        <div id="demo1"></div>
-                    </div>
-                </div>
-
-
-
-                <div class="layui-inline">
-                   <!-- <button type="button" onclick="downloadTemplate()" class="layui-btn" >导入模版下载</button>-->
-                    <!--<button type="button"  class="layui-btn layui-btn-normal" id="uploadBtn">
-                        <i class="iconfont layui-extendcloud-upload"></i>
-                        导入
-                    </button>-->
-                    <button type="button"  id="exportBtn" class="layui-btn">
-                        <i class="iconfont layui-extendcloud-download"></i>
-                        导出
-                    </button>
-                </div>
-            </form>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-normal" id="importBtn">导入成绩</button>
+                <button class="layui-btn layui-btn-primary" id="downloadTemplateBtn">模版下载</button>
+            </div>
         </div>
-        <div class="layui-card-body">
-           <!-- <table class="layui-hide"  id="test" lay-filter="test"></table>-->
-            <table  id="test"  lay-filter="test">
-              <!--  <thead>
-                <tr>
-                    <th lay-data="{field:'clazzId',width:100,align:'center'}">班级</th>
-                    <th lay-data="{field:'studentId',width:100,align:'center'}">学号</th>
-                    <th lay-data="{field:'studentName',width:80,align:'center'}">姓名</th>
-                    <th:block th:each="item,stat : ${courseList}">
-                        <th th:attr="lay-data='{field:'+${item.id}+', width:60,align:\'center\'}'" th:text="${item.courseName}"></th>
-                    </th:block>
-                    <th lay-data="{field:'totalScore',width:60,align:'center'}">总分</th>
-                    &lt;!&ndash;<th lay-data="{field:'clazzRank',width:100}">班级排名</th>&ndash;&gt;
-                    <th lay-data="{type:'numbers',field:'gradeRank',width:100,align:'center'}">年级排名</th>
-                </tr>
-                </thead>-->
-            </table>
-        </div>
-    </div>
+
+    </form>
+    <hr class="layui-bg-blue">
 </div>
 
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <legend>考试成绩表</legend>
+    <table class="layui-table" id="test" lay-filter="test"></table>
+</fieldset>
 
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit">
+        <i class="iconfont layui-extendedit-fill"></i>编辑教师</a>
+    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">
+        <i class="iconfont layui-extenddelete"></i>删除</a>-->
+</script>
 </body>
 <!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
 <!--/*/</th:block>/*/-->
 <script>
+    //加载组件
     layui.config({
-        base: '/static/layui_ext/'
+        base: '/static/layui_ext/xmSelect/'
     }).extend({
-        excel:'excel_ext/excel',
-        xmSelect:'xmSelect/xm-select'
+        xmSelect: 'xm-select'
     });
-    layui.use(['jquery','table','xmSelect', 'excel', 'layer'], function () {
+
+    layui.use(['jquery','form','layer','xmSelect','table'],function () {
         var $ = layui.jquery,
-            excel = layui.excel;
+            form = layui.form,
             layer = layui.layer,
-        table = layui.table,
-            xmSelect = layui.xmSelect;
+            xmSelect = layui.xmSelect,
+            table = layui.table;
 
-
-        var index = parent.layer.getFrameIndex(window.name);
         let examName = '';
         let flag = 0;
         function renderSelect(data) {
@@ -107,7 +79,7 @@
                     console.log(clazzId);
                     if (flag) {
                         table.reload('test', {
-                             where: {
+                            where: {
                                 clazzId: clazzId
                             }
                         });
@@ -116,9 +88,9 @@
             });
             ajaxGet($,'/clazz/list?gradeId='+data.gradeId,function(res) {
                 if(res.success) {
-                   demo1.update({
-                       data:res.data
-                   })
+                    demo1.update({
+                        data:res.data
+                    })
                 }
             });
         }
@@ -143,32 +115,21 @@
             let attrCol = [ [
                 {field:'clazzId', title:'班级',width:100,align:'center'},
                 {field:'studentId', title:'学号',width:100,align:'center'},
-                {field:'studentName', title:'姓名',width:100,align:'center'}
+                {field:'studentName', title:'姓名',width:100,align:'center'},
+                {field:'courseName', title:'科目',width:100,align:'center'},
+                {field:'score', title:'成绩',width:100,align:'center'}
 
             ]];
 
-            ajaxGetBySync($,'/course/list?gradeId='+data.gradeId,function(res) {
-               if(res.success) {
-                    $.each(res.data,function(i,val) {
-                        let o = {field:val.id,width:70,align:'center'};
-                        o.title=val.courseName;
-                        attrCol[0].push(o);
-                    })
-               }
-            });
-            let ts = {field:'totalScore',title:'总分',width:70,align:'center'};
-            let rank = {type:'numbers',title:'排名',field:'gradeRank',width:70,align:'center'};
-            attrCol[0].push(ts);
-            attrCol[0].push(rank);
-
             table.render({
-                url: apiPrefix+'/examScore/scoreList',
+                url: apiPrefix+'/examScore/list',
                 elem:'#test',
                 page:false,
                 title:data.examName+"-->成绩表",
                 cols:attrCol,
                 where:{
-                  examId:data.id
+                    examId:data.id,
+                    courseId:25
                 },
                 parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
                     return {
@@ -180,13 +141,13 @@
                 },
                 id:'test',
                 done:function(data) {
-                     layer.close(loadIndex);
+                    layer.close(loadIndex);
                 }
             });
         }
 
         $('#exportBtn').click(function() {
-           exportFile('test');
+            exportFile('test');
         });
 
         //表格导出
@@ -234,7 +195,6 @@
         }
     });
 
-
 </script>
-</body>
+
 </html>

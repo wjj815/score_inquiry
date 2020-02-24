@@ -141,9 +141,16 @@ public class PageController {
 	}
 
 	@GetMapping("/examScore")
-	public String examScore(Model model) {
-		List<CourseDTO> courseList = courseService.getCourseList(new CourseDTO());
-		model.addAttribute("courseList",courseList);
+	public String examScore() {
 		return "exam/examScore";
+	}
+
+	@GetMapping("/enterScore")
+	public String enterScore() {
+		return "teacher/enterScore";
+	}
+	@GetMapping("/enterScoreDetail")
+	public String enterScoreDetail() {
+		return "teacher/enterScoreDetail";
 	}
 }

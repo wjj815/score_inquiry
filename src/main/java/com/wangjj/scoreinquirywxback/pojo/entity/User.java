@@ -19,7 +19,6 @@ import java.util.Date;
 public class User  {
 
 	@Id
-	@GeneratedValue
 	private Long id;
 	/**登录账号*/
 	private String account;

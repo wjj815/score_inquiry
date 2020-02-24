@@ -46,10 +46,12 @@ public class UserService {
 	@Transactional
 	public void addTeacherUser(Teacher teacher) {
 		User user = new User();
-		user.setAccount(teacher.getId()+"");
+		user.setId(teacher.getId());
+		user.setAccount(teacher.getPhone()+"");
 		user.setPassword("123456");
 		user.setInfoId(teacher.getId());
 		user.setRole(teacher.getRole());
+		user.setName(teacher.getTeacherName());
 		userRepository.save(user);
 	}
 
