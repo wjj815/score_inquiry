@@ -43,13 +43,14 @@
 
         var loadIndex;
         layui.fillData=function(data) {
+            console.log(data);
             var loadIndex = layer.load(1, {
                 shade: [0.1,'#fff'] //0.1透明度的白色背景
             });
            $('#gradeId').val(data.gradeId);
            $('#clazzId').val(data.clazzId);
-            var url = apiPrefix+ "/student/excel/"+data.gradeId+'-'+data.clazzId;
-            renderUpload(url);
+
+            renderUpload(data.url);
             layer.close(loadIndex);
         }
 
@@ -63,8 +64,8 @@
                 ,accept:'file'
                 ,bindAction: '#test9'
                 , before: function (obj) {
-                    layer.tips('接口地址：'+ this.url, this.item, {tips: 1});
-                    console.log(this.url);
+                    // layer.tips('接口地址：'+ this.url, this.item, {tips: 1});
+                    // console.log(this.url);
                     loadIndex = layer.load(1, {
                         shade: [0.1,'#fff'] //0.1透明度的白色背景
                     });

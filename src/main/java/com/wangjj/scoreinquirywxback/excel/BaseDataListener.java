@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,15 +74,21 @@ public abstract class BaseDataListener<T> extends AnalysisEventListener<T> {
 		}
 	}
 
+	public void otherSave(List<T> list){
 
+	};
 	/**
 	 * 加上存储数据库
 	 */
-	private void saveData() {
+	@Transactional
+	public void saveData() {
 		log.info("{} 条数据，开始存储数据库！", list.size());
 		jpaRepository.saveAll(list);
+		otherSave(list);
 		log.info("存储数据库成功！");
 	}
+
+
 
 
 	/**

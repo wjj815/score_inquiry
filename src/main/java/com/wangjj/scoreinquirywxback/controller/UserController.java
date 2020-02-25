@@ -34,8 +34,9 @@ public class UserController {
 	@ApiImplicitParam(name = "loginParameter", value = "用户登录参数", dataType = "LoginParameter")
 	public APIResultBean login(@RequestBody LoginParameter loginParameter) {
 		UserDTO user = userService.findByLoginParameter(loginParameter);
+		user.setPassword(null);
 		SessionUtils.setUser(user);
-		log.info("set session that is : {}", SessionUtils.getUser());
+//		log.info("set session that is : {}", SessionUtils.getUser());
 		return APIResultBean.ok("登录成功", user).build();
 }
 

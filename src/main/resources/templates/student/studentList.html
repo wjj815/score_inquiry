@@ -245,6 +245,8 @@
                    var json = {};
                    json['gradeId'] = gradeId;
                    json['clazzId'] = clazzId;
+                   let url = apiPrefix+ "/student/excel/"+data.gradeId+'-'+data.clazzId;
+                   json['url'] = url;
                    var iframe = window['layui-layer-iframe'+index];
                    iframe.layui.fillData(json);
                },50);

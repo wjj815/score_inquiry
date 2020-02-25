@@ -10,16 +10,7 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <form class="layui-form ">
-                        <div class="layui-inline">
-                            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" style="width: 40px" id="addBtn">
-                                <i class="iconfont layui-extendjia-"></i>
-                            </button>
-                            <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" style="width: 40px" id="deleteBtn">
-                                <i class="iconfont layui-extenddelete"></i>
-                            </button>
-                        </div>
-                    </form>
+
                 </div>
 
                 <div class="layui-card-body">
@@ -99,22 +90,12 @@
                                 var iframe = window['layui-layer-iframe' + index];
                                 var json = res.data;
                                 iframe.layui.fillData(json);
-                            }, 100);
+                            }, 50);
                         }
                     });
 
                 });
             }
-        });
-
-
-
-        $("#addBtn").click(function () {
-            openMiniModel('/examDetail',layer,'考试信息',function(layero,index){
-
-            },function() {
-
-            });
         });
 
         var $ = layui.$, active = {
@@ -123,47 +104,13 @@
                     ,data = checkStatus.data;
                 layer.alert(JSON.stringify(data));
             }
-            ,delete: function(){ //获取选中数目
-                var checkStatus = table.checkStatus('idTest')
-                    ,data = checkStatus.data;
-                if(data.length <= 0) {
-                    layer.msg("未选中数据");
-                    return;
-                }
-                //拼装所选中的数据的id
-                var ids = '';
-                for(var x in data) {
-                    ids+=data[x].id+",";
-                }
-                var json = {};
-                json['ids'] = ids;
-                layer.confirm('<font color="red">您确定要删除吗？</font>', {
-                    btn: ['确定','取消'] //按钮
-                }, function(){
-                    ajaxDelete($,'/exam/list',JSON.stringify(json),function (data) {
-                        if(data.success) {
-                            t.reload();
-                        }
-                        layer.msg(data.resultMsg);
-                    });
-                }, function(){
-
-                });
-
-            }
             ,isAll: function(){ //验证是否全选
                 var checkStatus = table.checkStatus('idTest');
                 layer.msg(checkStatus.isAll ? '全选': '未全选')
             }
         };
 
-        $('.demoTable .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
-        $("#deleteBtn").click(function () {
-            active['delete'].call();
-        });
+
     });
 
 

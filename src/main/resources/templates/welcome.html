@@ -5,6 +5,16 @@
     <title>Title</title>
 </head>
 <body>
- <span th:text=" '-->' + ${user.name}"></span> 欢迎进入后台管理页面
+ <span id="userName"></span> 欢迎进入后台管理页面
 </body>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+<script>
+    layui.use('jquery',function(){
+        let $ = layui.$;
+        let user = JSON.parse(getUserInfo());
+        $('#userName').html('-->'+user['name']);
+    });
+
+</script>
 </html>

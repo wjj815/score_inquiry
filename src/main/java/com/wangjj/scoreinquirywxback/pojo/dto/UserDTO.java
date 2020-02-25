@@ -27,7 +27,7 @@ public class UserDTO {
 	/** 头像 */
 	private String avatar ;
 	/**用户信息*/
-	private Integer infoId;
+	private Long infoId;
 	/** 创建人 */
 	private String createdBy ;
 	/** 创建时间 */

@@ -20,8 +20,8 @@
                 </div>
             </div>
             <div class="layui-inline">
-                <button class="layui-btn layui-btn-normal" id="importBtn">导入成绩</button>
-                <button class="layui-btn layui-btn-primary" id="downloadTemplateBtn">模版下载</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="importBtn">导入成绩</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="downloadTemplateBtn">模版下载</button>
             </div>
         </div>
 
@@ -46,19 +46,24 @@
 <script>
     //加载组件
     layui.config({
-        base: '/static/layui_ext/xmSelect/'
+        base: '/static/layui_ext/'
     }).extend({
-        xmSelect: 'xm-select'
+        excel:'excel_ext/excel',
+        xmSelect:'xmSelect/xm-select'
     });
 
-    layui.use(['jquery','form','layer','xmSelect','table'],function () {
+    layui.use(['jquery','form','layer','xmSelect','table','excel'],function () {
         var $ = layui.jquery,
             form = layui.form,
             layer = layui.layer,
             xmSelect = layui.xmSelect,
-            table = layui.table;
+            table = layui.table,
+        excel = layui.excel;
 
         let examName = '';
+        let examId='';
+        let gradeId='';
+        let clazzId='';
         let flag = 0;
         function renderSelect(data) {
             let demo1 = xmSelect.render({
@@ -75,7 +80,7 @@
                     //change, 此次选择变化的数据,数组
                     var arr = data.arr;
                     console.log(arr);
-                    var clazzId = arr.length > 0 ? arr[0].id : '';
+                    clazzId = arr.length > 0 ? arr[0].id : '';
                     console.log(clazzId);
                     if (flag) {
                         table.reload('test', {
@@ -97,6 +102,8 @@
 
 
         layui.fillData = function(data) {
+            examId = data.id;
+            gradeId = data.gradeId;
             $('#gradeName').html('年级:'+data.gradeId);
             console.log(data);
             var loadIndex = layer.load(1, {
@@ -108,6 +115,23 @@
             flag = 1;
             layer.close(loadIndex);
         }
+        let user = JSON.parse(getUserInfo());
+        console.log(user);
+        let teacherInfo={};
+        ajaxGet($,'/teacher?id='+user['infoId'],function(res) {
+            if(res.success) {
+                teacherInfo = res.data;
+            }
+        })
+
+        $('#downloadTemplateBtn').click(function() {
+            if(clazzId === '') {
+                layer.msg("请选择班级！");
+                return false;
+            }
+           exportFile('test');
+        });
+        let t;
         function renderTable(data) {
             var loadIndex = layer.load(16, {
                 shade: [0.1,'#fff'] //0.1透明度的白色背景
@@ -121,7 +145,7 @@
 
             ]];
 
-            table.render({
+            t = table.render({
                 url: apiPrefix+'/examScore/list',
                 elem:'#test',
                 page:false,
@@ -129,7 +153,8 @@
                 cols:attrCol,
                 where:{
                     examId:data.id,
-                    courseId:25
+                    courseId:teacherInfo.courseId,
+                    clazzId: clazzId
                 },
                 parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
                     return {
@@ -146,9 +171,27 @@
             });
         }
 
-        $('#exportBtn').click(function() {
-            exportFile('test');
+        $('#importBtn').click(function(){
+            if(clazzId === '') {
+                layer.msg("请选择班级！");
+                return false;
+            }
+            openMiniModel("/uploadForm",layer,"导入学生成绩",function (layero, index) {
+                setTimeout(function(){
+                    var json = {};
+                    json['gradeId'] = gradeId;
+                    json['clazzId'] = clazzId;
+                    let courseId = teacherInfo.courseId;
+                    let url = apiPrefix+ "/examScore/"+examId+'_'+clazzId+'_'+courseId+"/excel/";
+                    json['url'] = url;
+                    var iframe = window['layui-layer-iframe'+index];
+                    iframe.layui.fillData(json);
+                },50);
+            },function() {
+                t.reload();
+            })
         });
+
 
         //表格导出
         function exportFile(id) {
@@ -191,7 +234,7 @@
             //导出excel
             excel.exportExcel({
                 sheet1: bodysArr
-            },examName + '--成绩表.xlsx', 'xlsx');
+            },examName + '--成绩登记表.xlsx', 'xlsx');
         }
     });
 

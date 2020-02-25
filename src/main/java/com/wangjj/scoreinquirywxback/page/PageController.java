@@ -52,9 +52,7 @@ public class PageController {
 	}
 	@ApiOperation(value = "欢迎页面")
 	@GetMapping("/welcome")
-	public String welcome(Model model) {
-		UserDTO user = SessionUtils.getUser();
-		model.addAttribute("user",user);
+	public String welcome() {
 		return "welcome";
 	}
 

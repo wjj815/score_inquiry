@@ -89,6 +89,14 @@ function ajaxGet($,url,fun)
     });
 }
 
+function storeUserInfo(info) {
+    localStorage.setItem("user",info);
+}
+
+function getUserInfo() {
+    return localStorage.getItem("user");
+}
+
 function ajaxFuntionWithToken($,url,data,type,fun)
 {
     $.ajax({

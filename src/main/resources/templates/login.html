@@ -124,6 +124,7 @@
             }*/
             ajaxPost($,'/user/login',JSON.stringify(data.field),function(data){
                if(data.success) {
+                   storeUserInfo(JSON.stringify(data.data));
                    window.location.href = '/index';
                }
                layer.msg(data.resultMsg);

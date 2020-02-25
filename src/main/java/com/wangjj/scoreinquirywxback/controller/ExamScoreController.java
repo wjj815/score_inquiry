@@ -35,7 +35,7 @@ public class ExamScoreController {
 	@Autowired
 	private CourseScoreService courseScoreService;
 
-	@PostMapping(value = "{id}",headers = "content-type=multipart/form-data",consumes = "multipart/*")
+	@PostMapping(value = "/{id}/excel",headers = "content-type=multipart/form-data",consumes = "multipart/*")
 	@ApiOperation( value = "导入成绩")
 	@ApiImplicitParam(name = "id",value = "导入成绩id:examId_clazzId_courseId")
 	public APIResultBean enterScore(@ApiParam(value = "上传的文件",required = true) MultipartFile file,
@@ -49,12 +49,13 @@ public class ExamScoreController {
 		courseScoreDTO.setClazzId(Long.parseLong(arr[1]));
 		courseScoreDTO.setCourseId(Long.parseLong(arr[2]));
 		try {
-			courseScoreService.importStudentScore(file.getInputStream(),courseScoreDTO);
+			String s = courseScoreService.importStudentScore(file.getInputStream(), courseScoreDTO);
+			return APIResultBean.ok("导入成功!"+s).build();
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new GlobalException("发生异常！");
 		}
-		return APIResultBean.ok(file.getOriginalFilename()).build();
+
 	}
 
 	@GetMapping("/scoreList")

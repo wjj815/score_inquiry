@@ -224,7 +224,7 @@ public class CourseScoreService {
 		return students;
 	}
 
-	public void importStudentScore(InputStream inputStream,CourseScoreDTO courseScoreDTO) {
+	public String importStudentScore(InputStream inputStream, CourseScoreDTO courseScoreDTO) {
 		check(courseScoreDTO);
 		StudentCourse studentCourse = new StudentCourse();
 		Exam exam = examRepository.getOne(courseScoreDTO.getExamId());
@@ -234,8 +234,10 @@ public class CourseScoreService {
 		studentCourse.setCourse(course);
 		studentCourse.setExam(exam);
 		studentCourse.setStudentMap(collect);
-		EasyExcel.read(inputStream, CourseScore.class,new ScoreDataListener(courseScoreRepository,studentCourse))
+		ScoreDataListener scoreDataListener = new ScoreDataListener(courseScoreRepository, studentCourse);
+		EasyExcel.read(inputStream, CourseScore.class,scoreDataListener)
 				.sheet().doRead();
+		return scoreDataListener.getResult();
 	}
 
 	private void check(CourseScoreDTO courseScoreDTO) {
