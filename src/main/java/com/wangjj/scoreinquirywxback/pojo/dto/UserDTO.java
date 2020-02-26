@@ -1,5 +1,6 @@
 package com.wangjj.scoreinquirywxback.pojo.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.GeneratedValue;
@@ -37,5 +38,7 @@ public class UserDTO {
 	/** 更新时间 */
 	private Date updatedTime ;
 	/**角色*/
-	private String roleIds;
+	private Long roleId;
+	/** 电话 */
+	private String phone ;
 }

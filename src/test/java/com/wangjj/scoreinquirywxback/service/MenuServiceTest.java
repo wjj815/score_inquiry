@@ -17,7 +17,7 @@ class MenuServiceTest {
 	@Test
 	void findMenuList() {
 		MenuDTO menuDTO = new MenuDTO();
-		menuDTO.setRoleIds("1");
+		menuDTO.setRoleId(1L);
 //		List<MenuDTO> menuList = menuService.findMenuList(menuDTO);
 		List<MenuDTO> menuDTOS = menuService.bulidMenuTree(menuDTO);
 		System.out.println(menuDTOS);

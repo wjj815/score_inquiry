@@ -79,19 +79,15 @@ public class MenuService {
 	}
 
 	private Specification<Menu> getMenuSpecification(MenuDTO menuDTO) {
-		List<Long> roleIds = ParameterUtils.analyse(menuDTO.getRoleIds());
 
 		return (root, query, criteriaBuilder) -> {
 
 			List<Predicate> predicates = new ArrayList<>();
 
-			if(!CollectionUtils.isEmpty(roleIds)) {
+			if(Objects.nonNull(menuDTO.getRoleId())) {
 				Path<Object> objectPath = root.joinSet("roleList").get("id");
-				CriteriaBuilder.In<Object> in = criteriaBuilder.in(objectPath);
-				for (Long roleId : roleIds) {
-					in.value(roleId);
-				}
-				predicates.add(criteriaBuilder.and(in));
+
+				predicates.add(criteriaBuilder.equal(objectPath,menuDTO.getRoleId()));
 			}
 
 //			query.orderBy(criteriaBuilder.asc(root.get("menuOrder")));

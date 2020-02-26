@@ -1,13 +1,16 @@
 package com.wangjj.scoreinquirywxback.service;
 
 import com.wangjj.scoreinquirywxback.constant.UserType;
+import com.wangjj.scoreinquirywxback.dao.RoleRepository;
 import com.wangjj.scoreinquirywxback.dao.UserRepository;
+import com.wangjj.scoreinquirywxback.pojo.dto.ParentDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.UserDTO;
 import com.wangjj.scoreinquirywxback.pojo.entity.Parent;
 import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.dto.request.LoginParameter;
+import com.wangjj.scoreinquirywxback.util.IdGenerator;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,10 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private ParentService parentService;
+
+
 	public UserDTO findByLoginParameter(LoginParameter loginParameter) {
 
 		User user = userRepository.findByAccountAndPassword(loginParameter.getAccount(), loginParameter.getPassword());
@@ -39,7 +46,7 @@ public class UserService {
 	private UserDTO getUserDTO(User user) {
 		UserDTO userDTO = new UserDTO();
 		PropertyUtils.copyNoNullProperties(user,userDTO);
-		userDTO.setRoleIds(user.getRole().getId()+"");
+		userDTO.setRoleId(user.getRole().getId());
 		return userDTO;
 	}
 
@@ -54,6 +61,21 @@ public class UserService {
 		user.setName(teacher.getTeacherName());
 		userRepository.save(user);
 	}
+
+	@Transactional
+	public void addParentUser(UserDTO userDTO) {
+		Long id = IdGenerator.generateId();
+		User user = new User();
+		user.setId(id);
+		PropertyUtils.copyNoNullProperties(userDTO,user);
+		user.setInfoId(id);
+		ParentDTO parentDTO = new ParentDTO();
+		parentDTO.setId(id);
+		parentDTO.setName(userDTO.getName());
+		parentDTO.setPhone(user.getPhone());
+		parentService.saveParent(parentDTO);
+	}
+
 
 	@Transactional
 	public void addParentUser(User user,Parent parent) {

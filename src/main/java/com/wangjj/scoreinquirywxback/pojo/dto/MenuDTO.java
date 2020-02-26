@@ -29,7 +29,7 @@ public class MenuDTO {
 		/*一个子菜单只能对应一个父菜单*/
 		List<MenuDTO> childrenMenu;
 
-		private String roleIds;
+		private Long roleId;
 
 		private Long parentMenuId;
 

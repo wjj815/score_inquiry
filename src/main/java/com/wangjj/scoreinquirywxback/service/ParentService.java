@@ -1,11 +1,14 @@
 package com.wangjj.scoreinquirywxback.service;
 
+import com.wangjj.scoreinquirywxback.constant.UserType;
 import com.wangjj.scoreinquirywxback.dao.ParentRepository;
+import com.wangjj.scoreinquirywxback.dao.RoleRepository;
 import com.wangjj.scoreinquirywxback.dao.StudentRepository;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.dto.ParentDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Parent;
+import com.wangjj.scoreinquirywxback.pojo.entity.Role;
 import com.wangjj.scoreinquirywxback.pojo.entity.Student;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +37,8 @@ public class ParentService {
 
 	@Autowired
 	private StudentRepository studentRepository;
-
+	@Autowired
+	private RoleRepository roleRepository;
 	@Transactional
 	public void saveParent(ParentDTO parentDTO) {
 
@@ -45,6 +49,8 @@ public class ParentService {
 			parent = new Parent();
 		}
 		PropertyUtils.copyNoNullProperties(parentDTO,parent);
+		Role role = roleRepository.getOne(UserType.PARENT.getId());
+		parent.setRole(role);
 		parentRepository.save(parent);
 
 		/*Parent savedParent = parentRepository.save(parent);

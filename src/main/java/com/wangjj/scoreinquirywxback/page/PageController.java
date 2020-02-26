@@ -28,12 +28,10 @@ public class PageController {
 
 	private final MenuService menuService;
 
-	private final CourseService courseService;
 
 	@Autowired
-	public PageController(MenuService menuService, CourseService courseService) {
+	public PageController(MenuService menuService) {
 		this.menuService = menuService;
-		this.courseService = courseService;
 	}
 
 	@ApiOperation(value = "主页面")
@@ -41,9 +39,9 @@ public class PageController {
 	public String index(Model model) {
 		UserDTO user = SessionUtils.getUser();
 		if (user != null) {
-			String roleIds = user.getRoleIds();
+
 			MenuDTO menuDTO = new MenuDTO();
-			menuDTO.setRoleIds(roleIds);
+			menuDTO.setRoleId(user.getRoleId());
 			List<MenuDTO> menuList = menuService.bulidMenuTree(menuDTO);
 			model.addAttribute("menuList",menuList);
 		}

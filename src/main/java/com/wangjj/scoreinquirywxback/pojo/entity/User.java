@@ -1,5 +1,6 @@
 package com.wangjj.scoreinquirywxback.pojo.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,6 +31,8 @@ public class User  {
 	private String avatar ;
 	/**用户信息*/
 	private Long infoId;
+	/** 电话 */
+	private String phone ;
 	/** 创建人 */
 	private String createdBy ;
 	/** 创建时间 */

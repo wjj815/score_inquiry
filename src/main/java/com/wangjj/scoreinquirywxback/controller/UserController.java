@@ -1,7 +1,12 @@
 package com.wangjj.scoreinquirywxback.controller;
 
+import com.wangjj.scoreinquirywxback.constant.UserType;
+import com.wangjj.scoreinquirywxback.pojo.dto.ParentDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.UserDTO;
 import com.wangjj.scoreinquirywxback.pojo.entity.User;
+import com.wangjj.scoreinquirywxback.service.ManagerService;
+import com.wangjj.scoreinquirywxback.service.ParentService;
+import com.wangjj.scoreinquirywxback.service.TeacherService;
 import com.wangjj.scoreinquirywxback.service.UserService;
 import com.wangjj.scoreinquirywxback.util.SessionUtils;
 import com.wangjj.scoreinquirywxback.pojo.dto.request.LoginParameter;
@@ -28,6 +33,14 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private TeacherService teacherService;
+
+	@Autowired
+	private ParentService parentService;
+
+	@Autowired
+	private ManagerService managerService;
 
 	@PostMapping("/login")
 	@ApiOperation(value = "用户登录", notes = "用户登录")
@@ -45,5 +58,29 @@ public class UserController {
 	public APIResultBean logout() {
 		SessionUtils.removeUser();
 		return APIResultBean.ok("已成功退出登录！").build();
+	}
+
+	@PostMapping("/register")
+	public APIResultBean registerParent(@RequestBody UserDTO userDTO) {
+
+		if(userDTO.getRoleId().equals(UserType.PARENT.getId())) {
+
+		}
+
+		return APIResultBean.ok().build();
+	}
+
+	@GetMapping("/info")
+	@ApiOperation(value = "获取用户信息",notes = "获取用户信息")
+	public APIResultBean getUserInfo(UserDTO userDTO) {
+		if(userDTO.getRoleId().equals(UserType.TEACHER.getId())) {
+			return APIResultBean.ok(teacherService.getTeacherById(userDTO.getInfoId())).build();
+		} else if(userDTO.getRoleId().equals(UserType.PARENT.getId())) {
+			return APIResultBean.ok(parentService.findParentById(userDTO.getInfoId())).build();
+		} else if(userDTO.getRoleId().equals(UserType.MANAGER.getId())) {
+			return APIResultBean.ok(managerService.findById(userDTO.getInfoId())).build();
+		} else {
+			return APIResultBean.ok().build();
+		}
 	}
 }
