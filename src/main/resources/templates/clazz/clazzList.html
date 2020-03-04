@@ -125,7 +125,7 @@
                         var iframe = parent.window['layui-layer-iframe'+index];
                         var json = data;
                         iframe.layui.fillData(json);
-                    },100);
+                    },delayTime);
                 },function() {
                     clazzTable.reload();
                 })

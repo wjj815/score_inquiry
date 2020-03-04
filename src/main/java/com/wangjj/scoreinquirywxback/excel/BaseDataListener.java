@@ -27,7 +27,7 @@ public abstract class BaseDataListener<T> extends AnalysisEventListener<T> {
 	private static final int BATCH_COUNT = 100;
 	List<T> list = new ArrayList<>();
 
-	private JpaRepository<T,Long> jpaRepository;
+	protected JpaRepository<T,Long> jpaRepository;
 	private StringBuffer stringBuffer;
 	private int count = 0;
 	private int failedCount = 0;

@@ -35,42 +35,57 @@
             $ = layui.jquery,
             form = layui.form;
 
-        var t = table.render({
-            elem: '#test'
-            , url: apiPrefix+'/exam/page'
-            // , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
-            // , defaultToolbar: ['filter', 'exports']
-            ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-            , title: '课程列表'
-            , cols: [ [
-                {type: 'checkbox',align:'center', fixed: 'left',width:'5%'}
-                , {field:'id', title: '考试编号', width: '10%',align:'center'}
-                , {field: 'examName', title: '考试名称', width: '15%',align:'center'}
-                , {field: 'examTime', title: '考试时间', width: '15%',align:'center'}
-                , {field: 'examType', title: '考试类型', width: '15%',align:'center',templet:function(obj) {
-                        if(obj.examType == 1) {
-                            return '年级考试'
-                        } else if(obj.examType == 0) {
-                            return '班级考试'
-                        }else {
-                            return '';
-                        }
-                    }}
-                , {field: 'gradeId', title: '考试年级', width: '15%',align:'center'}
-                /*   , {field: 'clazzId', title: '考试班级', width: '15%',align:'center'}*/
-                , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '10%' }
-            ]],
-            id: 'idTest'
-            , page: true
-            ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
-                return {
-                    "code": res.resultCode, //解析接口状态
-                    "msg": res.resultMsg, //解析提示文本
-                    "count": res.data.totalElements, //解析数据长度
-                    "data": res.data.content //解析数据列表
-                };
+        let t;
+        let userInfo = getUserInfo();
+        let info = {};
+        ajaxGet($,'/user/info?infoId='+userInfo['infoId']+'&roleId='+userInfo['roleId'],function(data){
+            if(data.success) {
+                info = data.data;
+                renderTable();
             }
         });
+        function renderTable(){
+            t = table.render({
+                elem: '#test'
+                , url: apiPrefix+'/exam/page'
+                // , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                // , defaultToolbar: ['filter', 'exports']
+                ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , title: '课程列表'
+                , cols: [ [
+                    {type: 'checkbox',align:'center', fixed: 'left',width:'5%'}
+                    , {field:'id', title: '考试编号', width: '10%',align:'center'}
+                    , {field: 'examName', title: '考试名称', width: '15%',align:'center'}
+                    , {field: 'examTime', title: '考试时间', width: '15%',align:'center'}
+                    , {field: 'examType', title: '考试类型', width: '15%',align:'center',templet:function(obj) {
+                            if(obj.examType == 1) {
+                                return '年级考试'
+                            } else if(obj.examType == 0) {
+                                return '班级考试'
+                            }else {
+                                return '';
+                            }
+                        }}
+                    , {field: 'gradeId', title: '考试年级', width: '15%',align:'center'}
+                    /*   , {field: 'clazzId', title: '考试班级', width: '15%',align:'center'}*/
+                    , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '10%' }
+                ]],
+                where:{
+                    teacherId:info.id
+                }
+                ,
+                id: 'idTest'
+                , page: true
+                ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                    return {
+                        "code": res.resultCode, //解析接口状态
+                        "msg": res.resultMsg, //解析提示文本
+                        "count": res.data.totalElements, //解析数据长度
+                        "data": res.data.content //解析数据列表
+                    };
+                }
+            });
+        }
 
 
         //监听行工具事件
@@ -90,7 +105,7 @@
                                 var iframe = window['layui-layer-iframe' + index];
                                 var json = res.data;
                                 iframe.layui.fillData(json);
-                            }, 50);
+                            }, delayTime);
                         }
                     });
 

@@ -103,19 +103,18 @@
                                 var iframe = window['layui-layer-iframe' + index];
                                 var json = res.data;
                                 iframe.layui.fillData(json);
-                            }, 10);
+                            }, delayTime);
                         }
                     });
 
                 });
             }else if (obj.event === 'scoreStat') {
                 openModel("/examScore",layer,"成绩统计",function(layero,index) {
-
+                    let iframe = window['layui-layer-iframe' + index];
+                    let json = data;
                     setTimeout(function () {
-                        let iframe = window['layui-layer-iframe' + index];
-                        let json = data;
                         iframe.layui.fillData(json);
-                    }, 200);
+                    }, delayTime);
 
                 });
             }

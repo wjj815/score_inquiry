@@ -147,6 +147,8 @@ public class ParentService {
 				predicates.add(criteriaBuilder.equal(root.joinSet("students").get("id"),
 						parentDTO.getStudentId()));
 			}
+
+			query.where(predicates.toArray(new Predicate[predicates.size()]));
 			return null;
 		};
 	}

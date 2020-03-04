@@ -6,8 +6,10 @@ import com.wangjj.scoreinquirywxback.pojo.dto.StudentDTO;
 import com.wangjj.scoreinquirywxback.pojo.entity.Clazz;
 import com.wangjj.scoreinquirywxback.pojo.entity.Grade;
 import com.wangjj.scoreinquirywxback.pojo.entity.Student;
+import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -32,14 +34,36 @@ public class StudentDataListener extends BaseDataListener<Student> {
 
 	}
 
+
 	@Override
 	protected void wrapperData(Student data) {
+
+		data.setId(buildStudentId());
 		Calendar instance = Calendar.getInstance();
 		instance.setTime(data.getBirthday());
 //		controllerLog.info("{}当前年份, {} 生日年份， {}相差年份",LocalDate.now().getYear(), );
 		data.setAge(LocalDate.now().getYear() - instance.get(Calendar.YEAR));
 		data.setGrade(gradeAndClazz.getGrade());
 		data.setClazz(gradeAndClazz.getClazz());
+	}
+
+	private Long sequence = 0L;
+	private Long buildStudentId() {
+		Student student = new Student();
+		student.setClazz(gradeAndClazz.getClazz());
+		student.setGrade(gradeAndClazz.getGrade());
+		//目前
+		Long count = jpaRepository.count(Example.of(student));
+		Long gradeId = gradeAndClazz.getGrade().getId();
+		Long clazzId = gradeAndClazz.getClazz().getId();
+		return Long.parseLong(String.valueOf(gradeId).concat(wrapperId(clazzId)).concat(wrapperId(++sequence)));
+	}
+
+	public String wrapperId(Long id) {
+		if(id >= 10) {
+			return String.valueOf(id);
+		}
+		return "0" + id;
 	}
 
 

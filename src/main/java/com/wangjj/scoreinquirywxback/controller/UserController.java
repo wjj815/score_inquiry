@@ -61,6 +61,7 @@ public class UserController {
 	}
 
 	@PostMapping("/register")
+	@ApiOperation(value = "家长注册", notes = "家长注册")
 	public APIResultBean registerParent(@RequestBody UserDTO userDTO) {
 
 		if(userDTO.getRoleId().equals(UserType.PARENT.getId())) {
@@ -82,5 +83,12 @@ public class UserController {
 		} else {
 			return APIResultBean.ok().build();
 		}
+	}
+
+	@GetMapping("/list")
+	public APIResultBean getUserList(UserDTO userDTO) {
+
+
+		return APIResultBean.ok().build();
 	}
 }

@@ -27,7 +27,7 @@ class StudentServiceImplTest {
 			long l = System.currentTimeMillis();
 			StudentDTO studentDTO = new StudentDTO();
 			studentDTO.setGradeId(2019L);
-			studentDTO.setClazzId(1L);
+			studentDTO.setClazzId(3L);
 			studentService.importStudentList(new FileInputStream("C:\\Users\\1090086767\\Desktop\\毕业设计\\导入学生模版.xlsx"), studentDTO);
 			System.out.println(System.currentTimeMillis() - l);
 		} catch (FileNotFoundException e) {

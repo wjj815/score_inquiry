@@ -12,7 +12,7 @@
 <script>
     layui.use('jquery',function(){
         let $ = layui.$;
-        let user = JSON.parse(getUserInfo());
+        let user = getUserInfo();
         $('#userName').html('-->'+user['name']);
     });
 

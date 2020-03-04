@@ -1,4 +1,5 @@
 let apiPrefix = "/api";
+let delayTime = 200;
 /*layui的模态框封装*/
 function openModel(url,layer,title,fun,endFun)
 {
@@ -15,6 +16,8 @@ function openModel(url,layer,title,fun,endFun)
         end:endFun
     });
 }
+
+
 
 function openMiniModel(url,layer,title,fun,endFun)
 {
@@ -90,11 +93,12 @@ function ajaxGet($,url,fun)
 }
 
 function storeUserInfo(info) {
-    localStorage.setItem("user",info);
+
+    localStorage.setItem("user",JSON.stringify(info));
 }
 
 function getUserInfo() {
-    return localStorage.getItem("user");
+    return JSON.parse(localStorage.getItem("user"));
 }
 
 function ajaxFuntionWithToken($,url,data,type,fun)

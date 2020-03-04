@@ -123,7 +123,7 @@ public class ExamService {
 			if(Objects.nonNull(examDTO.getTeacherId())) {
 				predicates.add(criteriaBuilder.equal(
 						root.join("grade")
-								.joinSet("courses")
+								.joinSet("clazzes")
 								.joinSet("teachers").get("id")
 						,examDTO.getTeacherId()));
 			}

@@ -115,7 +115,7 @@
             flag = 1;
             layer.close(loadIndex);
         }
-        let user = JSON.parse(getUserInfo());
+        let user = getUserInfo();
         console.log(user);
         let teacherInfo={};
         ajaxGet($,'/teacher?id='+user['infoId'],function(res) {
@@ -186,7 +186,7 @@
                     json['url'] = url;
                     var iframe = window['layui-layer-iframe'+index];
                     iframe.layui.fillData(json);
-                },50);
+                },200);
             },function() {
                 t.reload();
             })

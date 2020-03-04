@@ -13,9 +13,13 @@ import com.wangjj.scoreinquirywxback.pojo.dto.request.LoginParameter;
 import com.wangjj.scoreinquirywxback.util.IdGenerator;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -74,6 +78,32 @@ public class UserService {
 		parentDTO.setName(userDTO.getName());
 		parentDTO.setPhone(user.getPhone());
 		parentService.saveParent(parentDTO);
+	}
+
+
+	/**
+	 *获得用户列表
+	 * @param userDTO 用户查询参数
+	 * @return 用户列表
+	 */
+	public List<UserDTO> getUserList(UserDTO userDTO) {
+		List<User> users = userRepository.findAll(getUserSpecification(userDTO));
+		return PropertyUtils.convert(users, this::getUserDTO);
+	}
+
+	private Specification<User> getUserSpecification(UserDTO userDTO) {
+		return (root, query, criteriaBuilder) -> {
+			List<Predicate> predicates = new ArrayList<>();
+			if(Objects.nonNull(userDTO.getId())) {
+				predicates.add(criteriaBuilder.equal(root.get("id"),userDTO.getId()));
+			}
+
+			if(Objects.nonNull(userDTO.getRoleId())) {
+				predicates.add(criteriaBuilder.equal(root.get("role").get("id"),userDTO.getRoleId()));
+			}
+			query.where(predicates.toArray(new Predicate[predicates.size()]));
+			return null;
+		};
 	}
 
 

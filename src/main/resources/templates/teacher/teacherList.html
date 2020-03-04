@@ -19,15 +19,15 @@
                     </button>
                 </div>
 
-                <div class="layui-inline">
+               <!-- <div class="layui-inline">
                     <button type="button" onclick="downloadTemplate()" class="layui-btn layui-btn-sm" >导入模版下载</button>
-                </div>
+                </div>-->
                 <div class="layui-inline">
-                    <button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" id="uploadBtn">
+                   <!-- <button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" id="uploadBtn">
                         <i class="iconfont layui-extendcloud-upload"></i>
                         导入
-                    </button>
-                    <button type="button" onclick="downloadExcel()" class="layui-btn layui-btn-sm">
+                    </button>-->
+                    <button type="button" id="exportBtn" class="layui-btn layui-btn-sm layui-btn-normal">
                         <i class="iconfont layui-extendcloud-download"></i>
                         导出
                     </button>
@@ -59,12 +59,21 @@
     function downloadExcel() {
         window.location.href = apiPrefix+'/teacher/excel';
     }
-    layui.use(['jquery','table','upload','layer','form'], function () {
+    //加载组件
+    layui.config({
+        base: '/static/layui_ext/'
+    }).extend({
+        excel:'excel_ext/excel',
+        xmSelect:'xmSelect/xm-select'
+    });
+
+    layui.use(['jquery','table','upload','layer','form','excel'], function () {
         var table = layui.table,
             upload = layui.upload,
             layer = layui.layer,
             $ = layui.jquery,
-            form = layui.form;
+            form = layui.form,
+        excel = layui.excel;
 
         var gradeId = '';
         var clazzId = '';
@@ -122,7 +131,10 @@
                     ajaxGet($,"/teacher/"+data.id,function (data) {
                         var iframe = window['layui-layer-iframe' + index];
                         var json = data.data;
-                        iframe.layui.fillData(json);
+                        setTimeout(function(){
+                            iframe.layui.fillData(json);
+                        },delayTime);
+
                     });
                 },function () {
                     t.reload();
@@ -191,9 +203,64 @@
             }
         };
 
+        $('#addBtn').click(function(){
+            openModel("/teacherDetail",layer,"增加教师信息",function (layero,index) {
+            },function () {
+                t.reload();
+            });
+        });
         $("#deleteBtn").click(function () {
             active['delete'].call();
         });
+
+
+        $('#exportBtn').click(function() {
+            exportFile('idTest');
+        });
+
+        //表格导出
+        function exportFile(id) {
+            //根据传入tableID获取表头
+            var headers = $("div[lay-id=" + id + "] .layui-table-box table").get(0);
+            var htrs = Array.from(headers.querySelectorAll('tr'));
+            var titles = {};
+            for (var j = 0; j < htrs.length; j++) {
+                var hths = Array.from(htrs[j].querySelectorAll("th"));
+                for (var i = 0; i < hths.length; i++) {
+                    var clazz = hths[i].getAttributeNode('class').value;
+                    if (clazz != ' layui-table-col-special' && clazz != 'layui-hide') {
+                        //排除居左、具有、隐藏字段
+                        //修改:默认字段data-field+i,兼容部分数据表格中不存在data-field值的问题
+                        titles['data-field' + i] = hths[i].innerText;
+                    }
+                }
+            }
+            //根据传入tableID获取table内容
+            var bodys = $("div[lay-id=" + id + "] .layui-table-box table").get(1);
+            var btrs = Array.from(bodys.querySelectorAll("tr"))
+            var bodysArr = new Array();
+            for (var j = 0; j < btrs.length; j++) {
+                var contents = {};
+                var btds = Array.from(btrs[j].querySelectorAll("td"));
+                for (var i = 0; i < btds.length; i++) {
+                    for (var key in titles) {
+                        //修改:默认字段data-field+i,兼容部分数据表格中不存在data-field值的问题
+                        var field = 'data-field' + i;
+                        if (field === key) {
+                            //根据表头字段获取table内容字段
+                            contents[field] = btds[i].innerText;
+                        }
+                    }
+                }
+                bodysArr.push(contents)
+            }
+            //将标题行置顶添加到数组
+            bodysArr.unshift(titles);
+            //导出excel
+            excel.exportExcel({
+                sheet1: bodysArr
+            },'教师信息表.xlsx', 'xlsx');
+        }
     });
 </script>
 </html>

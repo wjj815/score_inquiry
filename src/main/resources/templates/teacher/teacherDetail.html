@@ -13,7 +13,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">教师编号</label>
                     <div class="layui-input-inline">
-                        <input type="text" id="id" name="id" disabled autocomplete="off" class="layui-input">
+                        <input type="text" id="id" name="id" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -46,7 +46,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">生日</label>
                     <div class="layui-input-inline">
-                        <input type="test" id="test1" placeholder="yyyy-MM-dd"  name="birthday"  autocomplete="off" class="layui-input">
+                        <input type="text" id="birthday" placeholder="yyyy-MM-dd"  name="birthday"  autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -126,6 +126,11 @@
             }
         })
 
+        laydate.render({
+            elem: '#birthday',
+            format: 'yyyy-MM-dd'
+            ,trigger: 'click'
+        });
         ajaxGet($,"/course/list",function(res) {
             console.log(res);
             demo1.update({
@@ -134,12 +139,13 @@
         });
 
 
-        var loadIndex;
+
         function init(data) {
-             loadIndex = layer.load(1, {
+            let loadIndex = layer.load(1, {
                 shade: [0.1,'#fff'] //0.1透明度的白色背景
             });
             fillForm(data);
+            layer.close(loadIndex);
         }
 
         var t = table.render({
@@ -175,6 +181,7 @@
         });
 
         function fillForm(data) {
+            $("#id").attr("disabled",'true');
             console.log(JSON.stringify(data));
             form.val('myForm',{
                 id:data.id,
@@ -195,7 +202,7 @@
         }
         layui.fillData=function(data) {
             init(data);
-            layer.close(loadIndex);
+
         }
 
         var index = parent.layer.getFrameIndex(window.name);

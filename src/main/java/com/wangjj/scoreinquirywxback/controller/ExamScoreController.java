@@ -6,10 +6,7 @@ import com.wangjj.scoreinquirywxback.pojo.dto.StudentScoreDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
 import com.wangjj.scoreinquirywxback.service.CourseScoreService;
 import com.wangjj.scoreinquirywxback.service.CourseService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +25,7 @@ import java.util.stream.Collectors;
  * @Date : 2020/2/23 10:50
  * @Description : TODO
  */
+@Api(value = "考试成绩类")
 @RestController
 @RequestMapping("/examScore")
 public class ExamScoreController {

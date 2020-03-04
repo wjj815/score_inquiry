@@ -227,7 +227,7 @@
                            var iframe = window['layui-layer-iframe'+index];
                            var json = data.data;
                            iframe.layui.fillData(json);
-                       },50);
+                       },delayTime);
                     });
                 },function () {
                    t.reload();
@@ -249,7 +249,7 @@
                    json['url'] = url;
                    var iframe = window['layui-layer-iframe'+index];
                    iframe.layui.fillData(json);
-               },50);
+               },delayTime);
            },function() {
                active['reload'].call();
            })

@@ -18,7 +18,7 @@
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-sm12 layui-col-md12 zyl_mar_01">
-            <blockquote class="layui-elem-quote"><h2>学生成绩管理系统</h2></blockquote>
+            <blockquote class="layui-elem-quote"><h2>后台管理系统</h2></blockquote>
         </div>
     </div>
 </div>
@@ -75,12 +75,12 @@
 
             <div class="layui-col-sm12 layui-col-md12">
                 <div class="layui-form-item">
-                    <div class="layui-input-block">
+                  <!--  <div class="layui-input-block">
                         <input type="radio" name="type" value="1" title="老师" >
                         <input type="radio" name="type" value="0" checked title="管理员">
-                        <!--<input type="radio" name="sex" value="" title="女">
-                        <input type="radio" name="sex" value="禁" title="禁用" disabled="">-->
-                    </div>
+                        &lt;!&ndash;<input type="radio" name="sex" value="" title="女">
+                        <input type="radio" name="sex" value="禁" title="禁用" disabled="">&ndash;&gt;
+                    </div>-->
                 </div>
             </div>
 
@@ -124,7 +124,7 @@
             }*/
             ajaxPost($,'/user/login',JSON.stringify(data.field),function(data){
                if(data.success) {
-                   storeUserInfo(JSON.stringify(data.data));
+                   storeUserInfo(data.data);
                    window.location.href = '/index';
                }
                layer.msg(data.resultMsg);
