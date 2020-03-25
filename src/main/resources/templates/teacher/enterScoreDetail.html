@@ -118,7 +118,7 @@
         let user = getUserInfo();
         console.log(user);
         let teacherInfo={};
-        ajaxGet($,'/teacher?id='+user['infoId'],function(res) {
+        ajaxGet($,'/user/info?id='+user['id']+'&roleId='+user['roleId'],function(res) {
             if(res.success) {
                 teacherInfo = res.data;
             }
@@ -234,7 +234,7 @@
             //导出excel
             excel.exportExcel({
                 sheet1: bodysArr
-            },examName + '--成绩登记表.xlsx', 'xlsx');
+            },examName + '--'+teacherInfo['courseName']+'成绩登记表.xls', 'xls');
         }
     });
 

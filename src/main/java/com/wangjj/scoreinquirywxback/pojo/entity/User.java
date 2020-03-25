@@ -30,7 +30,7 @@ public class User  {
 	/** 头像 */
 	private String avatar ;
 	/**用户信息*/
-	private Long infoId;
+//	private Long infoId;
 	/** 电话 */
 	private String phone ;
 	/** 创建人 */
@@ -44,5 +44,7 @@ public class User  {
 	/**角色*/
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Role role;
+
+	private String wxOpenId;
 
 }

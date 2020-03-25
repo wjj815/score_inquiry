@@ -23,9 +23,13 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addInterceptor(new LoginInterceptor())
 				.addPathPatterns("/**")
 				.excludePathPatterns("/login",apiPrefix+"/user/login",
+						apiPrefix+"/wechat/decodeUserInfo",
+						apiPrefix+"/user/wxLogin",
+						"/**/register",
 						"/static/**",
 						"/v2/**",
-						"/swagger-ui.html",
+//						"/swagger-ui.html",
+						"/doc.html",
 						"/swagger-resources/**",
 						"/webjars/**");
 
@@ -39,10 +43,12 @@ public class WebConfig implements WebMvcConfigurer {
 		//addResourceHandler请求路径
 		//addResourceLocations 在项目中的资源路径
 		//setCacheControl 设置静态资源缓存时间
-		registry.addResourceHandler("swagger-ui.html")
+	/*	registry.addResourceHandler("swagger-ui.html")
 				.addResourceLocations("classpath:/META-INF/resources/");
 		registry.addResourceHandler("/webjars/**")
-				.addResourceLocations("classpath:/META-INF/resources/webjars/");
+				.addResourceLocations("classpath:/META-INF/resources/webjars/");*/
+		registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
+		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 
 	@Override

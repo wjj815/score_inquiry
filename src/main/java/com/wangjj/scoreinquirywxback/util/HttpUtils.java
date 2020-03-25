@@ -24,12 +24,12 @@ public class HttpUtils {
 
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpServletResponse response = Objects.requireNonNull(requestAttributes).getResponse();
-		Objects.requireNonNull(response).setContentType("application/force-download");
+		Objects.requireNonNull(response).setContentType("application/vnd.ms-excel;charset=UTF-8");
 		response.setCharacterEncoding("utf-8");
 		try {
 			// 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
 			String fileName = URLEncoder.encode(filename, "UTF-8");
-			response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+			response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xls");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			throw new GlobalException("导出Excel异常");

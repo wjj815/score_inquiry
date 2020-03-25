@@ -16,8 +16,7 @@ import java.util.Date;
 @Data
 public class UserDTO {
 
-	@Id
-	@GeneratedValue
+
 	private Long id;
 	/**登录账号*/
 	private String account;
@@ -28,7 +27,7 @@ public class UserDTO {
 	/** 头像 */
 	private String avatar ;
 	/**用户信息*/
-	private Long infoId;
+//	private Long infoId;
 	/** 创建人 */
 	private String createdBy ;
 	/** 创建时间 */
@@ -41,4 +40,9 @@ public class UserDTO {
 	private Long roleId;
 	/** 电话 */
 	private String phone ;
+
+	/**
+	 * 微信id
+	 */
+	private String wxOpenId;
 }

@@ -40,7 +40,7 @@ public class ParentService {
 	@Autowired
 	private RoleRepository roleRepository;
 	@Transactional
-	public void saveParent(ParentDTO parentDTO) {
+	public Parent saveParent(ParentDTO parentDTO) {
 
 		Parent parent;
 		if(Objects.nonNull(parentDTO.getId()) && parentRepository.existsById(parentDTO.getId())) {
@@ -51,7 +51,7 @@ public class ParentService {
 		PropertyUtils.copyNoNullProperties(parentDTO,parent);
 		Role role = roleRepository.getOne(UserType.PARENT.getId());
 		parent.setRole(role);
-		parentRepository.save(parent);
+		return parentRepository.save(parent);
 
 		/*Parent savedParent = parentRepository.save(parent);
 		if(Objects.isNull(id)) {
@@ -125,7 +125,7 @@ public class ParentService {
 		return getParentDTO(parent);
 	}
 
-	private ParentDTO getParentDTO(Parent parent) {
+	public ParentDTO getParentDTO(Parent parent) {
 		ParentDTO dto = new ParentDTO();
 		PropertyUtils.copyNoNullProperties(parent,dto);
 		return dto;

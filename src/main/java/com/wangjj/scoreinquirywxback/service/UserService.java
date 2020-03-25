@@ -5,14 +5,19 @@ import com.wangjj.scoreinquirywxback.dao.RoleRepository;
 import com.wangjj.scoreinquirywxback.dao.UserRepository;
 import com.wangjj.scoreinquirywxback.pojo.dto.ParentDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.UserDTO;
+import com.wangjj.scoreinquirywxback.pojo.dto.request.WXLoginParameter;
+import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Parent;
 import com.wangjj.scoreinquirywxback.pojo.entity.Teacher;
 import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.dto.request.LoginParameter;
 import com.wangjj.scoreinquirywxback.util.IdGenerator;
+import com.wangjj.scoreinquirywxback.util.ParameterUtils;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +52,14 @@ public class UserService {
 		return getUserDTO(user);
 	}
 
+	public UserDTO findByWxLoginParameter(WXLoginParameter wxLoginParameter) {
+		User user = userRepository.findByWxOpenId(wxLoginParameter.getWxOpenId());
+		if(Objects.isNull(user)) {
+			throw new GlobalException("不存在该微信用户");
+		}
+		return getUserDTO(user);
+	}
+
 	private UserDTO getUserDTO(User user) {
 		UserDTO userDTO = new UserDTO();
 		PropertyUtils.copyNoNullProperties(user,userDTO);
@@ -60,24 +73,28 @@ public class UserService {
 		user.setId(teacher.getId());
 		user.setAccount(teacher.getPhone()+"");
 		user.setPassword("123456");
-		user.setInfoId(teacher.getId());
+//		user.setInfoId(teacher.getId());
 		user.setRole(teacher.getRole());
 		user.setName(teacher.getTeacherName());
+		user.setPhone(teacher.getPhone());
 		userRepository.save(user);
 	}
 
 	@Transactional
-	public void addParentUser(UserDTO userDTO) {
+	public ParentDTO addParentUser(ParentDTO parentDTO) {
 		Long id = IdGenerator.generateId();
+		parentDTO.setId(id);
+		Parent parent = parentService.saveParent(parentDTO);
 		User user = new User();
 		user.setId(id);
-		PropertyUtils.copyNoNullProperties(userDTO,user);
-		user.setInfoId(id);
-		ParentDTO parentDTO = new ParentDTO();
-		parentDTO.setId(id);
-		parentDTO.setName(userDTO.getName());
-		parentDTO.setPhone(user.getPhone());
-		parentService.saveParent(parentDTO);
+//		user.setInfoId(id);
+		user.setRole(parent.getRole());
+		user.setName(parent.getName());
+		user.setPhone(parent.getPhone());
+		user.setWxOpenId(parentDTO.getWxOpenId());
+		user.setAvatar(parentDTO.getAvatar());
+		userRepository.save(user);
+		return parentService.getParentDTO(parent);
 	}
 
 
@@ -89,6 +106,16 @@ public class UserService {
 	public List<UserDTO> getUserList(UserDTO userDTO) {
 		List<User> users = userRepository.findAll(getUserSpecification(userDTO));
 		return PropertyUtils.convert(users, this::getUserDTO);
+	}
+
+	/**
+	 * 分页获取用户列表
+	 * @param userDTO
+	 * @return
+	 */
+	public PageResult<UserDTO> getUserPage(UserDTO userDTO, Pageable pageable) {
+		Page<User> users = userRepository.findAll(getUserSpecification(userDTO), pageable);
+		return PropertyUtils.convert(users,this::getUserDTO);
 	}
 
 	private Specification<User> getUserSpecification(UserDTO userDTO) {

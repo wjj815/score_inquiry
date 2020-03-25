@@ -78,4 +78,13 @@ class CourseScoreServiceTest {
 		List<CourseScoreDTO> studentScoreDTOListForCourse = courseScoreService.getCourseScoreList(courseScoreDTO);
 		System.out.println(studentScoreDTOListForCourse);
 	}
+
+	@Test
+	void findStudentScore() {
+		CourseScoreDTO courseScoreDTO = new CourseScoreDTO();
+		courseScoreDTO.setStudentId(20190203L);
+		courseScoreDTO.setExamId(123L);
+		StudentScoreDTO studentScore = courseScoreService.findStudentScore(courseScoreDTO);
+		System.out.println(studentScore);
+	}
 }

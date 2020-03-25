@@ -1,6 +1,5 @@
 package com.wangjj.scoreinquirywxback.page;
 
-import com.wangjj.scoreinquirywxback.pojo.dto.CourseDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.MenuDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.UserDTO;
 import com.wangjj.scoreinquirywxback.service.*;
@@ -42,7 +41,7 @@ public class PageController {
 
 			MenuDTO menuDTO = new MenuDTO();
 			menuDTO.setRoleId(user.getRoleId());
-			List<MenuDTO> menuList = menuService.bulidMenuTree(menuDTO);
+			List<MenuDTO> menuList = menuService.buildMenuTree(menuDTO);
 			model.addAttribute("menuList",menuList);
 		}
 		model.addAttribute("user",user);
@@ -148,5 +147,10 @@ public class PageController {
 	@GetMapping("/enterScoreDetail")
 	public String enterScoreDetail() {
 		return "teacher/enterScoreDetail";
+	}
+
+	@GetMapping("/userList")
+	public String userList(){
+		return "user/userList";
 	}
 }

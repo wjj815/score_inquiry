@@ -1,5 +1,6 @@
 package com.wangjj.scoreinquirywxback.service;
 
+import com.wangjj.scoreinquirywxback.pojo.dto.ParentDTO;
 import com.wangjj.scoreinquirywxback.pojo.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,4 +20,12 @@ class UserServiceTest {
 
 	}
 
+	@Test
+	void addParentUser() {
+		ParentDTO parentDTO = new ParentDTO();
+		parentDTO.setName("123");
+		parentDTO.setPhone("123");
+		parentDTO.setWxOpenId("123");
+		userService.addParentUser(parentDTO);
+	}
 }

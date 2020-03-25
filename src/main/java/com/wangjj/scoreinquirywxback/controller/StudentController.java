@@ -1,5 +1,6 @@
 package com.wangjj.scoreinquirywxback.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.wangjj.scoreinquirywxback.pojo.dto.StudentDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.pojo.entity.Parent;
@@ -7,6 +8,7 @@ import com.wangjj.scoreinquirywxback.pojo.entity.Student;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.service.StudentService;
 import com.wangjj.scoreinquirywxback.util.ExcelUtils;
+import com.wangjj.scoreinquirywxback.util.HttpUtils;
 import com.wangjj.scoreinquirywxback.util.PropertyUtils;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
 import io.swagger.annotations.Api;
@@ -90,28 +92,17 @@ public class StudentController {
 	})
 	public APIResultBean exportStudentList(@RequestParam(required = false) Long clazzId,
 										   @RequestParam(required = false) Long gradeId) {
-		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-		HttpServletResponse response = Objects.requireNonNull(requestAttributes).getResponse();
-		Objects.requireNonNull(response).setContentType("application/force-download");
-		response.setCharacterEncoding("utf-8");
+		HttpServletResponse response = HttpUtils.getExcelResponse("学生信息");
+		StudentDTO studentDTO = new StudentDTO();
+		studentDTO.setClazzId(clazzId);
+		studentDTO.setGradeId(gradeId);
+		List<StudentDTO> studentList = studentService.findStudentList(studentDTO);
 		try {
-			// 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
-			String fileName = URLEncoder.encode("学生信息", "UTF-8");
-			response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
-		} catch (UnsupportedEncodingException e) {
+			EasyExcel.write(response.getOutputStream(),StudentDTO.class).sheet().doWrite(studentList);
+		} catch (IOException e) {
 			e.printStackTrace();
-			throw new GlobalException("导出Excel异常");
+			return APIResultBean.error("导出失败").build();
 		}
-//		List<Student> studentList = studentService.findStudent(new Student().toBuilder()
-//				.clazzId(clazzId)
-//				/*.gradeId(gradeId)*/
-//				.build());
-//		try {
-////			EasyExcel.write(response.getOutputStream(),Student.class).sheet().doWrite(studentList);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			return APIResultBean.error("导出失败").build();
-//		}
 		return APIResultBean.ok("导出成功").build();
 	}
 

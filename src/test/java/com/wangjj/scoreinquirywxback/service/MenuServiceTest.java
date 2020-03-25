@@ -7,8 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class MenuServiceTest {
 
@@ -19,7 +17,7 @@ class MenuServiceTest {
 		MenuDTO menuDTO = new MenuDTO();
 		menuDTO.setRoleId(1L);
 //		List<MenuDTO> menuList = menuService.findMenuList(menuDTO);
-		List<MenuDTO> menuDTOS = menuService.bulidMenuTree(menuDTO);
+		List<MenuDTO> menuDTOS = menuService.buildMenuTree(menuDTO);
 		System.out.println(menuDTOS);
 	}
 }

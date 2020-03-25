@@ -70,6 +70,8 @@ public class ExamScoreController {
 			Map<String, Integer> collect = studentScoreDTO.getScoreDTOList().stream().collect(Collectors.toMap(courseScoreDTO1 -> courseScoreDTO1.getCourseId()+"",CourseScoreDTO::getScore));
 			map.putAll(collect);
 			map.put("totalScore",studentScoreDTO.getTotalScore());
+			map.put("gradeRank",studentScoreDTO.getGradeRank());
+			map.put("clazzRank",studentScoreDTO.getClazzRank());
 			maps.add(map);
 		});
 		return APIResultBean.ok(maps).build();
@@ -81,6 +83,11 @@ public class ExamScoreController {
 		return APIResultBean.ok(courseScoreList).build();
 	}
 
+	@GetMapping("/studentScore")
+	public APIResultBean getStudentScore(CourseScoreDTO courseScoreDTO) {
+		StudentScoreDTO studentScore = courseScoreService.findStudentScore(courseScoreDTO);
+		return APIResultBean.ok(studentScore).build();
+	}
 
 
 }

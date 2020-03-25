@@ -245,7 +245,7 @@
                    var json = {};
                    json['gradeId'] = gradeId;
                    json['clazzId'] = clazzId;
-                   let url = apiPrefix+ "/student/excel/"+data.gradeId+'-'+data.clazzId;
+                   let url = apiPrefix+ "/student/excel/"+gradeId+'-'+clazzId;
                    json['url'] = url;
                    var iframe = window['layui-layer-iframe'+index];
                    iframe.layui.fillData(json);

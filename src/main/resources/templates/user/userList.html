@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en"xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head( ~{ :: title})">
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+</head>
+
+<body>
+<div class="layui-row">
+    <div class="layui-card">
+        <div class="layui-card-header" style="height: auto">
+            <form class="layui-form " action="">
+                <div class="layui-inline">
+                   <!-- <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" style="" id="addBtn">
+                        <i class="iconfont layui-extendjia-"></i>
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" style="" id="deleteBtn">
+                        <i class="iconfont layui-extenddelete"></i>
+                    </button>-->
+                </div>
+
+                <!-- <div class="layui-inline">
+                     <button type="button" onclick="downloadTemplate()" class="layui-btn layui-btn-sm" >导入模版下载</button>
+                 </div>-->
+                <div class="layui-inline">
+                    <!-- <button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" id="uploadBtn">
+                         <i class="iconfont layui-extendcloud-upload"></i>
+                         导入
+                     </button>-->
+                  <!--  <button type="button" id="exportBtn" class="layui-btn layui-btn-sm layui-btn-normal">
+                        <i class="iconfont layui-extendcloud-download"></i>
+                        导出
+                    </button>-->
+                </div>
+            </form>
+        </div>
+        <div class="layui-card-body">
+            <table class="layui-hide"  id="test" lay-filter="test"></table>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit">
+        <i class="iconfont layui-extendedit-fill"></i>编辑
+    </a>
+</script>
+</body>
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+<!--/*/</th:block>/*/-->
+
+<script>
+
+
+    //加载组件
+    layui.config({
+        base: '/static/layui_ext/'
+    }).extend({
+        excel:'excel_ext/excel',
+        xmSelect:'xmSelect/xm-select'
+    });
+
+    layui.use(['jquery','table','upload','layer','form','excel'], function () {
+        var table = layui.table,
+            upload = layui.upload,
+            layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form,
+            excel = layui.excel;
+
+        var gradeId = '';
+        var clazzId = '';
+        var t = table.render({
+            elem: '#test'
+            , url: apiPrefix+'/user/page'
+            /*   , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板*/
+            , defaultToolbar: [/*'filter', 'exports'*/]
+            ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , title: '学生信息'
+            , cols: [ [
+                {type: 'checkbox',align:'center',width:'5%'}
+                /* , {type:'numbers', title: '序号', width: '5%',align:'center'}*/
+                , {field: 'id', title: '用户编号', width: '12%',align:'center'}
+                , {field: 'name', title: '用户姓名', width: '12%',align:'center'}
+                , {field: 'account', title: '用户账号', width: '12%',align:'center'}
+                /*, {field: 'age', title: '年龄', width: '10%',align:'center'}*/
+                , {field: 'phone', title: '联系电话', width: '15%',align:'center'}
+                , {field: 'roleId', title: '用户角色', width: '15%',align:'center',templet:function(res) {
+                    switch (res.roleId) {
+                        case 1: return '管理员';
+                        case 2: return '教师';
+                        case 3: return '学生';
+                    }
+                    }}
+                , {field: 'wxOpenId', title: '微信登录凭证', width: '15%',align:'center'}
+                , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo', width: '10%' }
+            ]]
+            ,id: 'idTest'
+            , page: true
+            ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": res.resultCode, //解析接口状态
+                    "msg": res.resultMsg, //解析提示文本
+                    "count": res.data.totalElements, //解析数据长度
+                    "data": res.data.content //解析数据列表
+                };
+            },done:function(res) {
+               /* $.each(res.data,function(i,val){
+                    ajaxGet($,'/course/'+val.courseId,function (res) {
+                        if(res.success) {
+                            $('#course_'+val.id).html(res.data.courseName);
+                        }
+                    })
+                });*/
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            //console.controllerLog(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                openModel("/teacherDetail",layer,"编辑教师信息",function (layero,index) {
+                    ajaxGet($,"/teacher/"+data.id,function (data) {
+                        var iframe = window['layui-layer-iframe' + index];
+                        var json = data.data;
+                        setTimeout(function(){
+                            iframe.layui.fillData(json);
+                        },delayTime);
+
+                    });
+                },function () {
+                    t.reload();
+                });
+            }
+        });
+
+        function uploadFun() {
+            upload.render({
+                elem: '#uploadBtn'
+                , url: apiPrefix + '/teacher/excel' //改成您自己的上传接口
+                , accept: 'file' //普通文件
+                , method: 'post'
+                , done: function (res) {
+                    if (res.success) {
+                        layer.alert(res.resultMsg);
+                        t.reload();
+                    }
+                    console.log(res);
+                    uploadFun();
+                }
+            });
+        }
+
+        uploadFun();
+
+
+        var $ = layui.$, active = {
+            reload: function(){
+                // alert(gradeId);
+                //执行重载
+                table.reload('idTest', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        gradeId: gradeId,
+                        clazzId: clazzId
+                    }
+                });
+            } ,delete: function(){ //获取选中数目
+                var checkStatus = table.checkStatus('idTest')
+                    ,data = checkStatus.data;
+                if(data.length <= 0) {
+                    layer.msg("未选中数据");
+                    return;
+                }
+                var ids = '';
+                for(var x in data) {
+                    ids+=data[x].id+",";
+                }
+                var json = {};
+                json['ids'] = ids;
+                layer.confirm('<font color="red">您确定要删除吗？</font>', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    ajaxDelete($,'/teacher',JSON.stringify(json),function (data) {
+                        if(data.success) {
+                            t.reload();
+                        }
+                        layer.msg(data.resultMsg);
+                    });
+                }, function(){
+
+                });
+            }
+        };
+
+        $('#addBtn').click(function(){
+            openModel("/teacherDetail",layer,"增加教师信息",function (layero,index) {
+            },function () {
+                t.reload();
+            });
+        });
+        $("#deleteBtn").click(function () {
+            active['delete'].call();
+        });
+
+
+        $('#exportBtn').click(function() {
+            exportFile('idTest');
+        });
+
+        //表格导出
+        function exportFile(id) {
+            //根据传入tableID获取表头
+            var headers = $("div[lay-id=" + id + "] .layui-table-box table").get(0);
+            var htrs = Array.from(headers.querySelectorAll('tr'));
+            var titles = {};
+            for (var j = 0; j < htrs.length; j++) {
+                var hths = Array.from(htrs[j].querySelectorAll("th"));
+                for (var i = 0; i < hths.length; i++) {
+                    var clazz = hths[i].getAttributeNode('class').value;
+                    if (clazz != ' layui-table-col-special' && clazz != 'layui-hide') {
+                        //排除居左、具有、隐藏字段
+                        //修改:默认字段data-field+i,兼容部分数据表格中不存在data-field值的问题
+                        titles['data-field' + i] = hths[i].innerText;
+                    }
+                }
+            }
+            //根据传入tableID获取table内容
+            var bodys = $("div[lay-id=" + id + "] .layui-table-box table").get(1);
+            var btrs = Array.from(bodys.querySelectorAll("tr"))
+            var bodysArr = new Array();
+            for (var j = 0; j < btrs.length; j++) {
+                var contents = {};
+                var btds = Array.from(btrs[j].querySelectorAll("td"));
+                for (var i = 0; i < btds.length; i++) {
+                    for (var key in titles) {
+                        //修改:默认字段data-field+i,兼容部分数据表格中不存在data-field值的问题
+                        var field = 'data-field' + i;
+                        if (field === key) {
+                            //根据表头字段获取table内容字段
+                            contents[field] = btds[i].innerText;
+                        }
+                    }
+                }
+                bodysArr.push(contents)
+            }
+            //将标题行置顶添加到数组
+            bodysArr.unshift(titles);
+            //导出excel
+            excel.exportExcel({
+                sheet1: bodysArr
+            },'教师信息表.xlsx', 'xlsx');
+        }
+    });
+</script>
+</html>

@@ -19,4 +19,11 @@ public interface UserRepository extends JpaRepository<User,Long>, JpaSpecificati
 	 * @return 用户
 	 */
 	User findByAccountAndPassword(String account, String password);
+
+	/**
+	 * 通过微信的OpenId登录
+	 * @param wxOpenId
+	 * @return
+	 */
+	User findByWxOpenId(String wxOpenId);
 }

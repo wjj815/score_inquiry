@@ -1,5 +1,6 @@
 package com.wangjj.scoreinquirywxback.pojo.entity;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -27,7 +28,6 @@ public class Parent {
 
 	@ApiModelProperty(hidden = true)
 	@Id
-	@GeneratedValue
 	private Long id;
 
 	/** 家长姓名 */
@@ -43,11 +43,17 @@ public class Parent {
 	@ApiModelProperty( name = "age",value = "家长年龄",required = true)
 	private Integer age ;
 	/** 与学生关系 */
-	@ApiModelProperty( name = "studentRelation",value = "与学生关系",required = true)
-	private String studentRelation;
+	/*@ApiModelProperty( name = "studentRelation",value = "与学生关系",required = true)
+	private String studentRelation;*/
 	/** 身份证号 */
 	@ApiModelProperty( name = "idCardNo",value = "家长身份证号",required = true)
 	private String idCardNo ;
+	/** 籍贯 */
+	@ExcelProperty(value = "籍贯")
+	private String domicilePlace ;
+	/** 居住地址 */
+	@ExcelProperty(value = "居住地址")
+	private String presentAddress ;
 
 	/** 微信 */
 	@ApiModelProperty(hidden = true)

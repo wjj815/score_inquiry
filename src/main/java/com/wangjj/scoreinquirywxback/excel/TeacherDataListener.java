@@ -51,7 +51,7 @@ public class TeacherDataListener extends BaseDataListener<Teacher> {
 			user.setName(e.getTeacherName());
 			user.setRole(e.getRole());
 			user.setAccount(e.getId()+"");
-			user.setInfoId(e.getId());
+//			user.setInfoId(e.getId());
 			users.add(user);
 		});
 		userRepository.saveAll(users);

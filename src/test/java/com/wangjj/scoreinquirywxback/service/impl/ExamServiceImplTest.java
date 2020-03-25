@@ -21,7 +21,7 @@ class ExamServiceImplTest {
 
 	@Test
 	void getExamList() {
-		ExamDTO build = ExamDTO.builder().gradeId(2019L).studentId(20190101L).build();
+		ExamDTO build = ExamDTO.builder().teacherId(2019002L).build();
 		List<ExamDTO> examList = examService.getExamList(build);
 		System.out.println(examList);
 

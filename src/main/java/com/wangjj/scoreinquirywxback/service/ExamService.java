@@ -122,9 +122,10 @@ public class ExamService {
 
 			if(Objects.nonNull(examDTO.getTeacherId())) {
 				predicates.add(criteriaBuilder.equal(
-						root.join("grade")
-								.joinSet("clazzes")
-								.joinSet("teachers").get("id")
+								root.join("grade")
+								.joinList("courses")
+								.joinSet("teachers")
+								.get("id")
 						,examDTO.getTeacherId()));
 			}
 

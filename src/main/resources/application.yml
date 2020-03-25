@@ -29,7 +29,7 @@ spring:
         jdbc:
           batch_size: 100
           batch_versioned_data: true
-        #show-sql : true #打印sql
+          #打印sql
         format_sql: true #格式化sql
         use_sql_comments: true #指出是什么操作生成了该语句
         enable_lazy_load_no_trans: true
@@ -51,11 +51,15 @@ swagger2:
   enable: true
 #微信身份认证
 wechat:
-  appid: wxaea6a8e1cbdc644b
-  appsecret: a66479d55904ecadd24b4b2ae5b7d14a
+  appid: wxc957bc68dde29069
+  appsecret: d6688a5b9486b6ac7a9dfb55ac5e4d20
 logging:
   file: log/score-inquiry.log
-
+  level:
+    org.springframework.orm.jpa: debug
+knife4j:
+  enable: true
+#  markdowns: classpath:markdown/*
 
 
 

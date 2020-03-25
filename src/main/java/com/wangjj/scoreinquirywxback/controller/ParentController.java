@@ -2,6 +2,7 @@ package com.wangjj.scoreinquirywxback.controller;
 
 import com.wangjj.scoreinquirywxback.pojo.dto.ParentDTO;
 import com.wangjj.scoreinquirywxback.pojo.dto.request.PageParameter;
+import com.wangjj.scoreinquirywxback.pojo.dto.request.StudentAndParent;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.PageResult;
 import com.wangjj.scoreinquirywxback.service.ParentService;
@@ -54,6 +55,13 @@ public class ParentController {
 
 		ParentDTO parent = parentService.findParentById(parentId);
 		return APIResultBean.ok(parent).build();
+	}
+
+	@PostMapping("bindStudent")
+	@ApiOperation(value = "绑定学生信息")
+	public APIResultBean bindStudent(@RequestBody  StudentAndParent studentAndParent) {
+		parentService.saveRelevanceOfStudentAndParent(studentAndParent.getStudentId(),studentAndParent.getParentId());
+		return APIResultBean.ok().build();
 	}
 
 }

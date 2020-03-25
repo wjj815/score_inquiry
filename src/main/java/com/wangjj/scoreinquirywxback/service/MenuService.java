@@ -43,7 +43,7 @@ public class MenuService {
 		return menuDTO;
 	}
 
-	public List<MenuDTO> bulidMenuTree(MenuDTO menuDTO) {
+	public List<MenuDTO> buildMenuTree(MenuDTO menuDTO) {
 		List<MenuDTO> menuList = findMenuList(menuDTO);
 		boolean[] visited = new boolean[menuList.size()];
 		List<MenuDTO> collect = menuList.stream().filter(e -> Objects.isNull(e.getParentMenuId())).collect(Collectors.toList());
@@ -90,7 +90,7 @@ public class MenuService {
 				predicates.add(criteriaBuilder.equal(objectPath,menuDTO.getRoleId()));
 			}
 
-//			query.orderBy(criteriaBuilder.asc(root.get("menuOrder")));
+			query.orderBy(criteriaBuilder.asc(root.get("menuOrder")));
 			query.where(predicates.toArray(new Predicate[predicates.size()]));
 			return null;
 		};

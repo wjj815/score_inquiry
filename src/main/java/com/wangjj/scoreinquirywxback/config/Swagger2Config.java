@@ -1,8 +1,12 @@
 package com.wangjj.scoreinquirywxback.config;
 
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -19,6 +23,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
+@EnableKnife4j
+@ConditionalOnProperty(value = {"knife4j.enable"}, matchIfMissing = true)
+@Import(BeanValidatorPluginsConfiguration.class)
 public class Swagger2Config {
 	//api接口包扫描路径
 	private static final String SWAGGER_SCAN_BASE_PACKAGE = "com.wangjj.scoreinquirywxback";
@@ -51,6 +58,7 @@ public class Swagger2Config {
 	public Docket createRestApi() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.enable(swagger2Enable)
+				.groupName("2.X版本")
 				.apiInfo(apiInfo())
 				.select()
 				.apis(RequestHandlerSelectors.basePackage(SWAGGER_SCAN_BASE_PACKAGE))
@@ -80,4 +88,17 @@ public class Swagger2Config {
 				.build();
 	}
 
+	/*@Bean(value = "defaultApi2")
+	public Docket defaultApi2() {
+		Docket docket=new Docket(DocumentationType.SWAGGER_2)
+				.apiInfo(apiInfo())
+				//分组名称
+				.groupName("2.X版本")
+				.select()
+				//这里指定Controller扫描包路径
+				.apis(RequestHandlerSelectors.basePackage("SWAGGER_SCAN_BASE_PACKAGE"))
+				.paths(PathSelectors.any())
+				.build();
+		return docket;
+	}*/
 }

@@ -38,7 +38,7 @@
         let t;
         let userInfo = getUserInfo();
         let info = {};
-        ajaxGet($,'/user/info?infoId='+userInfo['infoId']+'&roleId='+userInfo['roleId'],function(data){
+        ajaxGet($,'/user/info?id='+userInfo['id']+'&roleId='+userInfo['roleId'],function(data){
             if(data.success) {
                 info = data.data;
                 renderTable();

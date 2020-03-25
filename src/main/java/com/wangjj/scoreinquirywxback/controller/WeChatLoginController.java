@@ -3,8 +3,11 @@ package com.wangjj.scoreinquirywxback.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.wangjj.scoreinquirywxback.util.AesCbcUtil;
 import com.wangjj.scoreinquirywxback.util.HttpClientUtil;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
+import com.wangjj.scoreinquirywxback.util.HttpUtils;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,6 +25,7 @@ import java.util.Map;
  * @Description : TODO
  */
 @Slf4j
+@Api(value = "微信类")
 @RestController
 @RequestMapping("/wechat")
 public class WeChatLoginController {
@@ -66,6 +71,59 @@ public class WeChatLoginController {
 		Map info = JSON.parseObject(userInfo);
 		return APIResultBean.ok(info).build();
 //		return new ModelAndView("personal","userInfo",info);
+	}
+
+
+	@GetMapping(value = "/decodeUserInfo")
+	public APIResultBean decodeUserInfo(String encryptedData, String iv, String code) {
+
+		Map<String,Object> map = new HashMap<>();
+		//登录凭证不能为空
+		if (code == null || code.length() == 0) {
+			return APIResultBean.error("code不能为空").build();
+		}
+
+		//小程序唯一标识   (在微信小程序管理后台获取)
+		String wxspAppid = appid;
+		//小程序的 app secret (在微信小程序管理后台获取)
+		String wxspSecret = appsecret;
+		//授权（必填）
+		String grant_type = "authorization_code";
+
+		//////////////// 1、向微信服务器 使用登录凭证 code 获取 session_key 和 openid ////////////////
+		//请求参数
+		String params = "appid=" + wxspAppid + "&secret=" + wxspSecret + "&js_code=" + code + "&grant_type=" + grant_type;
+		//发送请求
+		String sr = HttpClientUtil.doGet("https://api.weixin.qq.com/sns/jscode2session?"+params);
+		//解析相应内容（转换成json对象）
+		JSONObject json = JSON.parseObject(sr);
+		//获取会话密钥（session_key）
+		String session_key = json.get("session_key").toString();
+		//用户的唯一标识（openid）
+		String openid = (String) json.get("openid");
+
+		//////////////// 2、对encryptedData加密数据进行AES解密 ////////////////
+		try {
+			JSONObject userInfoJSON = AesCbcUtil.getUserInfo(encryptedData, session_key, iv);
+			log.info("解密后的信息为：{}",userInfoJSON);
+			if (null != userInfoJSON) {
+				Map<String,Object> userInfo = new HashMap<>();
+				userInfo.put("openId", userInfoJSON.get("openId"));
+				userInfo.put("nickName", userInfoJSON.get("nickName"));
+				userInfo.put("gender", userInfoJSON.get("gender"));
+				userInfo.put("city", userInfoJSON.get("city"));
+				userInfo.put("province", userInfoJSON.get("province"));
+				userInfo.put("country", userInfoJSON.get("country"));
+				userInfo.put("avatarUrl", userInfoJSON.get("avatarUrl"));
+				userInfo.put("unionId", userInfoJSON.get("unionId"));
+				map.put("userInfo", userInfo);
+				log.info("decodeUserInfo:{}",map);
+				return APIResultBean.ok("解密成功",userInfo).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return APIResultBean.error("解密失败").build();
 	}
 
 }

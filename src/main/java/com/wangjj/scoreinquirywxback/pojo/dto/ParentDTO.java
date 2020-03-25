@@ -1,5 +1,7 @@
 package com.wangjj.scoreinquirywxback.pojo.dto;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -9,6 +11,7 @@ import lombok.Data;
  * @Date : 2020/2/15 20:32
  * @Description : TODO
  */
+@ApiModel(description = "家长类")
 @Data
 public class ParentDTO {
 
@@ -28,12 +31,19 @@ public class ParentDTO {
 	/** 年龄*/
 	@ApiModelProperty( name = "age",value = "家长年龄",required = true)
 	private Integer age ;
-	/** 与学生关系 */
-	@ApiModelProperty( name = "studentRelation",value = "与学生关系",required = true)
-	private String studentRelation;
 	/** 身份证号 */
-	@ApiModelProperty( name = "idCardNo",value = "家长身份证号",required = true)
+	@ApiModelProperty( name = "idCardNo",value = "家长身份证号")
 	private String idCardNo ;
-
+	/** 籍贯 */
+	@ApiModelProperty( name = "domicilePlace",value = "籍贯",required = true)
+	private String domicilePlace ;
+	/** 居住地址 */
+	@ApiModelProperty( name = "presentAddress",value = "居住地址",required = true)
+	private String presentAddress ;
 	private Long studentId;
+
+	@ApiModelProperty( name = "wxOpenId",value = "微信openId")
+	private String wxOpenId;
+
+	private String avatar;
 }

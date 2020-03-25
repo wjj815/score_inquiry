@@ -47,10 +47,6 @@ public class StudentDTO {
 	@ExcelProperty("出生日期")
 	@DateTimeFormat(value = "yyyy/MM/dd")
 	private Date birthday ;
-	/** 微信 */
-	@ApiModelProperty(name = "weiXin", value = "微信号",example = "w12345")
-	@ExcelProperty(value = "微信")
-	private String weiXin;
 	/** 手机号 */
 	@ApiModelProperty(name = "mobilePhone", value = "手机号",example = "12345678901")
 	@ExcelProperty(value = "手机号")
@@ -78,5 +74,6 @@ public class StudentDTO {
 	@ExcelProperty(value = "年级编号")
 	private Long gradeId;
 
-
+	@ExcelIgnore
+	private Long parentId;
 }

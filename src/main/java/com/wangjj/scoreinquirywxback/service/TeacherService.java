@@ -145,6 +145,7 @@ public class TeacherService {
 		PropertyUtils.copyNoNullProperties(u, teacherDTO1);
 		if(Objects.nonNull(u.getCourse())) {
 			teacherDTO1.setCourseId(u.getCourse().getId());
+			teacherDTO1.setCourseName(u.getCourse().getCourseName());
 		}
 		return teacherDTO1;
 	}

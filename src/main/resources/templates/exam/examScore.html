@@ -157,9 +157,11 @@
                }
             });
             let ts = {field:'totalScore',title:'总分',width:70,align:'center'};
-            let rank = {type:'numbers',title:'排名',field:'gradeRank',width:70,align:'center'};
+            let gradeRank = {title:'年级排名',field:'gradeRank',width:70,align:'center'};
+            let clazzRank = {title:'班级排名',field:'clazzRank',width:70,align:'center'};
             attrCol[0].push(ts);
-            attrCol[0].push(rank);
+            attrCol[0].push(gradeRank);
+            attrCol[0].push(clazzRank);
 
             table.render({
                 url: apiPrefix+'/examScore/scoreList',

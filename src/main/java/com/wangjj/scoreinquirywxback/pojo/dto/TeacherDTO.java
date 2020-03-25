@@ -107,5 +107,7 @@ public class TeacherDTO {
 
 	private Long clazzId;
 
+	private String courseName;
+
 
 }

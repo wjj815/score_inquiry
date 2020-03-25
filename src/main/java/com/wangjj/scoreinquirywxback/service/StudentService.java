@@ -119,6 +119,10 @@ public class StudentService {
 				predicates.add(criteriaBuilder.equal(root.get("grade").get("id"), student.getGradeId()));
 			}
 
+			if(Objects.nonNull(student.getParentId())) {
+				predicates.add(criteriaBuilder.equal(root.joinList("parents").get("id"),student.getParentId()));
+			}
+
 			if (!CollectionUtils.isEmpty(predicates)) {
 				query.where(predicates.toArray(new Predicate[predicates.size()]));
 			}

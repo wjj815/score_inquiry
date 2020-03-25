@@ -32,13 +32,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
     //引入swagger2依赖
-    implementation "io.springfox:springfox-swagger2:2.9.2"
-    implementation "io.springfox:springfox-swagger-ui:2.9.2"
-    //implementation 'org.springframework.boot:spring-boot-starter-security'
+    compile 'com.github.xiaoymin:knife4j-spring-boot-starter:2.0.2'
     implementation "org.springframework.boot:spring-boot-starter-redis:1.3.5.RELEASE"
     compileOnly 'org.projectlombok:lombok'
-    //poiExcel的工具依赖包
-//    implementation 'org.apache.poi:poi:3.9'
+    compile 'org.bouncycastle:bcprov-jdk16:1.46'
     // https://mvnrepository.com/artifact/com.alibaba/easyexcel
     compile group: 'com.alibaba', name: 'easyexcel', version: '2.0.5'
     // https://mvnrepository.com/artifact/com.alibaba/druid

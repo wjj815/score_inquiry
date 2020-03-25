@@ -148,13 +148,20 @@ public class CourseScoreService {
 			}
 
 			if(Objects.nonNull(courseScoreDTO.getTeacherId())) {
-				predicates.add(criteriaBuilder.equal(root.join("course").joinSet("teachers").get("id"),courseScoreDTO.getTeacherId()));
+				predicates.add(criteriaBuilder.equal(root.join("exam")
+								.join("grade")
+								.joinList("courses")
+								.joinSet("teachers")
+								.get("id")
+						,courseScoreDTO.getTeacherId()));
 			}
 
 			query.orderBy(criteriaBuilder.asc(root.get("student").get("id")));
 			query.where(predicates.toArray(new Predicate[predicates.size()]));
 			return null;};
 	}
+
+
 
 	/**
 	 * 通过考试id或者考试id和班级id查询学生信息
@@ -167,35 +174,7 @@ public class CourseScoreService {
 
 		List<StudentScoreDTO> studentScoreDTOS = new ArrayList<>();
 		students.forEach(e->{
-			StudentScoreDTO studentScoreDTO = new StudentScoreDTO();
-
-			//-------设置学生信息
-			StudentDTO studentDTO = new StudentDTO();
-			studentDTO.setId(e.getId());
-			studentDTO.setStudentName(e.getStudentName());
-			studentDTO.setClazzId(e.getClazz().getId());
-			studentDTO.setGradeId(e.getGrade().getId());
-			studentScoreDTO.setStudentDTO(studentDTO);
-
-			//----设置学生的成绩
-			CourseScoreDTO courseScoreDTO = new CourseScoreDTO();
-			courseScoreDTO.setExamId(courseScore.getExamId());
-			courseScoreDTO.setStudentId(e.getId());
-			courseScoreDTO.setCourseId(courseScore.getCourseId());
-			List<CourseScore> courseScores = courseScoreRepository.findAll(getCourseScoreSpecification(courseScoreDTO));
-			/*总分*/
-			AtomicInteger totalScore = new AtomicInteger();
-			List<CourseScoreDTO> courseScoreDTOS = PropertyUtils.convert(courseScores, cs -> {
-				CourseScoreDTO courseScoreDTO1 = new CourseScoreDTO();
-				courseScoreDTO1.setCourseId(cs.getCourse().getId());
-				Integer score = Objects.nonNull(cs.getScore())?cs.getScore() : 0;
-				totalScore.addAndGet(score);
-				courseScoreDTO1.setScore(score);
-				return courseScoreDTO1;
-			});
-
-			studentScoreDTO.setTotalScore(totalScore.get());
-			studentScoreDTO.setScoreDTOList(courseScoreDTOS);
+			StudentScoreDTO studentScoreDTO = getStudentScoreDTO(courseScore, e);
 			//----
 			studentScoreDTOS.add(studentScoreDTO);
 
@@ -205,12 +184,53 @@ public class CourseScoreService {
 		return studentScoreDTOS;
 	}
 
+	private StudentScoreDTO getStudentScoreDTO(CourseScoreDTO courseScore, Student e) {
+		StudentScoreDTO studentScoreDTO = new StudentScoreDTO();
+
+		//-------设置学生信息
+		StudentDTO studentDTO = new StudentDTO();
+		studentDTO.setId(e.getId());
+		studentDTO.setStudentName(e.getStudentName());
+		studentDTO.setClazzId(e.getClazz().getId());
+		studentDTO.setGradeId(e.getGrade().getId());
+		studentScoreDTO.setStudentDTO(studentDTO);
+
+		//----设置学生的成绩
+		CourseScoreDTO courseScoreDTO = new CourseScoreDTO();
+		courseScoreDTO.setExamId(courseScore.getExamId());
+		courseScoreDTO.setStudentId(e.getId());
+		courseScoreDTO.setCourseId(courseScore.getCourseId());
+		List<CourseScore> courseScores = courseScoreRepository.findAll(getCourseScoreSpecification(courseScoreDTO));
+		/*总分*/
+		AtomicInteger totalScore = new AtomicInteger();
+		List<CourseScoreDTO> courseScoreDTOS = PropertyUtils.convert(courseScores, cs -> {
+			CourseScoreDTO courseScoreDTO1 = new CourseScoreDTO();
+			courseScoreDTO1.setCourseId(cs.getCourse().getId());
+			courseScoreDTO1.setCourseName(cs.getCourse().getCourseName());
+			Integer score = Objects.nonNull(cs.getScore())?cs.getScore() : 0;
+			totalScore.addAndGet(score);
+			courseScoreDTO1.setScore(score);
+			return courseScoreDTO1;
+		});
+		studentScoreDTO.setClazzRank(
+				courseScoreRepository.getStudentClazzRankByExamIdAndClazzIdAndStudentId(
+						courseScore.getExamId(),studentDTO.getClazzId(),studentDTO.getId()));
+		studentScoreDTO.setGradeRank(
+				courseScoreRepository.getStudentGradeRankByExamIdAndStudentId(
+						courseScore.getExamId(),studentDTO.getId())
+		);
+		studentScoreDTO.setTotalScore(totalScore.get());
+		studentScoreDTO.setScoreDTOList(courseScoreDTOS);
+		return studentScoreDTO;
+	}
+
 	private Set<Student> getStudents(CourseScoreDTO courseScore) {
 		if(!examRepository.existsById(courseScore.getExamId())) {
 			throw new GlobalException("考试不存在");
 		}
 		Exam exam = examRepository.getOne(courseScore.getExamId());
 		Set<Student> students;
+
 		//如果班级id不为空
 		if(Objects.nonNull(courseScore.getClazzId())) {
 			if(!clazzRepository.existsById(courseScore.getClazzId())) {
@@ -222,6 +242,17 @@ public class CourseScoreService {
 			students = exam.getGrade().getStudents();
 		}
 		return students;
+	}
+
+	public StudentScoreDTO findStudentScore(CourseScoreDTO courseScoreDTO) {
+		if(!studentRepository.existsById(courseScoreDTO.getStudentId())) {
+			throw new GlobalException("学生不存在");
+		}
+
+		if(!examRepository.existsById(courseScoreDTO.getExamId())) {
+			throw new GlobalException("考试不存在");
+		}
+		return getStudentScoreDTO(courseScoreDTO,studentRepository.getOne(courseScoreDTO.getStudentId()));
 	}
 
 	public String importStudentScore(InputStream inputStream, CourseScoreDTO courseScoreDTO) {
