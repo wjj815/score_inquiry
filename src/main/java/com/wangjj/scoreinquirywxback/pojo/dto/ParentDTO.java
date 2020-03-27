@@ -1,9 +1,12 @@
 package com.wangjj.scoreinquirywxback.pojo.dto;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.wangjj.scoreinquirywxback.valid.AddGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * @ClassName : ParentDTO
@@ -42,6 +45,7 @@ public class ParentDTO {
 	private String presentAddress ;
 	private Long studentId;
 
+	@NotBlank(message = "wxOpenId不能为空！",groups = {AddGroup.class})
 	@ApiModelProperty( name = "wxOpenId",value = "微信openId")
 	private String wxOpenId;
 

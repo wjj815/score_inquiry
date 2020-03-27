@@ -13,6 +13,7 @@ import com.wangjj.scoreinquirywxback.service.UserService;
 import com.wangjj.scoreinquirywxback.util.SessionUtils;
 import com.wangjj.scoreinquirywxback.pojo.dto.request.LoginParameter;
 import com.wangjj.scoreinquirywxback.pojo.dto.response.APIResultBean;
+import com.wangjj.scoreinquirywxback.valid.AddGroup;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -77,7 +79,7 @@ public class UserController {
 
 	@PostMapping("/parent/register")
 	@ApiOperation(value = "家长注册", notes = "家长注册")
-	public APIResultBean registerParent(@RequestBody ParentDTO parentDTO) {
+	public APIResultBean registerParent(@RequestBody @Validated(AddGroup.class) ParentDTO parentDTO) {
 		userService.addParentUser(parentDTO);
 		return APIResultBean.ok().build();
 	}
