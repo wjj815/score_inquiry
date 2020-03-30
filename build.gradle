@@ -3,7 +3,6 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
     id 'war'
-    id 'application'
 }
 
 group = 'com.wangjj'
@@ -18,13 +17,6 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
-}
-allprojects {
-
-    tasks.withType(JavaCompile){
-        options.encoding = "UTF-8"
-    }
-
 }
 
 
