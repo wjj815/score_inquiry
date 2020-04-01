@@ -18,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "t_exam_score")
-public class ExamScore {
+public class CourseScore {
 	@ExcelIgnore
 	@Id
 	private Long id; //ID
