@@ -17,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "t_exam_score")
+@Table(name = "t_course_score")
 public class CourseScore {
 	@ExcelIgnore
 	@Id
