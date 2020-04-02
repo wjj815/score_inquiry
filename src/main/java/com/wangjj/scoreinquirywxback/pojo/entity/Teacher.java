@@ -1,18 +1,17 @@
 package com.wangjj.scoreinquirywxback.pojo.entity;
 
-import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 教师类
@@ -23,6 +22,7 @@ import java.util.*;
 @Setter
 @Getter
 @Table(name = "t_teacher")
+@org.hibernate.annotations.Table(appliesTo = "t_teacher",comment = "教师信息表")
 public class Teacher {
 
 	@ExcelProperty(value="教师编号")
@@ -67,31 +67,31 @@ public class Teacher {
 
 	@ApiModelProperty(name = "introduction",value = "介绍")
 	private String introduction ;
-	/** 创建人 */
-	@ExcelIgnore
-	@ApiModelProperty(hidden = true)
-	private String createdBy ;
-	/** 创建时间 */
-	@Temporal(TemporalType.DATE)
-	@CreatedDate
-	@ExcelProperty("创建时间")
-	@ColumnWidth(value = 30)
-	@ApiModelProperty(hidden = true)
-	private Date createdTime ;
-	/** 更新人 */
-	@ExcelIgnore
-	@ApiModelProperty(hidden = true)
-	private String updatedBy ;
-	/** 更新时间 */
-	@ExcelIgnore
-	@LastModifiedDate
-	@ApiModelProperty(hidden = true)
-	private Date updatedTime ;
-
-	@ExcelIgnore
-	/** 微信 */
-	@ApiModelProperty(hidden = true)
-	private String weiXin;
+//	/** 创建人
+//	@ExcelIgnore
+//	@ApiModelProperty(hidden = true)
+//	private String createdBy ;
+//	*//** 创建时间 *//*
+//	@Temporal(TemporalType.DATE)
+//	@CreatedDate
+//	@ExcelProperty("创建时间")
+//	@ColumnWidth(value = 30)
+//	@ApiModelProperty(hidden = true)
+//	private Date createdTime ;
+//	*//** 更新人 *//*
+//	@ExcelIgnore
+//	@ApiModelProperty(hidden = true)
+//	private String updatedBy ;
+//	*//** 更新时间 *//*
+//	@ExcelIgnore
+//	@LastModifiedDate
+//	@ApiModelProperty(hidden = true)
+//	private Date updatedTime ;*/
+//
+//	@ExcelIgnore
+//	/** 微信 */
+//	@ApiModelProperty(hidden = true)
+//	private String weiXin;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Course course;

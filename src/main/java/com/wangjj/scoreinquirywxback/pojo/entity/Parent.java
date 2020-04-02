@@ -1,13 +1,15 @@
 package com.wangjj.scoreinquirywxback.pojo.entity;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @ClassName : Parent
@@ -16,12 +18,12 @@ import java.util.*;
  * @Description : 家长
  */
 /*@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})*/
-@ApiModel(description = "家长实体类")
 @Setter
 @Getter
 @ToString(exclude = {"students"})
 @Entity
 @Table(name = "t_parent")
+@org.hibernate.annotations.Table(appliesTo = "t_parent",comment = "学生家长表")
 @EqualsAndHashCode
 public class Parent {
 
@@ -55,21 +57,6 @@ public class Parent {
 	@ExcelProperty(value = "居住地址")
 	private String presentAddress ;
 
-	/** 微信 */
-	@ApiModelProperty(hidden = true)
-	private String weiXin ;
-	/** 创建时间 */
-	@ApiModelProperty(hidden = true)
-	private Date createdTime ;
-	/** 创建人 */
-	@ApiModelProperty(hidden = true)
-	private String createdBy ;
-	/** 更新人 */
-	@ApiModelProperty(hidden = true)
-	private String updatedBy ;
-	/** 更新时间 */
-	@ApiModelProperty(hidden = true)
-	private Date updatedTime ;
 
 
 	@ManyToMany(fetch = FetchType.LAZY)

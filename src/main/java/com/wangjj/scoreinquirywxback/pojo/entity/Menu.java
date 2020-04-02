@@ -1,12 +1,9 @@
 package com.wangjj.scoreinquirywxback.pojo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,9 +18,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "t_menu",uniqueConstraints = {
-		@UniqueConstraint(columnNames = {"menuCode"})
-})
+@Table(name = "t_menu",indexes = {@Index(
+		unique = true,name = "menu_code",columnList = "menuCode"
+)})
 public class Menu {
 
 	/*菜单id*/

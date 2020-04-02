@@ -1,10 +1,10 @@
 package com.wangjj.scoreinquirywxback.pojo.entity;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * @ClassName : User
@@ -17,31 +17,44 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "t_user")
-public class User  {
+@org.hibernate.annotations.Table(appliesTo = "t_user", comment = "用户信息表")
+public class User {
 
 	@Id
 	private Long id;
-	/**登录账号*/
+	/**
+	 * 登录账号
+	 */
 	private String account;
-	/**登录密码*/
+	/**
+	 * 登录密码
+	 */
 	private String password;
-	/**用户姓名*/
+	/**
+	 * 用户姓名
+	 */
 	private String name;
-	/** 头像 */
-	private String avatar ;
+	/**
+	 * 头像
+	 */
+	private String avatar;
 	/**用户信息*/
 //	private Long infoId;
-	/** 电话 */
-	private String phone ;
-	/** 创建人 */
-	private String createdBy ;
-	/** 创建时间 */
-	private Date createdTime ;
-	/** 更新人 */
-	private String updatedBy ;
-	/** 更新时间 */
-	private Date updatedTime ;
-	/**角色*/
+	/**
+	 * 电话
+	 */
+	private String phone;
+//	/** 创建人 */
+//	private String createdBy ;
+//	/** 创建时间 */
+//	private Date createdTime ;
+//	/** 更新人 */
+//	private String updatedBy ;
+//	/** 更新时间 */
+//	private Date updatedTime ;
+	/**
+	 * 角色
+	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Role role;
 

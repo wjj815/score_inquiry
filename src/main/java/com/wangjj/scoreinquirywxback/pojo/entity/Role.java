@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @ClassName : Role
@@ -19,6 +20,7 @@ import java.util.*;
 @AllArgsConstructor
 @ToString(exclude = {"user"})
 @Table(name="t_role")
+@org.hibernate.annotations.Table(appliesTo = "t_role",comment = "角色表")
 @Entity
 public class Role {
 	/** 角色id */
@@ -29,14 +31,6 @@ public class Role {
 	private String roleName ;
 	/** 角色描述 */
 	private String roleDescription ;
-	/** 创建人 */
-	private String createdBy ;
-	/** 创建时间 */
-	private Date createdTime ;
-	/** 更新人 */
-	private String updatedBy ;
-	/** 更新时间 */
-	private Date updatedTime ;
 	@JsonIgnore
 	@OneToMany(mappedBy = "role",fetch = FetchType.LAZY)
 	private final Set<User> user = new HashSet<>(0);

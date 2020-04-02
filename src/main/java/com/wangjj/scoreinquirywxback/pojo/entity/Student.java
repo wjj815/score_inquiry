@@ -3,17 +3,16 @@ package com.wangjj.scoreinquirywxback.pojo.entity;
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 学生类
@@ -24,6 +23,7 @@ import java.util.*;
 @ToString(exclude = {"grade","clazz","courseScores","parents"})
 @Entity
 @Table(name = "t_student")
+@org.hibernate.annotations.Table(appliesTo = "t_student",comment = "学生信息表")
 @EqualsAndHashCode
 public class Student {
 	/** 学生学号 */
@@ -64,25 +64,6 @@ public class Student {
 	@ApiParam(hidden = true)
 	private String status ;
 	/** 创建人 */
-	@ExcelIgnore
-	@ApiParam(hidden = true)
-	private String createdBy ;
-	/** 创建时间 */
-	@ExcelIgnore
-	@CreatedDate
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdTime ;
-
-	/** 更新人 */
-	@ExcelIgnore
-	private String updatedBy ;
-	/** 更新时间 */
-	@ExcelIgnore
-	@LastModifiedDate
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date updateTime ;
-	/** 所在班级 */
-	/*@Transient//jpa忽略字段*/
 
 	@ExcelIgnore
 	@ManyToOne(fetch = FetchType.LAZY)

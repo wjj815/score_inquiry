@@ -3,7 +3,6 @@ package com.wangjj.scoreinquirywxback.pojo.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * @ClassName : Manager
@@ -18,6 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "t_manager")
+@org.hibernate.annotations.Table(appliesTo = "t_manager",comment = "管理员信息表")
 public class Manager {
 
 	@Id
@@ -27,16 +27,6 @@ public class Manager {
 	private String managerName ;
 	/** 管理员电话 */
 	private String mobilePhone ;
-	/** 创建人 */
-	private String createdBy ;
-	/** 创建时间 */
-	private Date createdTime ;
-	/** 更新人 */
-	private String updatedBy ;
-	/** 更新时间 */
-	private Date updatedTime ;
-	/** 微信 */
-	private String weiXin;
 	/**角色*/
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Role role;

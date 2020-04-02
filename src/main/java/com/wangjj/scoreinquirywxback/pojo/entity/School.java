@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
 
 /**
  * 系统初始化的一些信息
@@ -18,6 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_school")
+@org.hibernate.annotations.Table(appliesTo = "t_school",comment = "学校信息表")
 public class School {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,14 +25,7 @@ public class School {
 
 	/** 学校名称 */
 	private String schoolName ;
-	/** 创建人 */
-	private String createdBy ;
-	/** 创建时间 */
-	private Date createdTime ;
-	/** 更新人 */
-	private String updatedBy ;
-	/** 更新时间 */
-	private Date updatedTime ;
+
 
 	private String noticeTeacher; //教师通知
 	
