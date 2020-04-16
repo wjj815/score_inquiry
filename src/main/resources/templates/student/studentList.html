@@ -224,7 +224,7 @@
                 openModel("/studentDetail",parent.layer,"编辑学生信息",function(layero,index){
                     ajaxGet($,"/student/"+data.id,function (data) {
                        setTimeout(function(){
-                           var iframe = window['layui-layer-iframe'+index];
+                           var iframe = parent.window['layui-layer-iframe'+index];
                            var json = data.data;
                            iframe.layui.fillData(json);
                        },delayTime);
@@ -247,7 +247,7 @@
                    json['clazzId'] = clazzId;
                    let url = apiPrefix+ "/student/excel/"+gradeId+'-'+clazzId;
                    json['url'] = url;
-                   var iframe = window['layui-layer-iframe'+index];
+                   var iframe = parent.window['layui-layer-iframe'+index];
                    iframe.layui.fillData(json);
                },delayTime);
            },function() {
