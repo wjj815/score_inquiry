@@ -221,7 +221,7 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
-                openModel("/studentDetail",layer,"编辑学生信息",function(layero,index){
+                openModel("/studentDetail",parent.layer,"编辑学生信息",function(layero,index){
                     ajaxGet($,"/student/"+data.id,function (data) {
                        setTimeout(function(){
                            var iframe = window['layui-layer-iframe'+index];
@@ -240,7 +240,7 @@
                layer.msg("请选择年级和班级，然后进行导入！");
                return;
            }
-           openMiniModel("/uploadForm",layer,"导入学生excel",function (layero, index) {
+           openMiniModel("/uploadForm",parent.layer,"导入学生excel",function (layero, index) {
                setTimeout(function(){
                    var json = {};
                    json['gradeId'] = gradeId;
@@ -273,7 +273,7 @@
         };
 
         $('#addStudentBtn').click(function() {
-            openModel('/studentDetail',layer,"添加学生",function() {
+            openModel('/studentDetail',parent.layer,"添加学生",function() {
 
             },function() {
                t.reload();

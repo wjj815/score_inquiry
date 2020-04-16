@@ -127,7 +127,7 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
-                openModel("/teacherDetail",layer,"编辑教师信息",function (layero,index) {
+                openModel("/teacherDetail",parent.layer,"编辑教师信息",function (layero,index) {
                     ajaxGet($,"/teacher/"+data.id,function (data) {
                         var iframe = window['layui-layer-iframe' + index];
                         var json = data.data;
@@ -204,7 +204,7 @@
         };
 
         $('#addBtn').click(function(){
-            openModel("/teacherDetail",layer,"增加教师信息",function (layero,index) {
+            openModel("/teacherDetail",parent.layer,"增加教师信息",function (layero,index) {
             },function () {
                 t.reload();
             });

@@ -96,7 +96,7 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
-                openMiniModel("/examDetail",layer,"编辑考试信息",function(layero,index) {
+                openMiniModel("/examDetail",parent.layer,"编辑考试信息",function(layero,index) {
                     ajaxGet($,'/exam/'+data.id,function(res) {
                         if(res.success) {
                             setTimeout(function () {
@@ -109,7 +109,7 @@
 
                 });
             }else if (obj.event === 'scoreStat') {
-                openModel("/examScore",layer,"成绩统计",function(layero,index) {
+                openModel("/examScore",parent.layer,"成绩统计",function(layero,index) {
                     let iframe = window['layui-layer-iframe' + index];
                     let json = data;
                     setTimeout(function () {
@@ -123,7 +123,7 @@
 
 
         $("#addBtn").click(function () {
-           openMiniModel('/examDetail',layer,'考试信息',function(layero,index){
+           openMiniModel('/examDetail',parent.layer,'考试信息',function(layero,index){
 
            },function() {
                 t.reload();

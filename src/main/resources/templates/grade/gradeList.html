@@ -122,7 +122,7 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
-                openModel("/gradeDetail",layer,"编辑年级信息",function(layero,index) {
+                openModel("/gradeDetail",parent.layer,"编辑年级信息",function(layero,index) {
                     var iframe = window['layui-layer-iframe'+index];
                     var json = data;
                     iframe.layui.fillData(json);
