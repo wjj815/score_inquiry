@@ -1,5 +1,5 @@
 let apiPrefix = "/api";
-let delayTime = 200;
+let delayTime = 500;
 /*layui的模态框封装*/
 function openModel(url,layer,title,fun,endFun)
 {
