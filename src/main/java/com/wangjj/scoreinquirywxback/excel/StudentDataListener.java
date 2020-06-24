@@ -54,9 +54,9 @@ public class StudentDataListener extends BaseDataListener<Student> {
 		student.setGrade(gradeAndClazz.getGrade());
 		//目前
 		Long count = jpaRepository.count(Example.of(student));
-		Long gradeId = gradeAndClazz.getGrade().getId();
+//		Long gradeId = gradeAndClazz.getGrade().getId();
 		Long clazzId = gradeAndClazz.getClazz().getId();
-		return Long.parseLong(String.valueOf(gradeId).concat(wrapperId(clazzId)).concat(wrapperId(++sequence)));
+		return Long.parseLong(String.valueOf(wrapperId(clazzId)).concat(wrapperId(++sequence)));
 	}
 
 	public String wrapperId(Long id) {

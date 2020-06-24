@@ -2,6 +2,7 @@ package com.wangjj.scoreinquirywxback.service;
 
 import com.wangjj.scoreinquirywxback.dao.ClazzRepository;
 import com.wangjj.scoreinquirywxback.dao.GradeRepository;
+import com.wangjj.scoreinquirywxback.dao.StudentRepository;
 import com.wangjj.scoreinquirywxback.dao.TeacherRepository;
 import com.wangjj.scoreinquirywxback.exception.GlobalException;
 import com.wangjj.scoreinquirywxback.pojo.dto.ClazzDTO;
@@ -37,6 +38,9 @@ public class ClazzService {
 	private ClazzRepository clazzRepository;
 	@Autowired
 	private GradeRepository gradeRepository;
+
+	@Autowired
+	private StudentService studentService;
 
 	@Autowired
 	private TeacherRepository teacherRepository;
@@ -113,6 +117,7 @@ public class ClazzService {
 				t.getClazzSet().remove(e);
 			});
 		});
+
 		clazzRepository.deleteByIdIn(clazzIds);
 	}
 

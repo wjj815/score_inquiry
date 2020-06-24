@@ -20,4 +20,6 @@ public interface StudentRepository extends JpaRepository<Student,Long>, JpaSpeci
 	List<Student> findAllByClazzId(Long clazzId);
 	@Query(value = "select max(id) from t_student",nativeQuery = true)
 	long findMaxId();
+
+
 }

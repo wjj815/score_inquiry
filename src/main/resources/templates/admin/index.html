@@ -27,7 +27,9 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    <th:block th:if="${user.avatar != null}">
+                        <img th:src="@{'/static/common/img/'+${user.avatar}}" class="layui-nav-img">
+                    </th:block>
                     <span id="username" th:text="${user.name}">用户</span>
                 </a>
                 <dl class="layui-nav-child">
