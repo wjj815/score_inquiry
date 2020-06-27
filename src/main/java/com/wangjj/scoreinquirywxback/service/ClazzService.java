@@ -113,8 +113,13 @@ public class ClazzService {
 		List<Long> clazzIds = ParameterUtils.analyse(ids);
 		List<Clazz> clazzes = clazzRepository.findAllById(clazzIds);
 		clazzes.forEach(e->{
+			//删除老师的关联信息
 			e.getTeachers().forEach(t->{
 				t.getClazzSet().remove(e);
+			});
+			//删除该班级下的所有学生
+			e.getStudents().forEach(s -> {
+				studentService.deleteStudent(s.getId());
 			});
 		});
 

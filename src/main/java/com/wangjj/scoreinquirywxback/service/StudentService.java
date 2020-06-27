@@ -83,7 +83,9 @@ public class StudentService {
 		}
 		Student student = studentRepository.getOne(studentId);
 		/*删除所有的该同学的家长关联数据 */
-		student.setParents(new ArrayList<>());
+		student.getParents().forEach(p -> {
+			p.getStudents().remove(student);
+		});
 		studentRepository.deleteById(studentId);
 	}
 
