@@ -3,9 +3,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://47.98.44.184:3306/micro_campus?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    url: jdbc:mysql://101.35.155.197:3306/micro_campus?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: root
-    password: root
+    password: zzxx123456
     type: com.alibaba.druid.pool.DruidDataSource #druid监控配置
    # filters: stat,wall
     #useGlobalDataSourceStat: true

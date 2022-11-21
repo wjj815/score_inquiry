@@ -1,0 +1,1 @@
+INSERT INTO  micro_campus.t_teacher (id, age, birthday, id_card_no, introduction, phone, sex, teacher_name, course_id, role_id) VALUES (20220933, 38, null, '610404111122223333', '', '15322223333', '男', ' 王大锤', 1, 2);

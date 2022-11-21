@@ -1,0 +1,1 @@
+INSERT IGNORE INTO  micro_campus.t_clazz (id, clazz_name, grade_id) VALUES (20220101, '2022 级初一班', 202209);

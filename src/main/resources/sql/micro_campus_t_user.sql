@@ -1,0 +1,2 @@
+INSERT IGNORE INTO  micro_campus.t_user (id, account, avatar, name, password, phone, wx_open_id, role_id) VALUES (1, 'admin', 'adminAvatar.jpg', '管理员', '123456', '153888800000', '0', 1);
+INSERT IGNORE INTO  micro_campus.t_user (id, account, avatar, name, password, phone, wx_open_id, role_id) VALUES (20220933, '15322223333', null, ' 王大锤', '123456', '15322223333', null, 2);

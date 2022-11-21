@@ -1,0 +1,1 @@
+INSERT IGNORE INTO  micro_campus.t_clazz_teachers (clazz_set_id, teachers_id) VALUES (20220101, 20220933);

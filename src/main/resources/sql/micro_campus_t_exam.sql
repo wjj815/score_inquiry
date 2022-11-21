@@ -1,0 +1,1 @@
+INSERT IGNORE INTO  micro_campus.t_exam (id, exam_name, exam_time, exam_type, remark, grade_id) VALUES (8, '2022 级初一开学摸底考试', '2022-11-23', 1, '年级考试，请重点关注', 202209);

@@ -1,0 +1,10 @@
+INSERT IGNORE INTO  micro_campus.t_exam_score (id, score, course_id, exam_id, student_id) VALUES (820220101011, 89, 1, 8, 2022010101);
+INSERT IGNORE INTO  micro_campus.t_exam_score (id, score, course_id, exam_id, student_id) VALUES (820220101021, 45, 1, 8, 2022010102);
+INSERT IGNORE INTO  micro_campus.t_exam_score (id, score, course_id, exam_id, student_id) VALUES (820220101031, 54, 1, 8, 2022010103);
+INSERT IGNORE INTO  micro_campus.t_exam_score (id, score, course_id, exam_id, student_id) VALUES (820220101041, 67, 1, 8, 2022010104);
+INSERT IGNORE INTO  micro_campus.t_exam_score (id, score, course_id, exam_id, student_id) VALUES (820220101051, 99, 1, 8, 2022010105);
+INSERT IGNORE INTO  micro_campus.t_exam_score (id, score, course_id, exam_id, student_id) VALUES (820220101061, 110, 1, 8, 2022010106);
+INSERT IGNORE INTO  micro_campus.t_exam_score (id, score, course_id, exam_id, student_id) VALUES (820220101071, 33, 1, 8, 2022010107);
+INSERT IGNORE INTO  micro_campus.t_exam_score (id, score, course_id, exam_id, student_id) VALUES (820220101081, 77, 1, 8, 2022010108);
+INSERT IGNORE INTO  micro_campus.t_exam_score (id, score, course_id, exam_id, student_id) VALUES (820220101091, 98, 1, 8, 2022010109);
+INSERT IGNORE INTO  micro_campus.t_exam_score (id, score, course_id, exam_id, student_id) VALUES (820220101101, 99, 1, 8, 2022010110);
